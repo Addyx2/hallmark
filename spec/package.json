@@ -1,0 +1,17 @@
+{
+  "name": "hallmark-agent-identity",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Hallmark Agent Identity Protocol - specification, reference implementation, and conformance suite",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node test-vectors/vectors.mjs && node crosscheck.mjs",
+    "vectors": "node test-vectors/vectors.mjs",
+    "bench": "node test-vectors/bench.mjs",
+    "crosscheck": "node crosscheck.mjs",
+    "keys": "node test-vectors/make-keys.mjs"
+  }
+}

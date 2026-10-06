@@ -1,0 +1,79 @@
+# Hallmark spec
+
+Normative specification for the Hallmark Agent Identity Protocol, plus the
+executable reference implementation and its conformance suite.
+
+| Document | Purpose |
+| --- | --- |
+| [`Hallmark-Agent-Identity-Spec.md`](Hallmark-Agent-Identity-Spec.md) | The specification. Normative. |
+
+The spec makes claims that are either measured or asserted by code in this
+directory. Nothing in it is decorative.
+
+## Status
+
+**Draft, v1.0, not ratified.** No production deployment. See §21 for the open
+questions that should be answered before the SDK ships.
+
+## Verify it
+
+```bash
+npm test              # vectors + spec/reference crosscheck; non-zero exit on failure
+npm run vectors       # regenerate vectors and self-test, writes vectors.json
+npm run bench         # hot-path performance numbers behind spec §17
+```
+
+`npm test` runs 38 conformance vectors (6 accept, 32 pinned to an exact error
+code), 4 design properties, 4 budget enforcement points, and a crosscheck that
+asserts the spec and the reference implementation still describe the same
+protocol. It exits non-zero if any invariant weakens.
+
+`vectors.json` contains every generated token alongside its expected and actual
+verdict — diff it in review to see exactly what changed.
+
+Requires Node >= 18. No dependencies.
+
+## Layout
+
+```
+Hallmark-Agent-Identity-Spec.md   the specification
+crosscheck.mjs                    spec/reference consistency assertions
+package.json                      npm scripts
+test-vectors/
+  hallmark-ref.mjs                JCS, Seal, thumbprints, JWS, revocation, replay, allocation
+  verify.mjs                      spawn-edge registry, minting, verifyPassport(), L1-L13
+  vectors.mjs                     vector generation and self-test
+  bench.mjs                       hot-path measurement
+  vectors.json                    generated vectors + verdicts (do not hand-edit)
+  make-keys.mjs                   regenerates fixtures/keys.json (run once)
+  fixtures/keys.json              published test keys (do not reuse anywhere real)
+```
+
+## What is actually enforced
+
+- **Cryptographic** — Ed25519/ES256 only, closed `alg` allowlist, canonical
+  JCS payloads, no duplicate JSON members, no remote key resolution.
+- **Lineage** — 13 invariants covering parent linkage, ancestry immutability,
+  human immutability, tenant isolation, audience narrowing, capability narrowing
+  and tree structure.
+- **Economic** — disjoint budget slices, so a root's spend cap holds across the
+  whole tree with no cross-gateway coordination, even if a parent lies about its
+  own bookkeeping.
+- **Operational** — TTL ceilings, replay suppression, per-capability revocation
+  freshness with fail-closed defaults, and a stated containment window of about
+  150 seconds for a compromised key.
+
+## Two things worth knowing before reading the code
+
+**The Seal covers the signing input, not the signature.** This is deliberate.
+P-ECDSA uses a random `k`, so two signatures over identical claims differ. If the
+seal covered the signature, every child in a mixed Ed25519/ES256 hierarchy would
+be orphaned by its parent. The reference suite asserts this directly
+(`seal-excludes-signature`).
+
+**Lineage invariants are enforced at two different strengths.** At spawn the
+parent is in hand and all 13 invariants are checked. At request time only the leaf
+is usually presented, so the structural invariants are re-checked while the
+narrowing invariants are *memoized* in the spawn-edge registry. That is a sound
+delegation argument, but only because edge writes are unforgeable. See spec §4
+(T7) and §8.5 before implementing.

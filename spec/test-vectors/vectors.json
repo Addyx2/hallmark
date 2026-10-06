@@ -1,0 +1,953 @@
+{
+  "spec": "hallmark-agent-identity",
+  "version": 1,
+  "generated": "deterministic",
+  "note": "Do not hand-edit. Regenerate with `node vectors.mjs`.",
+  "frozen_clock": {
+    "t0": 1772323200,
+    "iso": "2026-03-01T00:00:00.000Z"
+  },
+  "tenant": {
+    "tid": "tnt_acme",
+    "audience": "https://hallmark.gw.acme.example/",
+    "idpIssuer": "https://idp.acme.example/",
+    "human": "usr_4471",
+    "policyId": "pol_acme_default",
+    "policyVersion": 7
+  },
+  "policy": {
+    "id": "pol_acme_default",
+    "v": 7,
+    "maxDepth": 4,
+    "maxTtlSec": 120,
+    "revocation": "strict",
+    "profiles": [
+      "llm.chat.default.v1",
+      "llm.batch.v1",
+      "vec.search.default.v1"
+    ],
+    "capabilities": {
+      "llm.inference.v1": {
+        "methods": [
+          "POST"
+        ],
+        "pathPrefixes": [
+          "/v1/chat/completions",
+          "/v1/completions"
+        ],
+        "profiles": [
+          "llm.chat.default.v1",
+          "llm.batch.v1"
+        ],
+        "tin": 33554432,
+        "tout": 8192,
+        "cost": 2500
+      },
+      "vector.search.v1": {
+        "methods": [
+          "POST",
+          "GET"
+        ],
+        "pathPrefixes": [
+          "/v1/embeddings",
+          "/v1/vectors"
+        ],
+        "profiles": [
+          "llm.chat.default.v1",
+          "vec.search.default.v1"
+        ]
+      },
+      "code.exec.sandbox.v1": {
+        "methods": [
+          "POST"
+        ],
+        "pathPrefixes": [
+          "/v1/sandbox/exec"
+        ],
+        "profiles": [
+          "llm.chat.default.v1"
+        ]
+      }
+    }
+  },
+  "attestation": {
+    "jti": "at_0001",
+    "jws": "eyJhbGciOiJFUzI1NiIsImtpZCI6InAyNTY6NjhraElTZGNhMzBPNXY0cyIsInR5cCI6ImhhbGxtYXJrK3Jvb3QtYXR0ZXN0YXRpb24ifQ.eyJhbXIiOlsiaHdrIiwidXNlcl9wcmVzZW5jZSIsIm1mYSJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJjbmYiOnsiamt0IjoidFNKazFzUXRBbENOZ1VwOHhFWDExcUJLZ3JBVUU5d1pDaW13V3pZZ0t5QSJ9LCJleHAiOjE3NzI0MDk2MDAsImhsbSI6eyJhZ2VudCI6eyJjYXBzIjpbImxsbS5pbmZlcmVuY2UudjEiLCJ2ZWN0b3Iuc2VhcmNoLnYxIiwiY29kZS5leGVjLnNhbmRib3gudjEiXSwibmFtZSI6IlJlc2VhcmNoIE9yY2hlc3RyYXRvciIsInByb2ZpbGVzIjpbImxsbS5jaGF0LmRlZmF1bHQudjEiLCJsbG0uYmF0Y2gudjEiXSwic3BpZCI6InNwaWQ6Ly9hY21lL3Jlc2VhcmNoLW9yY2hlc3RyYXRvciJ9LCJidWRnZXQiOnsiY29uYyI6MzIsImNvc3QiOjUwMDAwMCwiZGVwdGgiOjQsInJlcSI6NTAwMCwidGluIjo1MzY4NzA5MTIsInRvdXQiOjI2ODQzNTQ1LCJ3aWQiOjh9LCJwb2wiOnsiaWQiOiJwb2xfYWNtZV9kZWZhdWx0IiwidiI6N30sInRpZCI6InRudF9hY21lIiwidiI6MX0sImlhdCI6MTc3MjMyMzIwMCwiaXNzIjoiaHR0cHM6Ly9pZHAuYWNtZS5leGFtcGxlLyIsImp0aSI6ImF0XzAwMDEiLCJuYmYiOjE3NzIzMjMyMDAsInN1YiI6InVzcl80NDcxIn0.HiLbwO6Wrf2anh3Ylg81ATlq1cxsnUuMLhYGkyALAHHMdUNiq9zFaYYUTH3XQ_c4JiqMLs5lp3ckTvYyW3L53w",
+    "seal": "7_WbcECGm3l0o59veVbPT0MxRmqagZaqZp1hNMsanLU"
+  },
+  "root_agent": {
+    "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6dFNKazFzUXRBbENOZ1VwOCIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzMyMCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjozMiwiY29zdCI6NTAwMDAwLCJkZXB0aCI6NCwicmVxIjo1MDAwLCJ0aW4iOjUzNjg3MDkxMiwidG91dCI6MjY4NDM1NDUsIndpZCI6OH0sImNhcHMiOlsiY29kZS5leGVjLnNhbmRib3gudjEiLCJsbG0uaW5mZXJlbmNlLnYxIiwidmVjdG9yLnNlYXJjaC52MSJdLCJkZXB0aCI6MSwibG4iOlt7ImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwic2lkIjoiYXRfMDAwMSJ9XSwibmFtZSI6IlJlc2VhcmNoIE9yY2hlc3RyYXRvciIsInBvbCI6eyJpZCI6InBvbF9hY21lX2RlZmF1bHQiLCJ2Ijo3fSwicHJvZiI6ImxsbS5jaGF0LmRlZmF1bHQudjEiLCJyb290Ijp7ImF0IjoiYXRfMDAwMSIsImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwiaXNzIjoiaHR0cHM6Ly9pZHAuYWNtZS5leGFtcGxlLyIsInN1YiI6InVzcl80NDcxIn0sInNwaWQiOiJzcGlkOi8vYWNtZS9yZXNlYXJjaC1vcmNoZXN0cmF0b3IiLCJ0aWQiOiJ0bnRfYWNtZSIsInYiOjF9LCJpYXQiOjE3NzIzMjMyMDAsImlzcyI6InVybjpoYWxsbWFyazppZHA6dG50X2FjbWUiLCJqdGkiOiJzZXNfcm9vdF8wMDAxIiwibmJmIjoxNzcyMzIzMjAwLCJzcW4iOjEsInN1YiI6InNlc19yb290XzAwMDEifQ.535Nv5r3a40japOjK7Rw13biqq9yaYFMSQMrJXRfoWDRNSDMLyoC2GdT7xdicmAufYgPH2tmKN9j7mfsK6btDA",
+    "seal": "ZTsj644aFvFqS0RI5-Yk0cyLujeQuch00Td-WB6v7sE"
+  },
+  "reproducibility": {
+    "note": "Payload and header segments, all Seals, and all policy/lineage values are byte-stable across runs. ES256 signature octets are NOT: P-ECDSA uses a random k per RFC 6979-optional practice, so the third JWS segment of the attestation differs on every run. That is precisely why seal() covers the signing input and not the signature. See property seal-excludes-signature.",
+    "stable": [
+      "header segment",
+      "payload segment",
+      "every seal",
+      "every error code",
+      "every pass/fail verdict"
+    ],
+    "unstable": [
+      "ES256 signature octet"
+    ]
+  },
+  "properties": [
+    {
+      "id": "seal-excludes-signature",
+      "claim": "ES256 is randomized, so identical claims must still yield an identical Seal.",
+      "observed": {
+        "jwsIdentical": false,
+        "sealA": "N3FbPknljwWPqWecb9IWaFsLtfIM6EPJL8OsMxeVYI4",
+        "sealB": "N3FbPknljwWPqWecb9IWaFsLtfIM6EPJL8OsMxeVYI4"
+      },
+      "pass": true
+    },
+    {
+      "id": "jcs-member-ordering",
+      "claim": "Canonical serialization sorts members by code unit and preserves array order.",
+      "observed": "{\"a\":{\"b\":3,\"y\":2},\"m\":[3,1,2],\"z\":1}",
+      "pass": true
+    },
+    {
+      "id": "seal-is-canonicalization-sensitive",
+      "claim": "Member order changes the Seal, so divergent parsers cannot silently interoperate.",
+      "observed": {
+        "canonical": "gJVhrXlM1eEHg21szez_wTy--ax3DU4Qr6LYkg5F0Pw",
+        "reordered": "AznYkj2ZNYuPGh51dZ9dXn201nAz2MconYF80kprPDQ"
+      },
+      "pass": true
+    },
+    {
+      "id": "seal-domain-separation",
+      "claim": "Seal is SHA-256 over a domain separator and a 0x00 delimiter, not a bare digest.",
+      "observed": {
+        "seal": "i_CH96s5r0cDTFOu8r34TRJ751o_DtKyYiLr0Ba1Smc",
+        "rawSha256": "Bxyb_9ns586CiIgiKknkpD2G2fVPeeO4SeuAU_ioqaQ"
+      },
+      "pass": true
+    }
+  ],
+  "enforcement": [
+    {
+      "name": "budget-overlap-refused",
+      "description": "Second 4000-request slice against a 5000-request parent is refused; slices must be disjoint.",
+      "expect": {
+        "code": "HLM_5003",
+        "reason": "budget_overlap"
+      },
+      "actual": {
+        "code": "HLM_5003",
+        "reason": "budget_overlap"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "root-cap-survives-lying-parent",
+      "description": "A parent claiming 6000 total but holding 5000 still cannot commit 3000+3000.",
+      "expect": {
+        "code": "HLM_5003",
+        "reason": "budget_overlap"
+      },
+      "actual": {
+        "code": "HLM_5003",
+        "reason": "budget_overlap"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "budget-exhausted-on-observed-usage",
+      "description": "Depth-3 agent holds req 40; 30 then 20 observed requests must be refused on the second.",
+      "expect": {
+        "code": "HLM_5002",
+        "reason": "budget_exhausted"
+      },
+      "actual": {
+        "code": "HLM_5002",
+        "reason": "budget_exhausted"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "slices-are-not-shared",
+      "description": "A sibling agent spending its own full slice must not be charged against another session.",
+      "expect": {
+        "code": null,
+        "reason": "no throw"
+      },
+      "actual": {
+        "code": null,
+        "reason": "no throw"
+      },
+      "result": "PASS"
+    }
+  ],
+  "vectors": [
+    {
+      "name": "root-agent",
+      "kind": "positive",
+      "description": "Depth-1 passport issued directly from a passkey-backed human attestation.",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6dFNKazFzUXRBbENOZ1VwOCIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzMyMCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjozMiwiY29zdCI6NTAwMDAwLCJkZXB0aCI6NCwicmVxIjo1MDAwLCJ0aW4iOjUzNjg3MDkxMiwidG91dCI6MjY4NDM1NDUsIndpZCI6OH0sImNhcHMiOlsiY29kZS5leGVjLnNhbmRib3gudjEiLCJsbG0uaW5mZXJlbmNlLnYxIiwidmVjdG9yLnNlYXJjaC52MSJdLCJkZXB0aCI6MSwibG4iOlt7ImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwic2lkIjoiYXRfMDAwMSJ9XSwibmFtZSI6IlJlc2VhcmNoIE9yY2hlc3RyYXRvciIsInBvbCI6eyJpZCI6InBvbF9hY21lX2RlZmF1bHQiLCJ2Ijo3fSwicHJvZiI6ImxsbS5jaGF0LmRlZmF1bHQudjEiLCJyb290Ijp7ImF0IjoiYXRfMDAwMSIsImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwiaXNzIjoiaHR0cHM6Ly9pZHAuYWNtZS5leGFtcGxlLyIsInN1YiI6InVzcl80NDcxIn0sInNwaWQiOiJzcGlkOi8vYWNtZS9yZXNlYXJjaC1vcmNoZXN0cmF0b3IiLCJ0aWQiOiJ0bnRfYWNtZSIsInYiOjF9LCJpYXQiOjE3NzIzMjMyMDAsImlzcyI6InVybjpoYWxsbWFyazppZHA6dG50X2FjbWUiLCJqdGkiOiJzZXNfcm9vdF8wMDAxIiwibmJmIjoxNzcyMzIzMjAwLCJzcW4iOjEsInN1YiI6InNlc19yb290XzAwMDEifQ.535Nv5r3a40japOjK7Rw13biqq9yaYFMSQMrJXRfoWDRNSDMLyoC2GdT7xdicmAufYgPH2tmKN9j7mfsK6btDA",
+      "opts": {
+        "method": "POST",
+        "path": "/v1/chat/completions"
+      },
+      "expect": null,
+      "actual": {
+        "ok": true
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "child-agent",
+      "kind": "positive",
+      "description": "Depth-2 passport. Verified via the spawn-edge registry, parent not on the wire.",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6T3NBVS1qSDdzNjd3Wk5fWSIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzI5MCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjo0LCJjb3N0IjoyNTAwMCwiZGVwdGgiOjEsInJlcSI6NTAwLCJ0aW4iOjMzNTU0NDMyLCJ0b3V0Ijo0MTk0MzA0LCJ3aWQiOjJ9LCJjYXBzIjpbImxsbS5pbmZlcmVuY2UudjEiLCJ2ZWN0b3Iuc2VhcmNoLnYxIl0sImRlcHRoIjoyLCJsbiI6W3siaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJzaWQiOiJhdF8wMDAxIn0seyJoIjoiWlRzajY0NGFGdkZxUzBSSTUtWWswY3lMdWplUXVjaDAwVGQtV0I2djdzRSIsInNpZCI6InNlc19yb290XzAwMDEifV0sIm5hbWUiOiJSZXNlYXJjaCBXb3JrZXIgMDciLCJwb2wiOnsiaWQiOiJwb2xfYWNtZV9kZWZhdWx0IiwidiI6N30sInByb2YiOiJsbG0uY2hhdC5kZWZhdWx0LnYxIiwicm9vdCI6eyJhdCI6ImF0XzAwMDEiLCJoIjoiN19XYmNFQ0dtM2wwbzU5dmVWYlBUME14Um1xYWdaYXFacDFoTk1zYW5MVSIsImlzcyI6Imh0dHBzOi8vaWRwLmFjbWUuZXhhbXBsZS8iLCJzdWIiOiJ1c3JfNDQ3MSJ9LCJzcGlkIjoic3BpZDovL2FjbWUvcmVzZWFyY2gtd29ya2VyLTA3IiwidGlkIjoidG50X2FjbWUiLCJ2IjoxfSwiaWF0IjoxNzcyMzIzMjAwLCJpc3MiOiJzZXNfcm9vdF8wMDAxIiwianRpIjoic2VzX2NoaWxkXzAwMDIiLCJuYmYiOjE3NzIzMjMyMDAsInNxbiI6MSwic3ViIjoic2VzX2NoaWxkXzAwMDIifQ.hGMyUi2gHcN28RshJeBClpKmxRdNpoR6ReiQC7sB7E5XYXqOkxEkIsogZWh5qh7P7Xl-DsJnnmD8S8Fvi_utDg",
+      "opts": {
+        "method": "POST",
+        "path": "/v1/chat/completions"
+      },
+      "expect": null,
+      "actual": {
+        "ok": true
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "grandchild-agent",
+      "kind": "positive",
+      "description": "Depth-3 passport, two registry hops, still traceable to usr_4471.",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6NUJkUE93dFU0YnRMbm5PRyIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzI2MCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjoxLCJjb3N0IjoxNTAwLCJkZXB0aCI6MCwicmVxIjo0MCwidGluIjo0MTk0MzA0LCJ0b3V0IjoyNjIxNDQsIndpZCI6MH0sImNhcHMiOlsibGxtLmluZmVyZW5jZS52MSJdLCJkZXB0aCI6MywibG4iOlt7ImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwic2lkIjoiYXRfMDAwMSJ9LHsiaCI6IlpUc2o2NDRhRnZGcVMwUkk1LVlrMGN5THVqZVF1Y2gwMFRkLVdCNnY3c0UiLCJzaWQiOiJzZXNfcm9vdF8wMDAxIn0seyJoIjoiWFpSLWQzenl5UnNvVjFjbXB6MGJKdkFmdUdJdDliRW45MUVFNGVBbERhWSIsInNpZCI6InNlc19jaGlsZF8wMDAyIn1dLCJuYW1lIjoiU3VtbWFyaXplciAwMSIsInBvbCI6eyJpZCI6InBvbF9hY21lX2RlZmF1bHQiLCJ2Ijo3fSwicHJvZiI6ImxsbS5jaGF0LmRlZmF1bHQudjEiLCJyb290Ijp7ImF0IjoiYXRfMDAwMSIsImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwiaXNzIjoiaHR0cHM6Ly9pZHAuYWNtZS5leGFtcGxlLyIsInN1YiI6InVzcl80NDcxIn0sInNwaWQiOiJzcGlkOi8vYWNtZS9zdW1tYXJpemVyLTAxIiwidGlkIjoidG50X2FjbWUiLCJ2IjoxfSwiaWF0IjoxNzcyMzIzMjAwLCJpc3MiOiJzZXNfY2hpbGRfMDAwMiIsImp0aSI6InNlc19nY18wMDA0IiwibmJmIjoxNzcyMzIzMjAwLCJzcW4iOjEsInN1YiI6InNlc19nY18wMDA0In0.ienm7IvLnrCtFLd7cv2rIoB2msAoQOsd-OWyFbtD1ji58XIDQ7nA7FtBJRg38_IkC7PTwsJMinBvW3fCq5u1Dw",
+      "opts": {
+        "method": "POST",
+        "path": "/v1/chat/completions"
+      },
+      "expect": null,
+      "actual": {
+        "ok": true
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "sibling-agent",
+      "kind": "positive",
+      "description": "Independent child of the root, narrow caps, zero further delegation.",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6M2xnVTBTQTNHOUhYTmtiUCIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzI2MCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjoyLCJjb3N0Ijo0MDAwLCJkZXB0aCI6MCwicmVxIjoyMDAsInRpbiI6ODM4ODYwOCwidG91dCI6MCwid2lkIjowfSwiY2FwcyI6WyJ2ZWN0b3Iuc2VhcmNoLnYxIl0sImRlcHRoIjoyLCJsbiI6W3siaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJzaWQiOiJhdF8wMDAxIn0seyJoIjoiWlRzajY0NGFGdkZxUzBSSTUtWWswY3lMdWplUXVjaDAwVGQtV0I2djdzRSIsInNpZCI6InNlc19yb290XzAwMDEifV0sIm5hbWUiOiJWZWN0b3IgSW5kZXhlciAwMSIsInBvbCI6eyJpZCI6InBvbF9hY21lX2RlZmF1bHQiLCJ2Ijo3fSwicHJvZiI6InZlYy5zZWFyY2guZGVmYXVsdC52MSIsInJvb3QiOnsiYXQiOiJhdF8wMDAxIiwiaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJpc3MiOiJodHRwczovL2lkcC5hY21lLmV4YW1wbGUvIiwic3ViIjoidXNyXzQ0NzEifSwic3BpZCI6InNwaWQ6Ly9hY21lL2luZGV4ZXItMDEiLCJ0aWQiOiJ0bnRfYWNtZSIsInYiOjF9LCJpYXQiOjE3NzIzMjMyMDAsImlzcyI6InNlc19yb290XzAwMDEiLCJqdGkiOiJzZXNfY2hpbGRfMDAwMyIsIm5iZiI6MTc3MjMyMzIwMCwic3FuIjoxLCJzdWIiOiJzZXNfY2hpbGRfMDAwMyJ9.rHuU6u7gHJGeYk6KQpQvzeC3Am_0WS-Ct1B8eY20zxW7k8ATQ-Oa-SL_aKjhOe_PwebPAwR2XBcd_Gzr6OF_BA",
+      "opts": {
+        "method": "GET",
+        "path": "/v1/vectors/query"
+      },
+      "expect": null,
+      "actual": {
+        "ok": true
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "child-with-parent-presented",
+      "kind": "positive",
+      "description": "Depth-2 verified against the parent passport directly (Level 1P).",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6T3NBVS1qSDdzNjd3Wk5fWSIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzI5MCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjo0LCJjb3N0IjoyNTAwMCwiZGVwdGgiOjEsInJlcSI6NTAwLCJ0aW4iOjMzNTU0NDMyLCJ0b3V0Ijo0MTk0MzA0LCJ3aWQiOjJ9LCJjYXBzIjpbImxsbS5pbmZlcmVuY2UudjEiLCJ2ZWN0b3Iuc2VhcmNoLnYxIl0sImRlcHRoIjoyLCJsbiI6W3siaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJzaWQiOiJhdF8wMDAxIn0seyJoIjoiWlRzajY0NGFGdkZxUzBSSTUtWWswY3lMdWplUXVjaDAwVGQtV0I2djdzRSIsInNpZCI6InNlc19yb290XzAwMDEifV0sIm5hbWUiOiJSZXNlYXJjaCBXb3JrZXIgMDciLCJwb2wiOnsiaWQiOiJwb2xfYWNtZV9kZWZhdWx0IiwidiI6N30sInByb2YiOiJsbG0uY2hhdC5kZWZhdWx0LnYxIiwicm9vdCI6eyJhdCI6ImF0XzAwMDEiLCJoIjoiN19XYmNFQ0dtM2wwbzU5dmVWYlBUME14Um1xYWdaYXFacDFoTk1zYW5MVSIsImlzcyI6Imh0dHBzOi8vaWRwLmFjbWUuZXhhbXBsZS8iLCJzdWIiOiJ1c3JfNDQ3MSJ9LCJzcGlkIjoic3BpZDovL2FjbWUvcmVzZWFyY2gtd29ya2VyLTA3IiwidGlkIjoidG50X2FjbWUiLCJ2IjoxfSwiaWF0IjoxNzcyMzIzMjAwLCJpc3MiOiJzZXNfcm9vdF8wMDAxIiwianRpIjoic2VzX2NoaWxkXzAwMDIiLCJuYmYiOjE3NzIzMjMyMDAsInNxbiI6MSwic3ViIjoic2VzX2NoaWxkXzAwMDIifQ.hGMyUi2gHcN28RshJeBClpKmxRdNpoR6ReiQC7sB7E5XYXqOkxEkIsogZWh5qh7P7Xl-DsJnnmD8S8Fvi_utDg",
+      "opts": {
+        "parentJws": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6dFNKazFzUXRBbENOZ1VwOCIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzMyMCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjozMiwiY29zdCI6NTAwMDAwLCJkZXB0aCI6NCwicmVxIjo1MDAwLCJ0aW4iOjUzNjg3MDkxMiwidG91dCI6MjY4NDM1NDUsIndpZCI6OH0sImNhcHMiOlsiY29kZS5leGVjLnNhbmRib3gudjEiLCJsbG0uaW5mZXJlbmNlLnYxIiwidmVjdG9yLnNlYXJjaC52MSJdLCJkZXB0aCI6MSwibG4iOlt7ImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwic2lkIjoiYXRfMDAwMSJ9XSwibmFtZSI6IlJlc2VhcmNoIE9yY2hlc3RyYXRvciIsInBvbCI6eyJpZCI6InBvbF9hY21lX2RlZmF1bHQiLCJ2Ijo3fSwicHJvZiI6ImxsbS5jaGF0LmRlZmF1bHQudjEiLCJyb290Ijp7ImF0IjoiYXRfMDAwMSIsImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwiaXNzIjoiaHR0cHM6Ly9pZHAuYWNtZS5leGFtcGxlLyIsInN1YiI6InVzcl80NDcxIn0sInNwaWQiOiJzcGlkOi8vYWNtZS9yZXNlYXJjaC1vcmNoZXN0cmF0b3IiLCJ0aWQiOiJ0bnRfYWNtZSIsInYiOjF9LCJpYXQiOjE3NzIzMjMyMDAsImlzcyI6InVybjpoYWxsbWFyazppZHA6dG50X2FjbWUiLCJqdGkiOiJzZXNfcm9vdF8wMDAxIiwibmJmIjoxNzcyMzIzMjAwLCJzcW4iOjEsInN1YiI6InNlc19yb290XzAwMDEifQ.535Nv5r3a40japOjK7Rw13biqq9yaYFMSQMrJXRfoWDRNSDMLyoC2GdT7xdicmAufYgPH2tmKN9j7mfsK6btDA"
+      },
+      "expect": null,
+      "actual": {
+        "ok": true
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "proof-of-possession-mtls",
+      "kind": "positive",
+      "description": "L4 client certificate thumbprint matches cnf.jkt.",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6M2xnVTBTQTNHOUhYTmtiUCIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImNuZiI6eyJqa3QiOiIzbGdVMFNBM0c5SFhOa2JQQVJnbkJ1ZXJaa3o0cEFNRmlBQTVEdVFsU2hrIn0sImV4cCI6MTc3MjMyMzI2MCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjoyLCJjb3N0Ijo0MDAwLCJkZXB0aCI6MCwicmVxIjoyMDAsInRpbiI6ODM4ODYwOCwidG91dCI6MCwid2lkIjowfSwiY2FwcyI6WyJ2ZWN0b3Iuc2VhcmNoLnYxIl0sImRlcHRoIjoyLCJsbiI6W3siaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJzaWQiOiJhdF8wMDAxIn0seyJoIjoiWlRzajY0NGFGdkZxUzBSSTUtWWswY3lMdWplUXVjaDAwVGQtV0I2djdzRSIsInNpZCI6InNlc19yb290XzAwMDEifV0sIm5hbWUiOiJWZWN0b3IgSW5kZXhlciAwMSIsInBvbCI6eyJpZCI6InBvbF9hY21lX2RlZmF1bHQiLCJ2Ijo3fSwicHJvZiI6InZlYy5zZWFyY2guZGVmYXVsdC52MSIsInJvb3QiOnsiYXQiOiJhdF8wMDAxIiwiaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJpc3MiOiJodHRwczovL2lkcC5hY21lLmV4YW1wbGUvIiwic3ViIjoidXNyXzQ0NzEifSwic3BpZCI6InNwaWQ6Ly9hY21lL2luZGV4ZXItMDEiLCJ0aWQiOiJ0bnRfYWNtZSIsInYiOjF9LCJpYXQiOjE3NzIzMjMyMDAsImlzcyI6InNlc19yb290XzAwMDEiLCJqdGkiOiJzZXNfcG9wXzAwMDUiLCJuYmYiOjE3NzIzMjMyMDAsInNxbiI6Miwic3ViIjoic2VzX3BvcF8wMDA1In0.xDifkGz5nGob9w3Sd-fvIhBJKPzrHB2J7SwEQwiedcYZVliWf8Dt7Ob4tpFtaaLK7E_SKriXoZ0ZAI1qWsfxCw",
+      "opts": {
+        "tlsCertJkt": "3lgU0SA3G9HXNkbPARgnBuerZkz4pAMFiAA5DuQlShk"
+      },
+      "expect": null,
+      "actual": {
+        "ok": true
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "signature-bitflip",
+      "kind": "negative",
+      "description": "Single bit flipped in the signature.",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6T3NBVS1qSDdzNjd3Wk5fWSIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzI5MCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjo0LCJjb3N0IjoyNTAwMCwiZGVwdGgiOjEsInJlcSI6NTAwLCJ0aW4iOjMzNTU0NDMyLCJ0b3V0Ijo0MTk0MzA0LCJ3aWQiOjJ9LCJjYXBzIjpbImxsbS5pbmZlcmVuY2UudjEiLCJ2ZWN0b3Iuc2VhcmNoLnYxIl0sImRlcHRoIjoyLCJsbiI6W3siaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJzaWQiOiJhdF8wMDAxIn0seyJoIjoiWlRzajY0NGFGdkZxUzBSSTUtWWswY3lMdWplUXVjaDAwVGQtV0I2djdzRSIsInNpZCI6InNlc19yb290XzAwMDEifV0sIm5hbWUiOiJSZXNlYXJjaCBXb3JrZXIgMDciLCJwb2wiOnsiaWQiOiJwb2xfYWNtZV9kZWZhdWx0IiwidiI6N30sInByb2YiOiJsbG0uY2hhdC5kZWZhdWx0LnYxIiwicm9vdCI6eyJhdCI6ImF0XzAwMDEiLCJoIjoiN19XYmNFQ0dtM2wwbzU5dmVWYlBUME14Um1xYWdaYXFacDFoTk1zYW5MVSIsImlzcyI6Imh0dHBzOi8vaWRwLmFjbWUuZXhhbXBsZS8iLCJzdWIiOiJ1c3JfNDQ3MSJ9LCJzcGlkIjoic3BpZDovL2FjbWUvcmVzZWFyY2gtd29ya2VyLTA3IiwidGlkIjoidG50X2FjbWUiLCJ2IjoxfSwiaWF0IjoxNzcyMzIzMjAwLCJpc3MiOiJzZXNfcm9vdF8wMDAxIiwianRpIjoic2VzX2NoaWxkXzAwMDIiLCJuYmYiOjE3NzIzMjMyMDAsInNxbiI6MSwic3ViIjoic2VzX2NoaWxkXzAwMDIifQ.hWMyUi2gHcN28RshJeBClpKmxRdNpoR6ReiQC7sB7E5XYXqOkxEkIsogZWh5qh7P7Xl-DsJnnmD8S8Fvi_utDg",
+      "opts": {},
+      "expect": {
+        "code": "HLM_1003",
+        "reason": "bad_signature"
+      },
+      "actual": {
+        "ok": false,
+        "code": "HLM_1003",
+        "reason": "bad_signature",
+        "detail": "signature does not verify",
+        "message": "HLM_1003 bad_signature: signature does not verify"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "alg-none-downgrade",
+      "kind": "negative",
+      "description": "alg=none with an empty signature (RFC 8725 classic).",
+      "passport": "eyJhbGciOiJub25lIiwia2lkIjoiZWQyNTUxOTpPc0FVLWpIN3M2N3daTl9ZIiwidHlwIjoiaGFsbG1hcmsrYWdlbnQtcGFzc3BvcnQifQ.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzI5MCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjo0LCJjb3N0IjoyNTAwMCwiZGVwdGgiOjEsInJlcSI6NTAwLCJ0aW4iOjMzNTU0NDMyLCJ0b3V0Ijo0MTk0MzA0LCJ3aWQiOjJ9LCJjYXBzIjpbImxsbS5pbmZlcmVuY2UudjEiLCJ2ZWN0b3Iuc2VhcmNoLnYxIl0sImRlcHRoIjoyLCJsbiI6W3siaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJzaWQiOiJhdF8wMDAxIn0seyJoIjoiWlRzajY0NGFGdkZxUzBSSTUtWWswY3lMdWplUXVjaDAwVGQtV0I2djdzRSIsInNpZCI6InNlc19yb290XzAwMDEifV0sIm5hbWUiOiJSZXNlYXJjaCBXb3JrZXIgMDciLCJwb2wiOnsiaWQiOiJwb2xfYWNtZV9kZWZhdWx0IiwidiI6N30sInByb2YiOiJsbG0uY2hhdC5kZWZhdWx0LnYxIiwicm9vdCI6eyJhdCI6ImF0XzAwMDEiLCJoIjoiN19XYmNFQ0dtM2wwbzU5dmVWYlBUME14Um1xYWdaYXFacDFoTk1zYW5MVSIsImlzcyI6Imh0dHBzOi8vaWRwLmFjbWUuZXhhbXBsZS8iLCJzdWIiOiJ1c3JfNDQ3MSJ9LCJzcGlkIjoic3BpZDovL2FjbWUvcmVzZWFyY2gtd29ya2VyLTA3IiwidGlkIjoidG50X2FjbWUiLCJ2IjoxfSwiaWF0IjoxNzcyMzIzMjAwLCJpc3MiOiJzZXNfcm9vdF8wMDAxIiwianRpIjoic2VzX2NoaWxkXzAwMDIiLCJuYmYiOjE3NzIzMjMyMDAsInNxbiI6MSwic3ViIjoic2VzX2NoaWxkXzAwMDIifQ.",
+      "opts": {},
+      "expect": {
+        "code": "HLM_1002",
+        "reason": "unsupported_alg"
+      },
+      "actual": {
+        "ok": false,
+        "code": "HLM_1002",
+        "reason": "unsupported_alg",
+        "detail": "alg=none",
+        "message": "HLM_1002 unsupported_alg: alg=none"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "alg-hs256-confusion",
+      "kind": "negative",
+      "description": "Attacker re-signs the passport with HMAC keyed by the public key.",
+      "passport": "eyJhbGciOiJIUzI1NiIsImtpZCI6ImVkMjU1MTk6T3NBVS1qSDdzNjd3Wk5fWSIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzI5MCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjo0LCJjb3N0IjoyNTAwMCwiZGVwdGgiOjEsInJlcSI6NTAwLCJ0aW4iOjMzNTU0NDMyLCJ0b3V0Ijo0MTk0MzA0LCJ3aWQiOjJ9LCJjYXBzIjpbImxsbS5pbmZlcmVuY2UudjEiLCJ2ZWN0b3Iuc2VhcmNoLnYxIl0sImRlcHRoIjoyLCJsbiI6W3siaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJzaWQiOiJhdF8wMDAxIn0seyJoIjoiWlRzajY0NGFGdkZxUzBSSTUtWWswY3lMdWplUXVjaDAwVGQtV0I2djdzRSIsInNpZCI6InNlc19yb290XzAwMDEifV0sIm5hbWUiOiJSZXNlYXJjaCBXb3JrZXIgMDciLCJwb2wiOnsiaWQiOiJwb2xfYWNtZV9kZWZhdWx0IiwidiI6N30sInByb2YiOiJsbG0uY2hhdC5kZWZhdWx0LnYxIiwicm9vdCI6eyJhdCI6ImF0XzAwMDEiLCJoIjoiN19XYmNFQ0dtM2wwbzU5dmVWYlBUME14Um1xYWdaYXFacDFoTk1zYW5MVSIsImlzcyI6Imh0dHBzOi8vaWRwLmFjbWUuZXhhbXBsZS8iLCJzdWIiOiJ1c3JfNDQ3MSJ9LCJzcGlkIjoic3BpZDovL2FjbWUvcmVzZWFyY2gtd29ya2VyLTA3IiwidGlkIjoidG50X2FjbWUiLCJ2IjoxfSwiaWF0IjoxNzcyMzIzMjAwLCJpc3MiOiJzZXNfcm9vdF8wMDAxIiwianRpIjoic2VzX2NoaWxkXzAwMDIiLCJuYmYiOjE3NzIzMjMyMDAsInNxbiI6MSwic3ViIjoic2VzX2NoaWxkXzAwMDIifQ.m_UX0Y3PmB6dmCLPasd4_VtZoBijCC0GmzHW9bCm-sU",
+      "opts": {},
+      "expect": {
+        "code": "HLM_1002",
+        "reason": "unsupported_alg"
+      },
+      "actual": {
+        "ok": false,
+        "code": "HLM_1002",
+        "reason": "unsupported_alg",
+        "detail": "alg=HS256",
+        "message": "HLM_1002 unsupported_alg: alg=HS256"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "typ-confusion",
+      "kind": "negative",
+      "description": "Valid agent passport presented where a different Hallmark token is expected.",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6T3NBVS1qSDdzNjd3Wk5fWSIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzI5MCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjo0LCJjb3N0IjoyNTAwMCwiZGVwdGgiOjEsInJlcSI6NTAwLCJ0aW4iOjMzNTU0NDMyLCJ0b3V0Ijo0MTk0MzA0LCJ3aWQiOjJ9LCJjYXBzIjpbImxsbS5pbmZlcmVuY2UudjEiLCJ2ZWN0b3Iuc2VhcmNoLnYxIl0sImRlcHRoIjoyLCJsbiI6W3siaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJzaWQiOiJhdF8wMDAxIn0seyJoIjoiWlRzajY0NGFGdkZxUzBSSTUtWWswY3lMdWplUXVjaDAwVGQtV0I2djdzRSIsInNpZCI6InNlc19yb290XzAwMDEifV0sIm5hbWUiOiJSZXNlYXJjaCBXb3JrZXIgMDciLCJwb2wiOnsiaWQiOiJwb2xfYWNtZV9kZWZhdWx0IiwidiI6N30sInByb2YiOiJsbG0uY2hhdC5kZWZhdWx0LnYxIiwicm9vdCI6eyJhdCI6ImF0XzAwMDEiLCJoIjoiN19XYmNFQ0dtM2wwbzU5dmVWYlBUME14Um1xYWdaYXFacDFoTk1zYW5MVSIsImlzcyI6Imh0dHBzOi8vaWRwLmFjbWUuZXhhbXBsZS8iLCJzdWIiOiJ1c3JfNDQ3MSJ9LCJzcGlkIjoic3BpZDovL2FjbWUvcmVzZWFyY2gtd29ya2VyLTA3IiwidGlkIjoidG50X2FjbWUiLCJ2IjoxfSwiaWF0IjoxNzcyMzIzMjAwLCJpc3MiOiJzZXNfcm9vdF8wMDAxIiwianRpIjoic2VzX2NoaWxkXzAwMDIiLCJuYmYiOjE3NzIzMjMyMDAsInNxbiI6MSwic3ViIjoic2VzX2NoaWxkXzAwMDIifQ.hGMyUi2gHcN28RshJeBClpKmxRdNpoR6ReiQC7sB7E5XYXqOkxEkIsogZWh5qh7P7Xl-DsJnnmD8S8Fvi_utDg",
+      "opts": {
+        "expectTyp": "hallmark+something-else"
+      },
+      "expect": {
+        "code": "HLM_1004",
+        "reason": "bad_type"
+      },
+      "actual": {
+        "ok": false,
+        "code": "HLM_1004",
+        "reason": "bad_type",
+        "detail": "typ=hallmark+agent-passport expected=hallmark+something-else",
+        "message": "HLM_1004 bad_type: typ=hallmark+agent-passport expected=hallmark+something-else"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "remote-key-resolution",
+      "kind": "negative",
+      "description": "jku header invites the gateway to fetch a key from an attacker URL.",
+      "passport": "eyJhbGciOiJFZERTQSIsImprdSI6Imh0dHBzOi8vZXZpbC5leGFtcGxlL2tleXMuanNvbiIsImtpZCI6ImVkMjU1MTk6T3NBVS1qSDdzNjd3Wk5fWSIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzI5MCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjo0LCJjb3N0IjoyNTAwMCwiZGVwdGgiOjEsInJlcSI6NTAwLCJ0aW4iOjMzNTU0NDMyLCJ0b3V0Ijo0MTk0MzA0LCJ3aWQiOjJ9LCJjYXBzIjpbImxsbS5pbmZlcmVuY2UudjEiLCJ2ZWN0b3Iuc2VhcmNoLnYxIl0sImRlcHRoIjoyLCJsbiI6W3siaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJzaWQiOiJhdF8wMDAxIn0seyJoIjoiWlRzajY0NGFGdkZxUzBSSTUtWWswY3lMdWplUXVjaDAwVGQtV0I2djdzRSIsInNpZCI6InNlc19yb290XzAwMDEifV0sIm5hbWUiOiJSZXNlYXJjaCBXb3JrZXIgMDciLCJwb2wiOnsiaWQiOiJwb2xfYWNtZV9kZWZhdWx0IiwidiI6N30sInByb2YiOiJsbG0uY2hhdC5kZWZhdWx0LnYxIiwicm9vdCI6eyJhdCI6ImF0XzAwMDEiLCJoIjoiN19XYmNFQ0dtM2wwbzU5dmVWYlBUME14Um1xYWdaYXFacDFoTk1zYW5MVSIsImlzcyI6Imh0dHBzOi8vaWRwLmFjbWUuZXhhbXBsZS8iLCJzdWIiOiJ1c3JfNDQ3MSJ9LCJzcGlkIjoic3BpZDovL2FjbWUvcmVzZWFyY2gtd29ya2VyLTA3IiwidGlkIjoidG50X2FjbWUiLCJ2IjoxfSwiaWF0IjoxNzcyMzIzMjAwLCJpc3MiOiJzZXNfcm9vdF8wMDAxIiwianRpIjoic2VzX2NoaWxkXzAwMDIiLCJuYmYiOjE3NzIzMjMyMDAsInNxbiI6MSwic3ViIjoic2VzX2NoaWxkXzAwMDIifQ.XwEujv-XQsOsWMCwSsYcGeI8oX8iFmq6xvFqv_BqPs3uz7xxYUnwgqXEXCi3oHFTNcBpSiYldEgnZL72RlDADg",
+      "opts": {},
+      "expect": {
+        "code": "HLM_1005",
+        "reason": "malformed"
+      },
+      "actual": {
+        "ok": false,
+        "code": "HLM_1005",
+        "reason": "malformed",
+        "detail": "remote key header jku is forbidden",
+        "message": "HLM_1005 malformed: remote key header jku is forbidden"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "unknown-kid",
+      "kind": "negative",
+      "description": "Passport signed by a key the gateway has never heard of.",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6dW1NNG1aaDdZNEw3Um5wbyIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzI5MCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjo0LCJjb3N0IjoyNTAwMCwiZGVwdGgiOjEsInJlcSI6NTAwLCJ0aW4iOjMzNTU0NDMyLCJ0b3V0Ijo0MTk0MzA0LCJ3aWQiOjJ9LCJjYXBzIjpbImxsbS5pbmZlcmVuY2UudjEiLCJ2ZWN0b3Iuc2VhcmNoLnYxIl0sImRlcHRoIjoyLCJsbiI6W3siaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJzaWQiOiJhdF8wMDAxIn0seyJoIjoiWlRzajY0NGFGdkZxUzBSSTUtWWswY3lMdWplUXVjaDAwVGQtV0I2djdzRSIsInNpZCI6InNlc19yb290XzAwMDEifV0sIm5hbWUiOiJSZXNlYXJjaCBXb3JrZXIgMDciLCJwb2wiOnsiaWQiOiJwb2xfYWNtZV9kZWZhdWx0IiwidiI6N30sInByb2YiOiJsbG0uY2hhdC5kZWZhdWx0LnYxIiwicm9vdCI6eyJhdCI6ImF0XzAwMDEiLCJoIjoiN19XYmNFQ0dtM2wwbzU5dmVWYlBUME14Um1xYWdaYXFacDFoTk1zYW5MVSIsImlzcyI6Imh0dHBzOi8vaWRwLmFjbWUuZXhhbXBsZS8iLCJzdWIiOiJ1c3JfNDQ3MSJ9LCJzcGlkIjoic3BpZDovL2FjbWUvcmVzZWFyY2gtd29ya2VyLTA3IiwidGlkIjoidG50X2FjbWUiLCJ2IjoxfSwiaWF0IjoxNzcyMzIzMjAwLCJpc3MiOiJzZXNfcm9vdF8wMDAxIiwianRpIjoic2VzX2NoaWxkXzAwMDIiLCJuYmYiOjE3NzIzMjMyMDAsInNxbiI6MSwic3ViIjoic2VzX2NoaWxkXzAwMDIifQ.5XCrwSiVqG1i1l0KGjJMLgd2ryFiS4hcDlA-5m1njsQrXQTfR9CCaxUnCDD2arDIEYfJzCvlnCwSS8scRC0vCw",
+      "opts": {},
+      "expect": {
+        "code": "HLM_1001",
+        "reason": "unknown_kid"
+      },
+      "actual": {
+        "ok": false,
+        "code": "HLM_1001",
+        "reason": "unknown_kid",
+        "detail": "no local key for kid=ed25519:umM4mZh7Y4L7Rnpo",
+        "message": "HLM_1001 unknown_kid: no local key for kid=ed25519:umM4mZh7Y4L7Rnpo"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "duplicate-json-member",
+      "kind": "negative",
+      "description": "Payload carries iss twice; JSON.parse would silently keep one.",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6T3NBVS1qSDdzNjd3Wk5fWSIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhenAiOiJ1c3JfNDQ3MSIsImFtciI6WyJhZ2VudF9kZWxlZ2F0aW9uIl0sImF1ZCI6Imh0dHBzOi8vaGFsbG1hcmsuZ3cuYWNtZS5leGFtcGxlLyIsImF6cCI6InVzcl80NDcxIiwiZXhwIjoxNzcyMzIzMjkwLCJobG0iOnsiYnVkZ2V0Ijp7ImNvbmMiOjQsImNvc3QiOjI1MDAwLCJkZXB0aCI6MSwicmVxIjo1MDAsInRpbiI6MzM1NTQ0MzIsInRvdXQiOjQxOTQzMDQsIndpZCI6Mn0sImNhcHMiOlsibGxtLmluZmVyZW5jZS52MSIsInZlY3Rvci5zZWFyY2gudjEiXSwiZGVwdGgiOjIsImxuIjpbeyJoIjoiN19XYmNFQ0dtM2wwbzU5dmVWYlBUME14Um1xYWdaYXFacDFoTk1zYW5MVSIsInNpZCI6ImF0XzAwMDEifSx7ImgiOiJaVHNqNjQ0YUZ2RnFTMFJJNS1ZazBjeUx1amVRdWNoMDBUZC1XQjZ2N3NFIiwic2lkIjoic2VzX3Jvb3RfMDAwMSJ9XSwibmFtZSI6IlJlc2VhcmNoIFdvcmtlciAwNyIsInBvbCI6eyJpZCI6InBvbF9hY21lX2RlZmF1bHQiLCJ2Ijo3fSwicHJvZiI6ImxsbS5jaGF0LmRlZmF1bHQudjEiLCJyb290Ijp7ImF0IjoiYXRfMDAwMSIsImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwiaXNzIjoiaHR0cHM6Ly9pZHAuYWNtZS5leGFtcGxlLyIsInN1YiI6InVzcl80NDcxIn0sInNwaWQiOiJzcGlkOi8vYWNtZS9yZXNlYXJjaC13b3JrZXItMDciLCJ0aWQiOiJ0bnRfYWNtZSIsInYiOjF9LCJpYXQiOjE3NzIzMjMyMDAsImlzcyI6InNlc19yb290XzAwMDEiLCJqdGkiOiJzZXNfY2hpbGRfMDAwMiIsIm5iZiI6MTc3MjMyMzIwMCwic3FuIjoxLCJzdWIiOiJzZXNfY2hpbGRfMDAwMiJ9.CeE7l7D-nzkyjH3j1qpOhgJVH43x39VhBB5C8NHTK0tv-fWS_y4pvSygg-u44AdIN5gi8nxJB96TBAdopqghBQ",
+      "opts": {},
+      "expect": {
+        "code": "HLM_1005",
+        "reason": "malformed"
+      },
+      "actual": {
+        "ok": false,
+        "code": "HLM_1005",
+        "reason": "malformed",
+        "detail": "duplicate payload members: azp",
+        "message": "HLM_1005 malformed: duplicate payload members: azp"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "non-canonical-payload",
+      "kind": "negative",
+      "description": "Validly signed, but members are not in JCS order -- two gateways would compute different seals.",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6T3NBVS1qSDdzNjd3Wk5fWSIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJzdWIiOiJ6enoiLCJpc3MiOiJhYWEifQ.k9hw5dBQ0DC9lyUxOHaafyJYD5_35MdXpARPcB9I4qtIq_3onAwyieb7HowaTNAg0kA3UUHQHsQzfWqosvgDBw",
+      "opts": {},
+      "expect": {
+        "code": "HLM_1005",
+        "reason": "malformed"
+      },
+      "actual": {
+        "ok": false,
+        "code": "HLM_1005",
+        "reason": "malformed",
+        "detail": "payload is not in canonical JCS form",
+        "message": "HLM_1005 malformed: payload is not in canonical JCS form"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "expired-passport",
+      "kind": "negative",
+      "description": "Issued an hour ago with a 60s window.",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6M2xnVTBTQTNHOUhYTmtiUCIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMxOTY2MCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjoyLCJjb3N0Ijo0MDAwLCJkZXB0aCI6MCwicmVxIjoyMDAsInRpbiI6ODM4ODYwOCwidG91dCI6MCwid2lkIjowfSwiY2FwcyI6WyJ2ZWN0b3Iuc2VhcmNoLnYxIl0sImRlcHRoIjoyLCJsbiI6W3siaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJzaWQiOiJhdF8wMDAxIn0seyJoIjoiWlRzajY0NGFGdkZxUzBSSTUtWWswY3lMdWplUXVjaDAwVGQtV0I2djdzRSIsInNpZCI6InNlc19yb290XzAwMDEifV0sIm5hbWUiOiJWZWN0b3IgSW5kZXhlciAwMSIsInBvbCI6eyJpZCI6InBvbF9hY21lX2RlZmF1bHQiLCJ2Ijo3fSwicHJvZiI6InZlYy5zZWFyY2guZGVmYXVsdC52MSIsInJvb3QiOnsiYXQiOiJhdF8wMDAxIiwiaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJpc3MiOiJodHRwczovL2lkcC5hY21lLmV4YW1wbGUvIiwic3ViIjoidXNyXzQ0NzEifSwic3BpZCI6InNwaWQ6Ly9hY21lL2luZGV4ZXItMDEiLCJ0aWQiOiJ0bnRfYWNtZSIsInYiOjF9LCJpYXQiOjE3NzIzMTk2MDAsImlzcyI6InNlc19yb290XzAwMDEiLCJqdGkiOiJzZXNfY2hpbGRfMDAwNiIsIm5iZiI6MTc3MjMxOTYwMCwic3FuIjozLCJzdWIiOiJzZXNfY2hpbGRfMDAwNiJ9.wXXAIhet2PmRyXuIjXWmNncTiXWId9Hn45C2GhtcxvZeBdjmjr_q9NlBbsyqbRd28czvkBlG-hvILjHT7LtQCw",
+      "opts": {},
+      "expect": {
+        "code": "HLM_2001",
+        "reason": "expired"
+      },
+      "actual": {
+        "ok": false,
+        "code": "HLM_2001",
+        "reason": "expired",
+        "detail": "exp=1772319660 now=1772323200",
+        "message": "HLM_2001 expired: exp=1772319660 now=1772323200"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "ttl-exceeds-policy-ceiling",
+      "kind": "negative",
+      "description": "Validly minted 24h passport: revocation would be cosmetic.",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6M2xnVTBTQTNHOUhYTmtiUCIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjQwOTYwMCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjoyLCJjb3N0Ijo0MDAwLCJkZXB0aCI6MCwicmVxIjoyMDAsInRpbiI6ODM4ODYwOCwidG91dCI6MCwid2lkIjowfSwiY2FwcyI6WyJ2ZWN0b3Iuc2VhcmNoLnYxIl0sImRlcHRoIjoyLCJsbiI6W3siaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJzaWQiOiJhdF8wMDAxIn0seyJoIjoiWlRzajY0NGFGdkZxUzBSSTUtWWswY3lMdWplUXVjaDAwVGQtV0I2djdzRSIsInNpZCI6InNlc19yb290XzAwMDEifV0sIm5hbWUiOiJWZWN0b3IgSW5kZXhlciAwMSIsInBvbCI6eyJpZCI6InBvbF9hY21lX2RlZmF1bHQiLCJ2Ijo3fSwicHJvZiI6InZlYy5zZWFyY2guZGVmYXVsdC52MSIsInJvb3QiOnsiYXQiOiJhdF8wMDAxIiwiaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJpc3MiOiJodHRwczovL2lkcC5hY21lLmV4YW1wbGUvIiwic3ViIjoidXNyXzQ0NzEifSwic3BpZCI6InNwaWQ6Ly9hY21lL2luZGV4ZXItMDEiLCJ0aWQiOiJ0bnRfYWNtZSIsInYiOjF9LCJpYXQiOjE3NzIzMjMyMDAsImlzcyI6InNlc19yb290XzAwMDEiLCJqdGkiOiJzZXNfY2hpbGRfMDAwNyIsIm5iZiI6MTc3MjMyMzIwMCwic3FuIjo0LCJzdWIiOiJzZXNfY2hpbGRfMDAwNyJ9.7yxbXba1hkv6R6DCgW-e4DVBE4k9QEubNVrgJOt1jJsvzsRv5kQ5mkbzsBJ1whxgKAb8yRDuRMoIl9MegdYICQ",
+      "opts": {},
+      "expect": {
+        "code": "HLM_2003",
+        "reason": "ttl_exceeds_max"
+      },
+      "actual": {
+        "ok": false,
+        "code": "HLM_2003",
+        "reason": "ttl_exceeds_max",
+        "detail": "ttl=86400 max=120",
+        "message": "HLM_2003 ttl_exceeds_max: ttl=86400 max=120"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "audience-mismatch",
+      "kind": "negative",
+      "description": "Passport minted for the gateway of a partner tenant.",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6M2xnVTBTQTNHOUhYTmtiUCIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LnBhcnRuZXIuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzI2MCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjoyLCJjb3N0Ijo0MDAwLCJkZXB0aCI6MCwicmVxIjoyMDAsInRpbiI6ODM4ODYwOCwidG91dCI6MCwid2lkIjowfSwiY2FwcyI6WyJ2ZWN0b3Iuc2VhcmNoLnYxIl0sImRlcHRoIjoyLCJsbiI6W3siaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJzaWQiOiJhdF8wMDAxIn0seyJoIjoiWlRzajY0NGFGdkZxUzBSSTUtWWswY3lMdWplUXVjaDAwVGQtV0I2djdzRSIsInNpZCI6InNlc19yb290XzAwMDEifV0sIm5hbWUiOiJWZWN0b3IgSW5kZXhlciAwMSIsInBvbCI6eyJpZCI6InBvbF9hY21lX2RlZmF1bHQiLCJ2Ijo3fSwicHJvZiI6InZlYy5zZWFyY2guZGVmYXVsdC52MSIsInJvb3QiOnsiYXQiOiJhdF8wMDAxIiwiaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJpc3MiOiJodHRwczovL2lkcC5hY21lLmV4YW1wbGUvIiwic3ViIjoidXNyXzQ0NzEifSwic3BpZCI6InNwaWQ6Ly9hY21lL2luZGV4ZXItMDEiLCJ0aWQiOiJ0bnRfYWNtZSIsInYiOjF9LCJpYXQiOjE3NzIzMjMyMDAsImlzcyI6InNlc19yb290XzAwMDEiLCJqdGkiOiJzZXNfY2hpbGRfMDAwOCIsIm5iZiI6MTc3MjMyMzIwMCwic3FuIjo1LCJzdWIiOiJzZXNfY2hpbGRfMDAwOCJ9.ptfo7GxHWzt0udqJj2IFPUvJFr2hc-JUQrWMocCj5ytj_uj7l2_FajrCOGYbANzDd6pRHCw-XfS0ApTXCIIYBg",
+      "opts": {},
+      "expect": {
+        "code": "HLM_3001",
+        "reason": "audience_mismatch"
+      },
+      "actual": {
+        "ok": false,
+        "code": "HLM_3001",
+        "reason": "audience_mismatch",
+        "detail": "aud=\"https://hallmark.gw.partner.example/\" gateway=https://hallmark.gw.acme.example/",
+        "message": "HLM_3001 audience_mismatch: aud=\"https://hallmark.gw.partner.example/\" gateway=https://hallmark.gw.acme.example/"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "tenant-mismatch",
+      "kind": "negative",
+      "description": "Passport claims a tenant the gateway does not serve.",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6M2xnVTBTQTNHOUhYTmtiUCIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzI2MCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjoyLCJjb3N0Ijo0MDAwLCJkZXB0aCI6MCwicmVxIjoyMDAsInRpbiI6ODM4ODYwOCwidG91dCI6MCwid2lkIjowfSwiY2FwcyI6WyJ2ZWN0b3Iuc2VhcmNoLnYxIl0sImRlcHRoIjoyLCJsbiI6W3siaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJzaWQiOiJhdF8wMDAxIn0seyJoIjoiWlRzajY0NGFGdkZxUzBSSTUtWWswY3lMdWplUXVjaDAwVGQtV0I2djdzRSIsInNpZCI6InNlc19yb290XzAwMDEifV0sIm5hbWUiOiJWZWN0b3IgSW5kZXhlciAwMSIsInBvbCI6eyJpZCI6InBvbF9hY21lX2RlZmF1bHQiLCJ2Ijo3fSwicHJvZiI6InZlYy5zZWFyY2guZGVmYXVsdC52MSIsInJvb3QiOnsiYXQiOiJhdF8wMDAxIiwiaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJpc3MiOiJodHRwczovL2lkcC5hY21lLmV4YW1wbGUvIiwic3ViIjoidXNyXzQ0NzEifSwic3BpZCI6InNwaWQ6Ly9hY21lL2luZGV4ZXItMDEiLCJ0aWQiOiJ0bnRfcGFydG5lciIsInYiOjF9LCJpYXQiOjE3NzIzMjMyMDAsImlzcyI6InNlc19yb290XzAwMDEiLCJqdGkiOiJzZXNfY2hpbGRfMDAwOSIsIm5iZiI6MTc3MjMyMzIwMCwic3FuIjo2LCJzdWIiOiJzZXNfY2hpbGRfMDAwOSJ9.BkilZUidCezNOEzLyAcl8y7RNUVe8uklAl6QRuYRXpjrvaAD3vxNBsGEM4AXVyknY4ppDv6iZjQGY2b9FZFcAw",
+      "opts": {},
+      "expect": {
+        "code": "HLM_3002",
+        "reason": "tenant_mismatch"
+      },
+      "actual": {
+        "ok": false,
+        "code": "HLM_3002",
+        "reason": "tenant_mismatch",
+        "detail": "tid=tnt_partner gateway tenant=tnt_acme",
+        "message": "HLM_3002 tenant_mismatch: tid=tnt_partner gateway tenant=tnt_acme"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "pop-required-but-absent",
+      "kind": "negative",
+      "description": "cnf.jkt present, no client cert and no request signature supplied.",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6M2xnVTBTQTNHOUhYTmtiUCIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImNuZiI6eyJqa3QiOiJPc0FVLWpIN3M2N3daTl9ZaUZuX0NsZUQ5UmRKTkYwU2dkNDEtOVJmRFVzIn0sImV4cCI6MTc3MjMyMzI2MCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjoyLCJjb3N0Ijo0MDAwLCJkZXB0aCI6MCwicmVxIjoyMDAsInRpbiI6ODM4ODYwOCwidG91dCI6MCwid2lkIjowfSwiY2FwcyI6WyJ2ZWN0b3Iuc2VhcmNoLnYxIl0sImRlcHRoIjoyLCJsbiI6W3siaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJzaWQiOiJhdF8wMDAxIn0seyJoIjoiWlRzajY0NGFGdkZxUzBSSTUtWWswY3lMdWplUXVjaDAwVGQtV0I2djdzRSIsInNpZCI6InNlc19yb290XzAwMDEifV0sIm5hbWUiOiJWZWN0b3IgSW5kZXhlciAwMSIsInBvbCI6eyJpZCI6InBvbF9hY21lX2RlZmF1bHQiLCJ2Ijo3fSwicHJvZiI6InZlYy5zZWFyY2guZGVmYXVsdC52MSIsInJvb3QiOnsiYXQiOiJhdF8wMDAxIiwiaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJpc3MiOiJodHRwczovL2lkcC5hY21lLmV4YW1wbGUvIiwic3ViIjoidXNyXzQ0NzEifSwic3BpZCI6InNwaWQ6Ly9hY21lL2luZGV4ZXItMDEiLCJ0aWQiOiJ0bnRfYWNtZSIsInYiOjF9LCJpYXQiOjE3NzIzMjMyMDAsImlzcyI6InNlc19yb290XzAwMDEiLCJqdGkiOiJzZXNfcG9wMl8wMDEwIiwibmJmIjoxNzcyMzIzMjAwLCJzcW4iOjEsInN1YiI6InNlc19wb3AyXzAwMTAifQ.S7yUXMp-TWu4KJeoov_RdBlVTGtXgCIhhhHX1fnJNkedrEQzVVYEaQGB-DyR6gw0x1XZAtspM8mIqxcZqX-nAg",
+      "opts": {},
+      "expect": {
+        "code": "HLM_8001",
+        "reason": "pop_missing"
+      },
+      "actual": {
+        "ok": false,
+        "code": "HLM_8001",
+        "reason": "pop_missing",
+        "detail": "cnf present but no proof of possession supplied",
+        "message": "HLM_8001 pop_missing: cnf present but no proof of possession supplied"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "pop-key-mismatch",
+      "kind": "negative",
+      "description": "Client certificate is not the key the passport is bound to.",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6M2xnVTBTQTNHOUhYTmtiUCIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImNuZiI6eyJqa3QiOiJPc0FVLWpIN3M2N3daTl9ZaUZuX0NsZUQ5UmRKTkYwU2dkNDEtOVJmRFVzIn0sImV4cCI6MTc3MjMyMzI2MCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjoyLCJjb3N0Ijo0MDAwLCJkZXB0aCI6MCwicmVxIjoyMDAsInRpbiI6ODM4ODYwOCwidG91dCI6MCwid2lkIjowfSwiY2FwcyI6WyJ2ZWN0b3Iuc2VhcmNoLnYxIl0sImRlcHRoIjoyLCJsbiI6W3siaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJzaWQiOiJhdF8wMDAxIn0seyJoIjoiWlRzajY0NGFGdkZxUzBSSTUtWWswY3lMdWplUXVjaDAwVGQtV0I2djdzRSIsInNpZCI6InNlc19yb290XzAwMDEifV0sIm5hbWUiOiJWZWN0b3IgSW5kZXhlciAwMSIsInBvbCI6eyJpZCI6InBvbF9hY21lX2RlZmF1bHQiLCJ2Ijo3fSwicHJvZiI6InZlYy5zZWFyY2guZGVmYXVsdC52MSIsInJvb3QiOnsiYXQiOiJhdF8wMDAxIiwiaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJpc3MiOiJodHRwczovL2lkcC5hY21lLmV4YW1wbGUvIiwic3ViIjoidXNyXzQ0NzEifSwic3BpZCI6InNwaWQ6Ly9hY21lL2luZGV4ZXItMDEiLCJ0aWQiOiJ0bnRfYWNtZSIsInYiOjF9LCJpYXQiOjE3NzIzMjMyMDAsImlzcyI6InNlc19yb290XzAwMDEiLCJqdGkiOiJzZXNfcG9wMl8wMDEwIiwibmJmIjoxNzcyMzIzMjAwLCJzcW4iOjEsInN1YiI6InNlc19wb3AyXzAwMTAifQ.S7yUXMp-TWu4KJeoov_RdBlVTGtXgCIhhhHX1fnJNkedrEQzVVYEaQGB-DyR6gw0x1XZAtspM8mIqxcZqX-nAg",
+      "opts": {
+        "tlsCertJkt": "3lgU0SA3G9HXNkbPARgnBuerZkz4pAMFiAA5DuQlShk"
+      },
+      "expect": {
+        "code": "HLM_8002",
+        "reason": "pop_key_mismatch"
+      },
+      "actual": {
+        "ok": false,
+        "code": "HLM_8002",
+        "reason": "pop_key_mismatch",
+        "detail": "client certificate is not cnf.jkt",
+        "message": "HLM_8002 pop_key_mismatch: client certificate is not cnf.jkt"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "rogue-claims-others-attestation",
+      "kind": "negative",
+      "description": "Attacker replays a real attestation against its own key. cnf.jkt says otherwise.",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6NUJkUE93dFU0YnRMbm5PRyIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzMyMCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjozMiwiY29zdCI6NTAwMDAwLCJkZXB0aCI6NCwicmVxIjo1MDAwLCJ0aW4iOjUzNjg3MDkxMiwidG91dCI6MjY4NDM1NDUsIndpZCI6OH0sImNhcHMiOlsiY29kZS5leGVjLnNhbmRib3gudjEiLCJsbG0uaW5mZXJlbmNlLnYxIiwidmVjdG9yLnNlYXJjaC52MSJdLCJkZXB0aCI6MSwibG4iOlt7ImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwic2lkIjoiYXRfMDAwMSJ9XSwibmFtZSI6IlJlc2VhcmNoIE9yY2hlc3RyYXRvciIsInBvbCI6eyJpZCI6InBvbF9hY21lX2RlZmF1bHQiLCJ2Ijo3fSwicHJvZiI6ImxsbS5jaGF0LmRlZmF1bHQudjEiLCJyb290Ijp7ImF0IjoiYXRfMDAwMSIsImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwiaXNzIjoiaHR0cHM6Ly9pZHAuYWNtZS5leGFtcGxlLyIsInN1YiI6InVzcl80NDcxIn0sInNwaWQiOiJzcGlkOi8vYWNtZS9yZXNlYXJjaC1vcmNoZXN0cmF0b3IiLCJ0aWQiOiJ0bnRfYWNtZSIsInYiOjF9LCJpYXQiOjE3NzIzMjMyMDAsImlzcyI6InVybjpoYWxsbWFyazppZHA6dG50X2FjbWUiLCJqdGkiOiJzZXNfZm9yZ2VyXzAwMTEiLCJuYmYiOjE3NzIzMjMyMDAsInNxbiI6MSwic3ViIjoic2VzX2Zvcmdlcl8wMDExIn0.Ioub1v0bPtnL3sDSm5OZvdapJxzdVLtuqiiHIFIAVrnk2fHXezN7udJdSb8TcItCRyMTyZ0hUjYHgau1RjUjDg",
+      "opts": {},
+      "expect": {
+        "code": "HLM_4002",
+        "reason": "lineage_root_mismatch"
+      },
+      "actual": {
+        "ok": false,
+        "code": "HLM_4002",
+        "reason": "lineage_root_mismatch",
+        "detail": "attestation cnf.jkt does not bind the chain root signer key",
+        "message": "HLM_4002 lineage_root_mismatch: attestation cnf.jkt does not bind the chain root signer key"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "human-swapped-mid-chain",
+      "kind": "negative",
+      "description": "Sub-agent re-points lineage at a different human operator. Parent presented, so L6 is live.",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6M2xnVTBTQTNHOUhYTmtiUCIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfOTk5OSIsImV4cCI6MTc3MjMyMzI2MCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjoyLCJjb3N0Ijo0MDAwLCJkZXB0aCI6MCwicmVxIjoyMDAsInRpbiI6ODM4ODYwOCwidG91dCI6MCwid2lkIjowfSwiY2FwcyI6WyJ2ZWN0b3Iuc2VhcmNoLnYxIl0sImRlcHRoIjoyLCJsbiI6W3siaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJzaWQiOiJhdF8wMDAxIn0seyJoIjoiWlRzajY0NGFGdkZxUzBSSTUtWWswY3lMdWplUXVjaDAwVGQtV0I2djdzRSIsInNpZCI6InNlc19yb290XzAwMDEifV0sIm5hbWUiOiJWZWN0b3IgSW5kZXhlciAwMSIsInBvbCI6eyJpZCI6InBvbF9hY21lX2RlZmF1bHQiLCJ2Ijo3fSwicHJvZiI6InZlYy5zZWFyY2guZGVmYXVsdC52MSIsInJvb3QiOnsiYXQiOiJhdF8wMDAxIiwiaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJpc3MiOiJodHRwczovL2lkcC5hY21lLmV4YW1wbGUvIiwic3ViIjoidXNyXzk5OTkifSwic3BpZCI6InNwaWQ6Ly9hY21lL2luZGV4ZXItMDEiLCJ0aWQiOiJ0bnRfYWNtZSIsInYiOjF9LCJpYXQiOjE3NzIzMjMyMDAsImlzcyI6InNlc19yb290XzAwMDEiLCJqdGkiOiJzZXNfY2hpbGRfMDAxMiIsIm5iZiI6MTc3MjMyMzIwMCwic3FuIjo3LCJzdWIiOiJzZXNfY2hpbGRfMDAxMiJ9.NkNI7wCpKpJN2-NIoUca7RN_oy0dwiE7y9R7A598KqtxtZiUUkF4LFK2xV6C-7picen-s8CKJydi2bvZT0imCw",
+      "opts": {
+        "parentJws": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6dFNKazFzUXRBbENOZ1VwOCIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzMyMCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjozMiwiY29zdCI6NTAwMDAwLCJkZXB0aCI6NCwicmVxIjo1MDAwLCJ0aW4iOjUzNjg3MDkxMiwidG91dCI6MjY4NDM1NDUsIndpZCI6OH0sImNhcHMiOlsiY29kZS5leGVjLnNhbmRib3gudjEiLCJsbG0uaW5mZXJlbmNlLnYxIiwidmVjdG9yLnNlYXJjaC52MSJdLCJkZXB0aCI6MSwibG4iOlt7ImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwic2lkIjoiYXRfMDAwMSJ9XSwibmFtZSI6IlJlc2VhcmNoIE9yY2hlc3RyYXRvciIsInBvbCI6eyJpZCI6InBvbF9hY21lX2RlZmF1bHQiLCJ2Ijo3fSwicHJvZiI6ImxsbS5jaGF0LmRlZmF1bHQudjEiLCJyb290Ijp7ImF0IjoiYXRfMDAwMSIsImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwiaXNzIjoiaHR0cHM6Ly9pZHAuYWNtZS5leGFtcGxlLyIsInN1YiI6InVzcl80NDcxIn0sInNwaWQiOiJzcGlkOi8vYWNtZS9yZXNlYXJjaC1vcmNoZXN0cmF0b3IiLCJ0aWQiOiJ0bnRfYWNtZSIsInYiOjF9LCJpYXQiOjE3NzIzMjMyMDAsImlzcyI6InVybjpoYWxsbWFyazppZHA6dG50X2FjbWUiLCJqdGkiOiJzZXNfcm9vdF8wMDAxIiwibmJmIjoxNzcyMzIzMjAwLCJzcW4iOjEsInN1YiI6InNlc19yb290XzAwMDEifQ.535Nv5r3a40japOjK7Rw13biqq9yaYFMSQMrJXRfoWDRNSDMLyoC2GdT7xdicmAufYgPH2tmKN9j7mfsK6btDA"
+      },
+      "expect": {
+        "code": "HLM_4006",
+        "reason": "lineage_human_changed"
+      },
+      "actual": {
+        "ok": false,
+        "code": "HLM_4006",
+        "reason": "lineage_human_changed",
+        "detail": "azp differs from the attested human",
+        "message": "HLM_4006 lineage_human_changed: azp differs from the attested human"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "budget-inflated-past-parent",
+      "kind": "negative",
+      "description": "Child asks for 40000 requests where the parent holds 5000.",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6M2xnVTBTQTNHOUhYTmtiUCIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzI2MCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjoyLCJjb3N0Ijo0MDAwLCJkZXB0aCI6MCwicmVxIjo0MDAwMCwidGluIjo4Mzg4NjA4LCJ0b3V0IjowLCJ3aWQiOjB9LCJjYXBzIjpbInZlY3Rvci5zZWFyY2gudjEiXSwiZGVwdGgiOjIsImxuIjpbeyJoIjoiN19XYmNFQ0dtM2wwbzU5dmVWYlBUME14Um1xYWdaYXFacDFoTk1zYW5MVSIsInNpZCI6ImF0XzAwMDEifSx7ImgiOiJaVHNqNjQ0YUZ2RnFTMFJJNS1ZazBjeUx1amVRdWNoMDBUZC1XQjZ2N3NFIiwic2lkIjoic2VzX3Jvb3RfMDAwMSJ9XSwibmFtZSI6IlZlY3RvciBJbmRleGVyIDAxIiwicG9sIjp7ImlkIjoicG9sX2FjbWVfZGVmYXVsdCIsInYiOjd9LCJwcm9mIjoidmVjLnNlYXJjaC5kZWZhdWx0LnYxIiwicm9vdCI6eyJhdCI6ImF0XzAwMDEiLCJoIjoiN19XYmNFQ0dtM2wwbzU5dmVWYlBUME14Um1xYWdaYXFacDFoTk1zYW5MVSIsImlzcyI6Imh0dHBzOi8vaWRwLmFjbWUuZXhhbXBsZS8iLCJzdWIiOiJ1c3JfNDQ3MSJ9LCJzcGlkIjoic3BpZDovL2FjbWUvaW5kZXhlci0wMSIsInRpZCI6InRudF9hY21lIiwidiI6MX0sImlhdCI6MTc3MjMyMzIwMCwiaXNzIjoic2VzX3Jvb3RfMDAwMSIsImp0aSI6InNlc19jaGlsZF8wMDEzIiwibmJmIjoxNzcyMzIzMjAwLCJzcW4iOjgsInN1YiI6InNlc19jaGlsZF8wMDEzIn0.QcAANlV36TgtCaM9K16ThwwSL218_oJ6kgoMpx3-4jDawZZLKlp7I_981tDlSH74MRxrYaoy4zVVrrw_WnFVDA",
+      "opts": {
+        "parentJws": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6dFNKazFzUXRBbENOZ1VwOCIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzMyMCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjozMiwiY29zdCI6NTAwMDAwLCJkZXB0aCI6NCwicmVxIjo1MDAwLCJ0aW4iOjUzNjg3MDkxMiwidG91dCI6MjY4NDM1NDUsIndpZCI6OH0sImNhcHMiOlsiY29kZS5leGVjLnNhbmRib3gudjEiLCJsbG0uaW5mZXJlbmNlLnYxIiwidmVjdG9yLnNlYXJjaC52MSJdLCJkZXB0aCI6MSwibG4iOlt7ImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwic2lkIjoiYXRfMDAwMSJ9XSwibmFtZSI6IlJlc2VhcmNoIE9yY2hlc3RyYXRvciIsInBvbCI6eyJpZCI6InBvbF9hY21lX2RlZmF1bHQiLCJ2Ijo3fSwicHJvZiI6ImxsbS5jaGF0LmRlZmF1bHQudjEiLCJyb290Ijp7ImF0IjoiYXRfMDAwMSIsImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwiaXNzIjoiaHR0cHM6Ly9pZHAuYWNtZS5leGFtcGxlLyIsInN1YiI6InVzcl80NDcxIn0sInNwaWQiOiJzcGlkOi8vYWNtZS9yZXNlYXJjaC1vcmNoZXN0cmF0b3IiLCJ0aWQiOiJ0bnRfYWNtZSIsInYiOjF9LCJpYXQiOjE3NzIzMjMyMDAsImlzcyI6InVybjpoYWxsbWFyazppZHA6dG50X2FjbWUiLCJqdGkiOiJzZXNfcm9vdF8wMDAxIiwibmJmIjoxNzcyMzIzMjAwLCJzcW4iOjEsInN1YiI6InNlc19yb290XzAwMDEifQ.535Nv5r3a40japOjK7Rw13biqq9yaYFMSQMrJXRfoWDRNSDMLyoC2GdT7xdicmAufYgPH2tmKN9j7mfsK6btDA"
+      },
+      "expect": {
+        "code": "HLM_5001",
+        "reason": "budget_inflated"
+      },
+      "actual": {
+        "ok": false,
+        "code": "HLM_5001",
+        "reason": "budget_inflated",
+        "detail": "req: 40000 > parent 5000",
+        "message": "HLM_5001 budget_inflated: req: 40000 > parent 5000"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "capability-widened",
+      "kind": "negative",
+      "description": "Child claims code.exec.sandbox.v1, a capability its real parent never held.",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6M2xnVTBTQTNHOUhYTmtiUCIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzI2MCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjoyLCJjb3N0Ijo0MDAwLCJkZXB0aCI6MCwicmVxIjoyMDAsInRpbiI6ODM4ODYwOCwidG91dCI6MCwid2lkIjowfSwiY2FwcyI6WyJjb2RlLmV4ZWMuc2FuZGJveC52MSIsInZlY3Rvci5zZWFyY2gudjEiXSwiZGVwdGgiOjMsImxuIjpbeyJoIjoiN19XYmNFQ0dtM2wwbzU5dmVWYlBUME14Um1xYWdaYXFacDFoTk1zYW5MVSIsInNpZCI6ImF0XzAwMDEifSx7ImgiOiJaVHNqNjQ0YUZ2RnFTMFJJNS1ZazBjeUx1amVRdWNoMDBUZC1XQjZ2N3NFIiwic2lkIjoic2VzX3Jvb3RfMDAwMSJ9LHsiaCI6IlhaUi1kM3p5eVJzb1YxY21wejBiSnZBZnVHSXQ5YkVuOTFFRTRlQWxEYVkiLCJzaWQiOiJzZXNfY2hpbGRfMDAwMiJ9XSwibmFtZSI6IlZlY3RvciBJbmRleGVyIDAxIiwicG9sIjp7ImlkIjoicG9sX2FjbWVfZGVmYXVsdCIsInYiOjd9LCJwcm9mIjoibGxtLmNoYXQuZGVmYXVsdC52MSIsInJvb3QiOnsiYXQiOiJhdF8wMDAxIiwiaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJpc3MiOiJodHRwczovL2lkcC5hY21lLmV4YW1wbGUvIiwic3ViIjoidXNyXzQ0NzEifSwic3BpZCI6InNwaWQ6Ly9hY21lL2luZGV4ZXItMDEiLCJ0aWQiOiJ0bnRfYWNtZSIsInYiOjF9LCJpYXQiOjE3NzIzMjMyMDAsImlzcyI6InNlc19jaGlsZF8wMDAyIiwianRpIjoic2VzX2NoaWxkXzAwMTQiLCJuYmYiOjE3NzIzMjMyMDAsInNxbiI6OSwic3ViIjoic2VzX2NoaWxkXzAwMTQifQ.H39HIABbARPcVJBpttGx7T1LuMgUYfvWp7HoC7jo6cqQ2qtEhyID1jsJ3yOLcJxc99KdNRjpF4xhb3EnK1_qAQ",
+      "opts": {
+        "parentJws": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6T3NBVS1qSDdzNjd3Wk5fWSIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzI5MCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjo0LCJjb3N0IjoyNTAwMCwiZGVwdGgiOjEsInJlcSI6NTAwLCJ0aW4iOjMzNTU0NDMyLCJ0b3V0Ijo0MTk0MzA0LCJ3aWQiOjJ9LCJjYXBzIjpbImxsbS5pbmZlcmVuY2UudjEiLCJ2ZWN0b3Iuc2VhcmNoLnYxIl0sImRlcHRoIjoyLCJsbiI6W3siaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJzaWQiOiJhdF8wMDAxIn0seyJoIjoiWlRzajY0NGFGdkZxUzBSSTUtWWswY3lMdWplUXVjaDAwVGQtV0I2djdzRSIsInNpZCI6InNlc19yb290XzAwMDEifV0sIm5hbWUiOiJSZXNlYXJjaCBXb3JrZXIgMDciLCJwb2wiOnsiaWQiOiJwb2xfYWNtZV9kZWZhdWx0IiwidiI6N30sInByb2YiOiJsbG0uY2hhdC5kZWZhdWx0LnYxIiwicm9vdCI6eyJhdCI6ImF0XzAwMDEiLCJoIjoiN19XYmNFQ0dtM2wwbzU5dmVWYlBUME14Um1xYWdaYXFacDFoTk1zYW5MVSIsImlzcyI6Imh0dHBzOi8vaWRwLmFjbWUuZXhhbXBsZS8iLCJzdWIiOiJ1c3JfNDQ3MSJ9LCJzcGlkIjoic3BpZDovL2FjbWUvcmVzZWFyY2gtd29ya2VyLTA3IiwidGlkIjoidG50X2FjbWUiLCJ2IjoxfSwiaWF0IjoxNzcyMzIzMjAwLCJpc3MiOiJzZXNfcm9vdF8wMDAxIiwianRpIjoic2VzX2NoaWxkXzAwMDIiLCJuYmYiOjE3NzIzMjMyMDAsInNxbiI6MSwic3ViIjoic2VzX2NoaWxkXzAwMDIifQ.hGMyUi2gHcN28RshJeBClpKmxRdNpoR6ReiQC7sB7E5XYXqOkxEkIsogZWh5qh7P7Xl-DsJnnmD8S8Fvi_utDg"
+      },
+      "expect": {
+        "code": "HLM_4012",
+        "reason": "profile_not_narrowed"
+      },
+      "actual": {
+        "ok": false,
+        "code": "HLM_4012",
+        "reason": "profile_not_narrowed",
+        "detail": "capability code.exec.sandbox.v1 not held by parent",
+        "message": "HLM_4012 profile_not_narrowed: capability code.exec.sandbox.v1 not held by parent"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "audience-widened-past-parent",
+      "kind": "negative",
+      "description": "Child adds a second audience the parent was not scoped to.",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6M2xnVTBTQTNHOUhYTmtiUCIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOlsiaHR0cHM6Ly9oYWxsbWFyay5ndy5hY21lLmV4YW1wbGUvIiwiaHR0cHM6Ly9oYWxsbWFyay5ndy5wYXJ0bmVyLmV4YW1wbGUvIl0sImF6cCI6InVzcl80NDcxIiwiZXhwIjoxNzcyMzIzMjYwLCJobG0iOnsiYnVkZ2V0Ijp7ImNvbmMiOjIsImNvc3QiOjQwMDAsImRlcHRoIjowLCJyZXEiOjIwMCwidGluIjo4Mzg4NjA4LCJ0b3V0IjowLCJ3aWQiOjB9LCJjYXBzIjpbInZlY3Rvci5zZWFyY2gudjEiXSwiZGVwdGgiOjIsImxuIjpbeyJoIjoiN19XYmNFQ0dtM2wwbzU5dmVWYlBUME14Um1xYWdaYXFacDFoTk1zYW5MVSIsInNpZCI6ImF0XzAwMDEifSx7ImgiOiJaVHNqNjQ0YUZ2RnFTMFJJNS1ZazBjeUx1amVRdWNoMDBUZC1XQjZ2N3NFIiwic2lkIjoic2VzX3Jvb3RfMDAwMSJ9XSwibmFtZSI6IlZlY3RvciBJbmRleGVyIDAxIiwicG9sIjp7ImlkIjoicG9sX2FjbWVfZGVmYXVsdCIsInYiOjd9LCJwcm9mIjoidmVjLnNlYXJjaC5kZWZhdWx0LnYxIiwicm9vdCI6eyJhdCI6ImF0XzAwMDEiLCJoIjoiN19XYmNFQ0dtM2wwbzU5dmVWYlBUME14Um1xYWdaYXFacDFoTk1zYW5MVSIsImlzcyI6Imh0dHBzOi8vaWRwLmFjbWUuZXhhbXBsZS8iLCJzdWIiOiJ1c3JfNDQ3MSJ9LCJzcGlkIjoic3BpZDovL2FjbWUvaW5kZXhlci0wMSIsInRpZCI6InRudF9hY21lIiwidiI6MX0sImlhdCI6MTc3MjMyMzIwMCwiaXNzIjoic2VzX3Jvb3RfMDAwMSIsImp0aSI6InNlc19jaGlsZF8wMDE1IiwibmJmIjoxNzcyMzIzMjAwLCJzcW4iOjEwLCJzdWIiOiJzZXNfY2hpbGRfMDAxNSJ9.Flh9JCbNAiU-WXaJx4VPhXj385arAgP9TMcLp_NCwO2NAEbM4iyN3phgotLmWMtCGgAO4CvOfsy8HsOmUFsyAA",
+      "opts": {
+        "parentJws": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6dFNKazFzUXRBbENOZ1VwOCIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzMyMCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjozMiwiY29zdCI6NTAwMDAwLCJkZXB0aCI6NCwicmVxIjo1MDAwLCJ0aW4iOjUzNjg3MDkxMiwidG91dCI6MjY4NDM1NDUsIndpZCI6OH0sImNhcHMiOlsiY29kZS5leGVjLnNhbmRib3gudjEiLCJsbG0uaW5mZXJlbmNlLnYxIiwidmVjdG9yLnNlYXJjaC52MSJdLCJkZXB0aCI6MSwibG4iOlt7ImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwic2lkIjoiYXRfMDAwMSJ9XSwibmFtZSI6IlJlc2VhcmNoIE9yY2hlc3RyYXRvciIsInBvbCI6eyJpZCI6InBvbF9hY21lX2RlZmF1bHQiLCJ2Ijo3fSwicHJvZiI6ImxsbS5jaGF0LmRlZmF1bHQudjEiLCJyb290Ijp7ImF0IjoiYXRfMDAwMSIsImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwiaXNzIjoiaHR0cHM6Ly9pZHAuYWNtZS5leGFtcGxlLyIsInN1YiI6InVzcl80NDcxIn0sInNwaWQiOiJzcGlkOi8vYWNtZS9yZXNlYXJjaC1vcmNoZXN0cmF0b3IiLCJ0aWQiOiJ0bnRfYWNtZSIsInYiOjF9LCJpYXQiOjE3NzIzMjMyMDAsImlzcyI6InVybjpoYWxsbWFyazppZHA6dG50X2FjbWUiLCJqdGkiOiJzZXNfcm9vdF8wMDAxIiwibmJmIjoxNzcyMzIzMjAwLCJzcW4iOjEsInN1YiI6InNlc19yb290XzAwMDEifQ.535Nv5r3a40japOjK7Rw13biqq9yaYFMSQMrJXRfoWDRNSDMLyoC2GdT7xdicmAufYgPH2tmKN9j7mfsK6btDA"
+      },
+      "expect": {
+        "code": "HLM_4008",
+        "reason": "lineage_audience_widened"
+      },
+      "actual": {
+        "ok": false,
+        "code": "HLM_4008",
+        "reason": "lineage_audience_widened",
+        "detail": "aud https://hallmark.gw.partner.example/ not held by parent",
+        "message": "HLM_4008 lineage_audience_widened: aud https://hallmark.gw.partner.example/ not held by parent"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "spawn-edge-never-registered",
+      "kind": "negative",
+      "description": "Lineage-shaped passport whose parent never actually spawned it.",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6M2xnVTBTQTNHOUhYTmtiUCIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzI2MCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjoyLCJjb3N0Ijo0MDAwLCJkZXB0aCI6MCwicmVxIjoyMDAsInRpbiI6ODM4ODYwOCwidG91dCI6MCwid2lkIjowfSwiY2FwcyI6WyJ2ZWN0b3Iuc2VhcmNoLnYxIl0sImRlcHRoIjoyLCJsbiI6W3siaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJzaWQiOiJhdF8wMDAxIn0seyJoIjoiWlRzajY0NGFGdkZxUzBSSTUtWWswY3lMdWplUXVjaDAwVGQtV0I2djdzRSIsInNpZCI6InNlc19yb290XzAwMDEifV0sIm5hbWUiOiJWZWN0b3IgSW5kZXhlciAwMSIsInBvbCI6eyJpZCI6InBvbF9hY21lX2RlZmF1bHQiLCJ2Ijo3fSwicHJvZiI6InZlYy5zZWFyY2guZGVmYXVsdC52MSIsInJvb3QiOnsiYXQiOiJhdF8wMDAxIiwiaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJpc3MiOiJodHRwczovL2lkcC5hY21lLmV4YW1wbGUvIiwic3ViIjoidXNyXzQ0NzEifSwic3BpZCI6InNwaWQ6Ly9hY21lL2luZGV4ZXItMDEiLCJ0aWQiOiJ0bnRfYWNtZSIsInYiOjF9LCJpYXQiOjE3NzIzMjMyMDAsImlzcyI6InNlc19yb290XzAwMDEiLCJqdGkiOiJzZXNfY2hpbGRfMDAxNiIsIm5iZiI6MTc3MjMyMzIwMCwic3FuIjoxMSwic3ViIjoic2VzX2NoaWxkXzAwMTYifQ.-aDpb9LXYmwNYkx1Z3Bhwm2cjd6CUHy535uKvRyGotqtznazUb4qJBnoW1pFjCbBDdBcprKiVTnrFrHkxea8Bg",
+      "opts": {},
+      "expect": {
+        "code": "HLM_4011",
+        "reason": "edge_unregistered"
+      },
+      "actual": {
+        "ok": false,
+        "code": "HLM_4011",
+        "reason": "edge_unregistered",
+        "detail": "no spawn edge for session ses_child_0016",
+        "message": "HLM_4011 edge_unregistered: no spawn edge for session ses_child_0016"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "intermediate-ancestry-rewritten",
+      "kind": "negative",
+      "description": "Attacker splices a different parent into the middle of the chain.",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6NUJkUE93dFU0YnRMbm5PRyIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzI2MCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjoxLCJjb3N0IjoxNTAwLCJkZXB0aCI6MCwicmVxIjo0MCwidGluIjo0MTk0MzA0LCJ0b3V0IjoyNjIxNDQsIndpZCI6MH0sImNhcHMiOlsibGxtLmluZmVyZW5jZS52MSJdLCJkZXB0aCI6MywibG4iOlt7ImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwic2lkIjoiYXRfMDAwMSJ9LHsiaCI6IlpUc2o2NDRhRnZGcVMwUkk1LVlrMGN5THVqZVF1Y2gwMFRkLVdCNnY3c0UiLCJzaWQiOiJzZXNfcm9vdF8wMDAxIn0seyJoIjoiWFpSLWQzenl5UnNvVjFjbXB6MGJKdkFmdUdJdDliRW45MUVFNGVBbERhWSIsInNpZCI6InNlc19jaGlsZF8wMDAyIn1dLCJuYW1lIjoiU3VtbWFyaXplciAwMSIsInBvbCI6eyJpZCI6InBvbF9hY21lX2RlZmF1bHQiLCJ2Ijo3fSwicHJvZiI6ImxsbS5jaGF0LmRlZmF1bHQudjEiLCJyb290Ijp7ImF0IjoiYXRfMDAwMSIsImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwiaXNzIjoiaHR0cHM6Ly9pZHAuYWNtZS5leGFtcGxlLyIsInN1YiI6InVzcl80NDcxIn0sInNwaWQiOiJzcGlkOi8vYWNtZS9zdW1tYXJpemVyLTAxIiwidGlkIjoidG50X2FjbWUiLCJ2IjoxfSwiaWF0IjoxNzcyMzIzMjAwLCJpc3MiOiJzZXNfY2hpbGRfMDAwMiIsImp0aSI6InNlc19mb3JnZV8wMDE3IiwibmJmIjoxNzcyMzIzMjAwLCJzcW4iOjEsInN1YiI6InNlc19mb3JnZV8wMDE3In0.HwrnWP8PTxkn4fodraXs4C7V23Xhs9-xCnfJh6F7CxmtC8BuSAu60QAp_pHDc0HcV3cI2Cxzo4dlxwz_IWFEBg",
+      "opts": {},
+      "expect": {
+        "code": "HLM_4003",
+        "reason": "lineage_seal_mismatch"
+      },
+      "actual": {
+        "ok": false,
+        "code": "HLM_4003",
+        "reason": "lineage_seal_mismatch",
+        "detail": "edge seal mismatch at lineage position 2",
+        "message": "HLM_4003 lineage_seal_mismatch: edge seal mismatch at lineage position 2"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "self-referential-lineage",
+      "kind": "negative",
+      "description": "Lineage claims the agent is its own ancestor.",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6M2xnVTBTQTNHOUhYTmtiUCIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzI2MCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjoyLCJjb3N0Ijo0MDAwLCJkZXB0aCI6MCwicmVxIjoyMDAsInRpbiI6ODM4ODYwOCwidG91dCI6MCwid2lkIjowfSwiY2FwcyI6WyJ2ZWN0b3Iuc2VhcmNoLnYxIl0sImRlcHRoIjoyLCJsbiI6W3siaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJzaWQiOiJhdF8wMDAxIn0seyJoIjoiN19XYmNFQ0dtM2wwbzU5dmVWYlBUME14Um1xYWdaYXFacDFoTk1zYW5MVSIsInNpZCI6InNlc19jaGlsZF8wMDE4In1dLCJuYW1lIjoiVmVjdG9yIEluZGV4ZXIgMDEiLCJwb2wiOnsiaWQiOiJwb2xfYWNtZV9kZWZhdWx0IiwidiI6N30sInByb2YiOiJ2ZWMuc2VhcmNoLmRlZmF1bHQudjEiLCJyb290Ijp7ImF0IjoiYXRfMDAwMSIsImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwiaXNzIjoiaHR0cHM6Ly9pZHAuYWNtZS5leGFtcGxlLyIsInN1YiI6InVzcl80NDcxIn0sInNwaWQiOiJzcGlkOi8vYWNtZS9pbmRleGVyLTAxIiwidGlkIjoidG50X2FjbWUiLCJ2IjoxfSwiaWF0IjoxNzcyMzIzMjAwLCJpc3MiOiJzZXNfcm9vdF8wMDAxIiwianRpIjoic2VzX2NoaWxkXzAwMTgiLCJuYmYiOjE3NzIzMjMyMDAsInNxbiI6MTIsInN1YiI6InNlc19jaGlsZF8wMDE4In0.Z_3HOOXCQD6o6XxznLydcwqUlUIshEFkMqxLyAZ6UFyFByAPl-nhVRcoIrj4PARNJXFYvWn8LY2cKjaAFavHDQ",
+      "opts": {},
+      "expect": {
+        "code": "HLM_4009",
+        "reason": "lineage_cycle"
+      },
+      "actual": {
+        "ok": false,
+        "code": "HLM_4009",
+        "reason": "lineage_cycle",
+        "detail": "subject appears in own lineage",
+        "message": "HLM_4009 lineage_cycle: subject appears in own lineage"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "session-reused-in-lineage",
+      "kind": "negative",
+      "description": "Same session id occupies two chain positions: a DAG where a tree is required.",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6M2xnVTBTQTNHOUhYTmtiUCIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzI2MCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjoyLCJjb3N0Ijo0MDAwLCJkZXB0aCI6MCwicmVxIjoyMDAsInRpbiI6ODM4ODYwOCwidG91dCI6MCwid2lkIjowfSwiY2FwcyI6WyJ2ZWN0b3Iuc2VhcmNoLnYxIl0sImRlcHRoIjozLCJsbiI6W3siaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJzaWQiOiJhdF8wMDAxIn0seyJoIjoiN19XYmNFQ0dtM2wwbzU5dmVWYlBUME14Um1xYWdaYXFacDFoTk1zYW5MVSIsInNpZCI6InNlc19yb290XzAwMDEifSx7ImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwic2lkIjoic2VzX3Jvb3RfMDAwMSJ9XSwibmFtZSI6IlZlY3RvciBJbmRleGVyIDAxIiwicG9sIjp7ImlkIjoicG9sX2FjbWVfZGVmYXVsdCIsInYiOjd9LCJwcm9mIjoidmVjLnNlYXJjaC5kZWZhdWx0LnYxIiwicm9vdCI6eyJhdCI6ImF0XzAwMDEiLCJoIjoiN19XYmNFQ0dtM2wwbzU5dmVWYlBUME14Um1xYWdaYXFacDFoTk1zYW5MVSIsImlzcyI6Imh0dHBzOi8vaWRwLmFjbWUuZXhhbXBsZS8iLCJzdWIiOiJ1c3JfNDQ3MSJ9LCJzcGlkIjoic3BpZDovL2FjbWUvaW5kZXhlci0wMSIsInRpZCI6InRudF9hY21lIiwidiI6MX0sImlhdCI6MTc3MjMyMzIwMCwiaXNzIjoic2VzX3Jvb3RfMDAwMSIsImp0aSI6InNlc19jaGlsZF8wMDE4IiwibmJmIjoxNzcyMzIzMjAwLCJzcW4iOjEyLCJzdWIiOiJzZXNfY2hpbGRfMDAxOCJ9.AOKFvLe1GpyuxtkcZ7JOu9jhefGsWlIupHEMgk9YYLSdVENS_D-6SJmrz_AGvp04FGGHh0yDRyAqebneb7x8Cw",
+      "opts": {},
+      "expect": {
+        "code": "HLM_4010",
+        "reason": "lineage_session_reused"
+      },
+      "actual": {
+        "ok": false,
+        "code": "HLM_4010",
+        "reason": "lineage_session_reused",
+        "detail": "sid ses_root_0001 appears twice",
+        "message": "HLM_4010 lineage_session_reused: sid ses_root_0001 appears twice"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "depth-exceeds-policy",
+      "kind": "negative",
+      "description": "Depth-5 chain against a policy ceiling of 4.",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6M2xnVTBTQTNHOUhYTmtiUCIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzMyMCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjoxLCJjb3N0IjoxMCwiZGVwdGgiOjAsInJlcSI6MTAsInRpbiI6MTAyNCwidG91dCI6MTI4LCJ3aWQiOjF9LCJjYXBzIjpbImxsbS5pbmZlcmVuY2UudjEiXSwiZGVwdGgiOjUsImxuIjpbeyJoIjoiN19XYmNFQ0dtM2wwbzU5dmVWYlBUME14Um1xYWdaYXFacDFoTk1zYW5MVSIsInNpZCI6ImF0XzAwMDEifSx7ImgiOiJaVHNqNjQ0YUZ2RnFTMFJJNS1ZazBjeUx1amVRdWNoMDBUZC1XQjZ2N3NFIiwic2lkIjoic2VzX3Jvb3RfMDAwMSJ9LHsiaCI6InBnRkpWOXdHNGxLa25CTEtkdXR0OUtBdnhTc0pRZ2tlZ0ZJeWRzdEY4bVkiLCJzaWQiOiJzZXNfY2hpbGRfMDAxOSJ9LHsiaCI6ImxNbGdXRUY1WnVHRmJYRWREWEZvVElhcTJGNWwxQUVKQ01DY20tQ3hsM00iLCJzaWQiOiJzZXNfY2hpbGRfMDAyMCJ9LHsiaCI6IklVWEUtRkNHM0kzTlptam0zTnUxT0VuTTE3Wl8yQmx1TTJpZnA3MVFfV0UiLCJzaWQiOiJzZXNfY2hpbGRfMDAyMSJ9XSwibmFtZSI6IkRlZXAgMyIsInBvbCI6eyJpZCI6InBvbF9hY21lX2RlZmF1bHQiLCJ2Ijo3fSwicHJvZiI6ImxsbS5jaGF0LmRlZmF1bHQudjEiLCJyb290Ijp7ImF0IjoiYXRfMDAwMSIsImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwiaXNzIjoiaHR0cHM6Ly9pZHAuYWNtZS5leGFtcGxlLyIsInN1YiI6InVzcl80NDcxIn0sInNwaWQiOiJzcGlkOi8vYWNtZS9kZWVwLTMiLCJ0aWQiOiJ0bnRfYWNtZSIsInYiOjF9LCJpYXQiOjE3NzIzMjMyMDAsImlzcyI6InNlc19jaGlsZF8wMDIxIiwianRpIjoic2VzX2NoaWxkXzAwMjIiLCJuYmYiOjE3NzIzMjMyMDAsInNxbiI6MTQsInN1YiI6InNlc19jaGlsZF8wMDIyIn0.-q0V5YbxChOVQ9lDL65HxnIXYtoob4Wbl9sB1nwDjqwsvFJFJ73ly6z3TiQbAD9QQs83LjL0CApwrdnXMRhtCA",
+      "opts": {},
+      "expect": {
+        "code": "HLM_5004",
+        "reason": "budget_depth_exceeded"
+      },
+      "actual": {
+        "ok": false,
+        "code": "HLM_5004",
+        "reason": "budget_depth_exceeded",
+        "detail": "depth=5 max=4",
+        "message": "HLM_5004 budget_depth_exceeded: depth=5 max=4"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "route-outside-capability",
+      "kind": "negative",
+      "description": "Agent holding llm.inference.v1 calls the sandbox execution route.",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6NUJkUE93dFU0YnRMbm5PRyIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzI2MCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjoxLCJjb3N0IjoxNTAwLCJkZXB0aCI6MCwicmVxIjo0MCwidGluIjo0MTk0MzA0LCJ0b3V0IjoyNjIxNDQsIndpZCI6MH0sImNhcHMiOlsibGxtLmluZmVyZW5jZS52MSJdLCJkZXB0aCI6MywibG4iOlt7ImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwic2lkIjoiYXRfMDAwMSJ9LHsiaCI6IlpUc2o2NDRhRnZGcVMwUkk1LVlrMGN5THVqZVF1Y2gwMFRkLVdCNnY3c0UiLCJzaWQiOiJzZXNfcm9vdF8wMDAxIn0seyJoIjoiWFpSLWQzenl5UnNvVjFjbXB6MGJKdkFmdUdJdDliRW45MUVFNGVBbERhWSIsInNpZCI6InNlc19jaGlsZF8wMDAyIn1dLCJuYW1lIjoiU3VtbWFyaXplciAwMSIsInBvbCI6eyJpZCI6InBvbF9hY21lX2RlZmF1bHQiLCJ2Ijo3fSwicHJvZiI6ImxsbS5jaGF0LmRlZmF1bHQudjEiLCJyb290Ijp7ImF0IjoiYXRfMDAwMSIsImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwiaXNzIjoiaHR0cHM6Ly9pZHAuYWNtZS5leGFtcGxlLyIsInN1YiI6InVzcl80NDcxIn0sInNwaWQiOiJzcGlkOi8vYWNtZS9zdW1tYXJpemVyLTAxIiwidGlkIjoidG50X2FjbWUiLCJ2IjoxfSwiaWF0IjoxNzcyMzIzMjAwLCJpc3MiOiJzZXNfY2hpbGRfMDAwMiIsImp0aSI6InNlc19nY18wMDA0IiwibmJmIjoxNzcyMzIzMjAwLCJzcW4iOjEsInN1YiI6InNlc19nY18wMDA0In0.ienm7IvLnrCtFLd7cv2rIoB2msAoQOsd-OWyFbtD1ji58XIDQ7nA7FtBJRg38_IkC7PTwsJMinBvW3fCq5u1Dw",
+      "opts": {
+        "method": "POST",
+        "path": "/v1/sandbox/exec"
+      },
+      "expect": {
+        "code": "HLM_7001",
+        "reason": "route_not_authorized"
+      },
+      "actual": {
+        "ok": false,
+        "code": "HLM_7001",
+        "reason": "route_not_authorized",
+        "detail": "POST /v1/sandbox/exec not permitted by llm.inference.v1",
+        "message": "HLM_7001 route_not_authorized: POST /v1/sandbox/exec not permitted by llm.inference.v1"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "method-not-allowed",
+      "kind": "negative",
+      "description": "GET against a POST-only inference route.",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6NUJkUE93dFU0YnRMbm5PRyIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzI2MCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjoxLCJjb3N0IjoxNTAwLCJkZXB0aCI6MCwicmVxIjo0MCwidGluIjo0MTk0MzA0LCJ0b3V0IjoyNjIxNDQsIndpZCI6MH0sImNhcHMiOlsibGxtLmluZmVyZW5jZS52MSJdLCJkZXB0aCI6MywibG4iOlt7ImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwic2lkIjoiYXRfMDAwMSJ9LHsiaCI6IlpUc2o2NDRhRnZGcVMwUkk1LVlrMGN5THVqZVF1Y2gwMFRkLVdCNnY3c0UiLCJzaWQiOiJzZXNfcm9vdF8wMDAxIn0seyJoIjoiWFpSLWQzenl5UnNvVjFjbXB6MGJKdkFmdUdJdDliRW45MUVFNGVBbERhWSIsInNpZCI6InNlc19jaGlsZF8wMDAyIn1dLCJuYW1lIjoiU3VtbWFyaXplciAwMSIsInBvbCI6eyJpZCI6InBvbF9hY21lX2RlZmF1bHQiLCJ2Ijo3fSwicHJvZiI6ImxsbS5jaGF0LmRlZmF1bHQudjEiLCJyb290Ijp7ImF0IjoiYXRfMDAwMSIsImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwiaXNzIjoiaHR0cHM6Ly9pZHAuYWNtZS5leGFtcGxlLyIsInN1YiI6InVzcl80NDcxIn0sInNwaWQiOiJzcGlkOi8vYWNtZS9zdW1tYXJpemVyLTAxIiwidGlkIjoidG50X2FjbWUiLCJ2IjoxfSwiaWF0IjoxNzcyMzIzMjAwLCJpc3MiOiJzZXNfY2hpbGRfMDAwMiIsImp0aSI6InNlc19nY18wMDA0IiwibmJmIjoxNzcyMzIzMjAwLCJzcW4iOjEsInN1YiI6InNlc19nY18wMDA0In0.ienm7IvLnrCtFLd7cv2rIoB2msAoQOsd-OWyFbtD1ji58XIDQ7nA7FtBJRg38_IkC7PTwsJMinBvW3fCq5u1Dw",
+      "opts": {
+        "method": "GET",
+        "path": "/v1/chat/completions"
+      },
+      "expect": {
+        "code": "HLM_7002",
+        "reason": "method_not_allowed"
+      },
+      "actual": {
+        "ok": false,
+        "code": "HLM_7002",
+        "reason": "method_not_allowed",
+        "detail": "GET not permitted by llm.inference.v1",
+        "message": "HLM_7002 method_not_allowed: GET not permitted by llm.inference.v1"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "replay-of-valid-passport",
+      "kind": "negative",
+      "description": "Byte-identical replay of a passport already accepted once.",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6NUJkUE93dFU0YnRMbm5PRyIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzI2MCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjoxLCJjb3N0IjoxNTAwLCJkZXB0aCI6MCwicmVxIjo0MCwidGluIjo0MTk0MzA0LCJ0b3V0IjoyNjIxNDQsIndpZCI6MH0sImNhcHMiOlsibGxtLmluZmVyZW5jZS52MSJdLCJkZXB0aCI6MywibG4iOlt7ImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwic2lkIjoiYXRfMDAwMSJ9LHsiaCI6IlpUc2o2NDRhRnZGcVMwUkk1LVlrMGN5THVqZVF1Y2gwMFRkLVdCNnY3c0UiLCJzaWQiOiJzZXNfcm9vdF8wMDAxIn0seyJoIjoiWFpSLWQzenl5UnNvVjFjbXB6MGJKdkFmdUdJdDliRW45MUVFNGVBbERhWSIsInNpZCI6InNlc19jaGlsZF8wMDAyIn1dLCJuYW1lIjoiU3VtbWFyaXplciAwMSIsInBvbCI6eyJpZCI6InBvbF9hY21lX2RlZmF1bHQiLCJ2Ijo3fSwicHJvZiI6ImxsbS5jaGF0LmRlZmF1bHQudjEiLCJyb290Ijp7ImF0IjoiYXRfMDAwMSIsImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwiaXNzIjoiaHR0cHM6Ly9pZHAuYWNtZS5leGFtcGxlLyIsInN1YiI6InVzcl80NDcxIn0sInNwaWQiOiJzcGlkOi8vYWNtZS9zdW1tYXJpemVyLTAxIiwidGlkIjoidG50X2FjbWUiLCJ2IjoxfSwiaWF0IjoxNzcyMzIzMjAwLCJpc3MiOiJzZXNfY2hpbGRfMDAwMiIsImp0aSI6InNlc19nY18wMDA0IiwibmJmIjoxNzcyMzIzMjAwLCJzcW4iOjEsInN1YiI6InNlc19nY18wMDA0In0.ienm7IvLnrCtFLd7cv2rIoB2msAoQOsd-OWyFbtD1ji58XIDQ7nA7FtBJRg38_IkC7PTwsJMinBvW3fCq5u1Dw",
+      "opts": {
+        "preAdmitJti": "ses_gc_0004",
+        "preAdmitJkt": "5BdPOwtU4btLnnOG0Qi6rFj7HSSLrCmh-UPvA42KJSA",
+        "preAdmitSq": 1
+      },
+      "expect": {
+        "code": "HLM_2004",
+        "reason": "replay_detected"
+      },
+      "actual": {
+        "ok": false,
+        "code": "HLM_2004",
+        "reason": "replay_detected",
+        "detail": "jti=ses_gc_0004",
+        "message": "HLM_2004 replay_detected: jti=ses_gc_0004"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "attestation-key-revoked",
+      "kind": "negative",
+      "description": "Root agent key is on the denylist (kill switch fired).",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6dFNKazFzUXRBbENOZ1VwOCIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzMyMCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjozMiwiY29zdCI6NTAwMDAwLCJkZXB0aCI6NCwicmVxIjo1MDAwLCJ0aW4iOjUzNjg3MDkxMiwidG91dCI6MjY4NDM1NDUsIndpZCI6OH0sImNhcHMiOlsiY29kZS5leGVjLnNhbmRib3gudjEiLCJsbG0uaW5mZXJlbmNlLnYxIiwidmVjdG9yLnNlYXJjaC52MSJdLCJkZXB0aCI6MSwibG4iOlt7ImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwic2lkIjoiYXRfMDAwMSJ9XSwibmFtZSI6IlJlc2VhcmNoIE9yY2hlc3RyYXRvciIsInBvbCI6eyJpZCI6InBvbF9hY21lX2RlZmF1bHQiLCJ2Ijo3fSwicHJvZiI6ImxsbS5jaGF0LmRlZmF1bHQudjEiLCJyb290Ijp7ImF0IjoiYXRfMDAwMSIsImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwiaXNzIjoiaHR0cHM6Ly9pZHAuYWNtZS5leGFtcGxlLyIsInN1YiI6InVzcl80NDcxIn0sInNwaWQiOiJzcGlkOi8vYWNtZS9yZXNlYXJjaC1vcmNoZXN0cmF0b3IiLCJ0aWQiOiJ0bnRfYWNtZSIsInYiOjF9LCJpYXQiOjE3NzIzMjMyMDAsImlzcyI6InVybjpoYWxsbWFyazppZHA6dG50X2FjbWUiLCJqdGkiOiJzZXNfcm9vdF8wMDAxIiwibmJmIjoxNzcyMzIzMjAwLCJzcW4iOjEsInN1YiI6InNlc19yb290XzAwMDEifQ.535Nv5r3a40japOjK7Rw13biqq9yaYFMSQMrJXRfoWDRNSDMLyoC2GdT7xdicmAufYgPH2tmKN9j7mfsK6btDA",
+      "opts": {
+        "revocation": {
+          "v": 1,
+          "iat": 1772323200,
+          "exp": 1772323260,
+          "keys": [
+            "tSJk1sQtAlCNgUp8xEX11qBKgrAUE9wZCimwWzYgKyA"
+          ],
+          "sessions": [],
+          "attestations": [],
+          "tenants": []
+        }
+      },
+      "expect": {
+        "code": "HLM_6001",
+        "reason": "key_revoked"
+      },
+      "actual": {
+        "ok": false,
+        "code": "HLM_6001",
+        "reason": "key_revoked",
+        "detail": "tSJk1sQtAlCNgUp8xEX11qBKgrAUE9wZCimwWzYgKyA",
+        "message": "HLM_6001 key_revoked: tSJk1sQtAlCNgUp8xEX11qBKgrAUE9wZCimwWzYgKyA"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "session-revoked",
+      "kind": "negative",
+      "description": "Specific agent session killed without touching the key.",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6M2xnVTBTQTNHOUhYTmtiUCIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzI2MCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjoyLCJjb3N0Ijo0MDAwLCJkZXB0aCI6MCwicmVxIjoyMDAsInRpbiI6ODM4ODYwOCwidG91dCI6MCwid2lkIjowfSwiY2FwcyI6WyJ2ZWN0b3Iuc2VhcmNoLnYxIl0sImRlcHRoIjoyLCJsbiI6W3siaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJzaWQiOiJhdF8wMDAxIn0seyJoIjoiWlRzajY0NGFGdkZxUzBSSTUtWWswY3lMdWplUXVjaDAwVGQtV0I2djdzRSIsInNpZCI6InNlc19yb290XzAwMDEifV0sIm5hbWUiOiJWZWN0b3IgSW5kZXhlciAwMSIsInBvbCI6eyJpZCI6InBvbF9hY21lX2RlZmF1bHQiLCJ2Ijo3fSwicHJvZiI6InZlYy5zZWFyY2guZGVmYXVsdC52MSIsInJvb3QiOnsiYXQiOiJhdF8wMDAxIiwiaCI6IjdfV2JjRUNHbTNsMG81OXZlVmJQVDBNeFJtcWFnWmFxWnAxaE5Nc2FuTFUiLCJpc3MiOiJodHRwczovL2lkcC5hY21lLmV4YW1wbGUvIiwic3ViIjoidXNyXzQ0NzEifSwic3BpZCI6InNwaWQ6Ly9hY21lL2luZGV4ZXItMDEiLCJ0aWQiOiJ0bnRfYWNtZSIsInYiOjF9LCJpYXQiOjE3NzIzMjMyMDAsImlzcyI6InNlc19yb290XzAwMDEiLCJqdGkiOiJzZXNfY2hpbGRfMDAwMyIsIm5iZiI6MTc3MjMyMzIwMCwic3FuIjoxLCJzdWIiOiJzZXNfY2hpbGRfMDAwMyJ9.rHuU6u7gHJGeYk6KQpQvzeC3Am_0WS-Ct1B8eY20zxW7k8ATQ-Oa-SL_aKjhOe_PwebPAwR2XBcd_Gzr6OF_BA",
+      "opts": {
+        "revocation": {
+          "v": 1,
+          "iat": 1772323200,
+          "exp": 1772323260,
+          "keys": [],
+          "sessions": [
+            "ses_child_0003"
+          ],
+          "attestations": [],
+          "tenants": []
+        }
+      },
+      "expect": {
+        "code": "HLM_6002",
+        "reason": "session_revoked"
+      },
+      "actual": {
+        "ok": false,
+        "code": "HLM_6002",
+        "reason": "session_revoked",
+        "detail": "ses_child_0003",
+        "message": "HLM_6002 session_revoked: ses_child_0003"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "attestation-revoked",
+      "kind": "negative",
+      "description": "The human authorization itself was withdrawn during offboarding.",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6dFNKazFzUXRBbENOZ1VwOCIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzMyMCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjozMiwiY29zdCI6NTAwMDAwLCJkZXB0aCI6NCwicmVxIjo1MDAwLCJ0aW4iOjUzNjg3MDkxMiwidG91dCI6MjY4NDM1NDUsIndpZCI6OH0sImNhcHMiOlsiY29kZS5leGVjLnNhbmRib3gudjEiLCJsbG0uaW5mZXJlbmNlLnYxIiwidmVjdG9yLnNlYXJjaC52MSJdLCJkZXB0aCI6MSwibG4iOlt7ImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwic2lkIjoiYXRfMDAwMSJ9XSwibmFtZSI6IlJlc2VhcmNoIE9yY2hlc3RyYXRvciIsInBvbCI6eyJpZCI6InBvbF9hY21lX2RlZmF1bHQiLCJ2Ijo3fSwicHJvZiI6ImxsbS5jaGF0LmRlZmF1bHQudjEiLCJyb290Ijp7ImF0IjoiYXRfMDAwMSIsImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwiaXNzIjoiaHR0cHM6Ly9pZHAuYWNtZS5leGFtcGxlLyIsInN1YiI6InVzcl80NDcxIn0sInNwaWQiOiJzcGlkOi8vYWNtZS9yZXNlYXJjaC1vcmNoZXN0cmF0b3IiLCJ0aWQiOiJ0bnRfYWNtZSIsInYiOjF9LCJpYXQiOjE3NzIzMjMyMDAsImlzcyI6InVybjpoYWxsbWFyazppZHA6dG50X2FjbWUiLCJqdGkiOiJzZXNfcm9vdF8wMDAxIiwibmJmIjoxNzcyMzIzMjAwLCJzcW4iOjEsInN1YiI6InNlc19yb290XzAwMDEifQ.535Nv5r3a40japOjK7Rw13biqq9yaYFMSQMrJXRfoWDRNSDMLyoC2GdT7xdicmAufYgPH2tmKN9j7mfsK6btDA",
+      "opts": {
+        "revocation": {
+          "v": 1,
+          "iat": 1772323200,
+          "exp": 1772323260,
+          "keys": [],
+          "sessions": [],
+          "attestations": [
+            "at_0001"
+          ],
+          "tenants": []
+        }
+      },
+      "expect": {
+        "code": "HLM_6003",
+        "reason": "attestation_revoked"
+      },
+      "actual": {
+        "ok": false,
+        "code": "HLM_6003",
+        "reason": "attestation_revoked",
+        "detail": "at_0001",
+        "message": "HLM_6003 attestation_revoked: at_0001"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "revocation-set-stale",
+      "kind": "negative",
+      "description": "Denylist is 5 minutes old on a strict-revocation profile.",
+      "passport": "eyJhbGciOiJFZERTQSIsImtpZCI6ImVkMjU1MTk6dFNKazFzUXRBbENOZ1VwOCIsInR5cCI6ImhhbGxtYXJrK2FnZW50LXBhc3Nwb3J0In0.eyJhbXIiOlsiYWdlbnRfZGVsZWdhdGlvbiJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJhenAiOiJ1c3JfNDQ3MSIsImV4cCI6MTc3MjMyMzMyMCwiaGxtIjp7ImJ1ZGdldCI6eyJjb25jIjozMiwiY29zdCI6NTAwMDAwLCJkZXB0aCI6NCwicmVxIjo1MDAwLCJ0aW4iOjUzNjg3MDkxMiwidG91dCI6MjY4NDM1NDUsIndpZCI6OH0sImNhcHMiOlsiY29kZS5leGVjLnNhbmRib3gudjEiLCJsbG0uaW5mZXJlbmNlLnYxIiwidmVjdG9yLnNlYXJjaC52MSJdLCJkZXB0aCI6MSwibG4iOlt7ImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwic2lkIjoiYXRfMDAwMSJ9XSwibmFtZSI6IlJlc2VhcmNoIE9yY2hlc3RyYXRvciIsInBvbCI6eyJpZCI6InBvbF9hY21lX2RlZmF1bHQiLCJ2Ijo3fSwicHJvZiI6ImxsbS5jaGF0LmRlZmF1bHQudjEiLCJyb290Ijp7ImF0IjoiYXRfMDAwMSIsImgiOiI3X1diY0VDR20zbDBvNTl2ZVZiUFQwTXhSbXFhZ1phcVpwMWhOTXNhbkxVIiwiaXNzIjoiaHR0cHM6Ly9pZHAuYWNtZS5leGFtcGxlLyIsInN1YiI6InVzcl80NDcxIn0sInNwaWQiOiJzcGlkOi8vYWNtZS9yZXNlYXJjaC1vcmNoZXN0cmF0b3IiLCJ0aWQiOiJ0bnRfYWNtZSIsInYiOjF9LCJpYXQiOjE3NzIzMjMyMDAsImlzcyI6InVybjpoYWxsbWFyazppZHA6dG50X2FjbWUiLCJqdGkiOiJzZXNfcm9vdF8wMDAxIiwibmJmIjoxNzcyMzIzMjAwLCJzcW4iOjEsInN1YiI6InNlc19yb290XzAwMDEifQ.535Nv5r3a40japOjK7Rw13biqq9yaYFMSQMrJXRfoWDRNSDMLyoC2GdT7xdicmAufYgPH2tmKN9j7mfsK6btDA",
+      "opts": {
+        "revocation": {
+          "v": 1,
+          "iat": 1772322900,
+          "exp": 1772323260,
+          "keys": [],
+          "sessions": [],
+          "attestations": [],
+          "tenants": []
+        }
+      },
+      "expect": {
+        "code": "HLM_6004",
+        "reason": "revocation_set_stale"
+      },
+      "actual": {
+        "ok": false,
+        "code": "HLM_6004",
+        "reason": "revocation_set_stale",
+        "detail": "manifest age 300s > 30s",
+        "message": "HLM_6004 revocation_set_stale: manifest age 300s > 30s"
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "attestation-from-untrusted-idp",
+      "kind": "negative",
+      "description": "Attestation signed by an IdP key the tenant never registered.",
+      "passport": "eyJhbGciOiJFUzI1NiIsImtpZCI6InAyNTY6WUdPc2g5Sm5xTTFpRXdnRCIsInR5cCI6ImhhbGxtYXJrK3Jvb3QtYXR0ZXN0YXRpb24ifQ.eyJhbXIiOlsiaHdrIiwidXNlcl9wcmVzZW5jZSJdLCJhdWQiOiJodHRwczovL2hhbGxtYXJrLmd3LmFjbWUuZXhhbXBsZS8iLCJjbmYiOnsiamt0IjoidFNKazFzUXRBbENOZ1VwOHhFWDExcUJLZ3JBVUU5d1pDaW13V3pZZ0t5QSJ9LCJleHAiOjE3NzI0MDk2MDAsImhsbSI6eyJhZ2VudCI6eyJjYXBzIjpbImxsbS5pbmZlcmVuY2UudjEiLCJ2ZWN0b3Iuc2VhcmNoLnYxIiwiY29kZS5leGVjLnNhbmRib3gudjEiXSwibmFtZSI6IlJlc2VhcmNoIE9yY2hlc3RyYXRvciIsInByb2ZpbGVzIjpbImxsbS5jaGF0LmRlZmF1bHQudjEiLCJsbG0uYmF0Y2gudjEiXSwic3BpZCI6InNwaWQ6Ly9hY21lL3Jlc2VhcmNoLW9yY2hlc3RyYXRvciJ9LCJidWRnZXQiOnsiY29uYyI6MzIsImNvc3QiOjUwMDAwMCwiZGVwdGgiOjQsInJlcSI6NTAwMCwidGluIjo1MzY4NzA5MTIsInRvdXQiOjI2ODQzNTQ1LCJ3aWQiOjh9LCJwb2wiOnsiaWQiOiJwb2xfYWNtZV9kZWZhdWx0IiwidiI6N30sInRpZCI6InRudF9hY21lIiwidiI6MX0sImlhdCI6MTc3MjMyMzIwMCwiaXNzIjoiaHR0cHM6Ly9ldmlsLWlkcC5leGFtcGxlLyIsImp0aSI6ImF0XzAwMDIiLCJuYmYiOjE3NzIzMjMyMDAsInN1YiI6InVzcl80NDcxIn0.8qmzz656SM4NrbCRYyzEQuNQwrgr_zX_dbiBUU6X0AAroImsvTv7p4W15e1FksP70wQ5dIhwaCYXxaf8HlBRkg",
+      "opts": {
+        "asAttestation": true
+      },
+      "expect": {
+        "code": "HLM_1001",
+        "reason": "unknown_kid"
+      },
+      "actual": {
+        "ok": false,
+        "code": "HLM_1001",
+        "reason": "unknown_kid",
+        "detail": "no local key for kid=p256:YGOsh9JnqM1iEwgD",
+        "message": "HLM_1001 unknown_kid: no local key for kid=p256:YGOsh9JnqM1iEwgD"
+      },
+      "result": "PASS"
+    }
+  ]
+}

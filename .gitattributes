@@ -1,0 +1,12 @@
+# Normalize to LF in the working tree on every platform.
+#
+# The conformance suite in spec/test-vectors/ claims byte-for-byte
+# reproducibility (§18.3). vectors.json is written by JSON.stringify, which
+# emits LF only. Without this file, core.autocrlf=true would rewrite it to CRLF
+# on checkout, and the next run of `npm run vectors` would report a diff against
+# a file that had not actually changed.
+* text=auto eol=lf
+
+*.png  binary
+*.jpg  binary
+*.ico  binary
