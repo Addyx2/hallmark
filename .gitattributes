@@ -1,10 +1,12 @@
 # Normalize to LF in the working tree on every platform.
 #
-# The conformance suite in spec/test-vectors/ claims byte-for-byte
-# reproducibility (§18.3). vectors.json is written by JSON.stringify, which
-# emits LF only. Without this file, core.autocrlf=true would rewrite it to CRLF
-# on checkout, and the next run of `npm run vectors` would report a diff against
-# a file that had not actually changed.
+# The conformance suite writes spec/test-vectors/vectors.json on every run.
+# Per §18.3, headers, payloads, Seals, verdicts and error codes are byte-stable
+# across runs; ES256 signature octets are not, because P-ECDSA uses a random k.
+# So a regeneration touches exactly the two ES256 signature lines -- never the
+# file's structure. core.autocrlf=true would additionally rewrite the whole file
+# to CRLF on checkout, drowning that signal in a diff where every line appears
+# changed.
 * text=auto eol=lf
 
 *.png  binary

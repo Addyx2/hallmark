@@ -990,6 +990,13 @@ input rather than the signature; property `seal-excludes-signature` asserts it
 directly. Any implementation can therefore reproduce this suite by comparing
 signing inputs, not whole tokens.
 
+Concretely: regenerating `test-vectors/vectors.json` in a clean checkout must
+change exactly two lines, the ES256 `jws` and the ES256 `passport`, and in each
+only the segment after the last `.`. A diff touching anything else — a Seal, a
+verdict, a header, the file's structure — is a real change and should be
+treated as one. This is the cheapest available review signal for this suite, so
+it is worth preserving.
+
 ---
 
 ## 19. Worked example

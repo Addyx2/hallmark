@@ -31,6 +31,12 @@ protocol. It exits non-zero if any invariant weakens.
 `vectors.json` contains every generated token alongside its expected and actual
 verdict — diff it in review to see exactly what changed.
 
+On a clean checkout, regenerating must touch exactly two lines: the ES256
+attestation's `jws` and the ES256 `passport`, differing only in the signature
+segment (ES256 uses a random `k`, so its octets rotate every run — §18.3). A
+diff that reaches a Seal, a verdict, a header, or the file's structure is a real
+change and should be reviewed as one.
+
 Requires Node >= 18. No dependencies.
 
 ## Layout
