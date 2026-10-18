@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Hallmark — Agent Identity, Grants &amp; Provenance</title>
+  <meta name="description" content="Hallmark: resolve agent → human, with Imprints, Grants, Barricade &amp; Freeroam. One tap to attribute and authorize AI agents.">
+  <style>
+    :root{--bg:#0b0d12;--panel:#141823;--text:#e7e9ee;--muted:#9aa0b4;--accent:#7aa2f7}
+    *{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,system-ui,sans-serif}
+    body{margin:0;background:linear-gradient(180deg,#0b0d12 0%,#0f1526 100%);color:var(--text);line-height:1.6}
+    header{padding:64px 24px 32px;text-align:center}
+    .logo{font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:14px;color:var(--muted)}
+    h1{margin:12px 0 16px;font-size:clamp(40px,6vw,80px);line-height:1}
+    .sub{max-width:760px;margin:0 auto 24px;color:var(--muted);font-size:clamp(16px,2.2vw,20px)}
+    .cta{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:24px}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:999px;text-decoration:none;font-weight:600}
+    .btn-primary{background:linear-gradient(90deg,var(--accent),#b4f9f8);color:#0b1020}
+    .btn-ghost{border:1px solid rgba(154,160,180,.5);color:var(--text)}
+    section{max-width:1100px;margin:0 auto;padding:40px 24px}
+    .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+    .card{background:linear-gradient(180deg,rgba(154,160,180,.12),rgba(154,160,180,.06));border:1px solid rgba(154,160,180,.3);border-radius:16px;padding:20px}
+    h2{font-size:clamp(28px,4vw,44px);margin:0 0 12px}
+    h3{margin:0 0 8px}
+    .muted{color:var(--muted)}
+    footer{padding:48px 24px;text-align:center;color:var(--muted);border-top:1px solid rgba(154,160,180,.2);margin-top:60px}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Hallmark</div>
+    <h1>Resolve agent → human. Attribute every action.</h1>
+    <p class="sub">Imprints bind AI agents to a responsible human. Grants authorize exact actions with budgets. Barricade enforces, Freeroam observes, Trackline shows users what their agents did.</p>
+    <div class="cta">
+      <a class="btn btn-primary" href="https://github.com/Addyx2/hallmark" target="_blank" rel="noopener">View on GitHub</a>
+      <a class="btn btn-ghost" href="https://github.com/Addyx2/hallmark/blob/main/spec/design/Product-Family.md" target="_blank" rel="noopener">Read Product Family</a>
+      <a class="btn btn-ghost" href="https://github.com/Addyx2/hallmark/blob/main/spec/Hallmark-Agent-Identity-Spec.md" target="_blank" rel="noopener">Read the Spec</a>
+    </div>
+  </header>
+  <section>
+    <h2>The problem</h2>
+    <p class="muted">Agents hold emails, burn API spend, write to workspaces — and platforms can't answer: <strong>which paying user is responsible?</strong> Blocking them loses usage. Accepting them blind loses attribution and creates liability.</p>
+    <div class="grid">
+      <div class="card"><h3>Imprint</h3><p class="muted">Every agent wears a provable imprint tracing to a single human via verifiable lineage.</p></div>
+      <div class="card"><h3>Grants</h3><p class="muted">Computed authorizations: lineage + capability + budget + action + lifetime + jti. ~116µs to verify.</p></div>
+      <div class="card"><h3>Barricade</h3><p class="muted">Plugin enforcing imprint + grant per surface. Enroll at first responsibility, not first contact.</p></div>
+      <div class="card"><h3>Freeroam</h3><p class="muted">Zero-friction observation; cooperating agents self-identify. The wedge to Barricade.</p></div>
+      <div class="card"><h3>Trackline</h3><p class="muted">User receipts: what the agent did, cost, grant ref, budget remaining.</p></div>
+      <div class="card"><h3>Seal v2</h3><p class="muted">Ownership seals on original works (<code>hallmark+work</code>), enabling licensed use and payments.</p></div>
+    </div>
+  </section>
+  <footer>
+    <div>github.com/Addyx2/hallmark</div>
+  </footer>
+</body>
+</html>
