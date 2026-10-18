@@ -3,6 +3,11 @@
 Normative specification for the Hallmark Agent Identity Protocol, plus the
 executable reference implementation and its conformance suite.
 
+> **Branding:** the product built on this protocol is **Pascaal**
+> (see [`../PASCAAL_BRAND_NOTE.md`](../PASCAAL_BRAND_NOTE.md)).
+> "Hallmark" is kept as the protocol/spec name; `typ`, header and error codes
+> all use the `hallmark` prefix and are frozen for v1.
+
 | Document | Purpose |
 | --- | --- |
 | [`Hallmark-Agent-Identity-Spec.md`](Hallmark-Agent-Identity-Spec.md) | The specification. Normative. |

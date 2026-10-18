@@ -38,3 +38,10 @@ Keep landing/index.html private as requested. Can publish later at pascaal.com o
 
 ## Verdict
 Pascaal is the right call. Distinctive, available-ish domain-wise, avoids Hallmark Cards' heavy TM footprint, and gives you a clean brand to build multiple products under.
+
+## Status log
+- 2026-10-19: User chose Pascaal as product name; landing stays private for now.
+- 2026-10-19: DNS check `pascaal.com` — no A/NS records (consistent with unregistered). Register ASAP to lock it in.
+- 2026-10-19: Landing page rebranded to Pascaal (Hallmark kept as protocol name in footer + docs).
+- TODO: USPTO word-mark search for "Pascaal" (Classes 9/38/42) before public launch.
+- TODO: Buy pascaal.com when ready to go public.
