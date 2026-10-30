@@ -3,55 +3,574 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Pascaal — Resolve agent → human</title>
-  <meta name="description" content="Pascaal: resolve agent → human, with Imprints, Grants, Barricade &amp; Freeroam. One tap to attribute and authorize AI agents. Powered by the Hallmark protocol.">
+  <title>Pascaal — accountability for AI agents</title>
+  <meta name="description" content="Pascaal is building the accountability layer for AI agents: every agent resolves to one responsible human, every action is authorized by a grant, every outcome leaves a receipt. Powered by the open Hallmark protocol.">
+  <meta property="og:title" content="Pascaal — accountability for AI agents">
+  <meta property="og:description" content="Imprints bind agents to humans. Grants authorize exact actions with budgets. Trackline proves what happened.">
+  <meta name="theme-color" content="#08090b">
   <style>
-    :root{--bg:#0b0d12;--panel:#141823;--text:#e7e9ee;--muted:#9aa0b4;--accent:#7aa2f7}
-    *{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,system-ui,sans-serif}
-    body{margin:0;background:linear-gradient(180deg,#0b0d12 0%,#0f1526 100%);color:var(--text);line-height:1.6}
-    header{padding:64px 24px 32px;text-align:center}
-    .logo{font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:14px;color:var(--muted)}
-    h1{margin:12px 0 16px;font-size:clamp(40px,6vw,80px);line-height:1}
-    .sub{max-width:760px;margin:0 auto 24px;color:var(--muted);font-size:clamp(16px,2.2vw,20px)}
-    .cta{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:24px}
-    .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:999px;text-decoration:none;font-weight:600}
-    .btn-primary{background:linear-gradient(90deg,var(--accent),#b4f9f8);color:#0b1020}
-    .btn-ghost{border:1px solid rgba(154,160,180,.5);color:var(--text)}
-    section{max-width:1100px;margin:0 auto;padding:40px 24px}
-    .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
-    .card{background:linear-gradient(180deg,rgba(154,160,180,.12),rgba(154,160,180,.06));border:1px solid rgba(154,160,180,.3);border-radius:16px;padding:20px}
-    h2{font-size:clamp(28px,4vw,44px);margin:0 0 12px}
-    h3{margin:0 0 8px}
-    .muted{color:var(--muted)}
-    footer{padding:48px 24px;text-align:center;color:var(--muted);border-top:1px solid rgba(154,160,180,.2);margin-top:60px}
+    :root{
+      --bg:#08090b;
+      --bg-2:#0c0e12;
+      --text:#f2f3f5;
+      --muted:#9ba1ad;
+      --faint:#6b7280;
+      --line:rgba(255,255,255,.09);
+      --line-soft:rgba(255,255,255,.05);
+      --panel:rgba(255,255,255,.025);
+      --accent:#8ab4ff;
+      --accent-2:#bff5ee;
+      --mono:ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,monospace;
+      --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Roboto,Helvetica,Arial,sans-serif;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);
+      line-height:1.6;-webkit-font-smoothing:antialiased;
+    }
+    ::selection{background:rgba(138,180,255,.28);color:#fff}
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+    .mono{font-family:var(--mono)}
+    .label{
+      font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+      color:var(--faint);
+    }
+
+    /* ---------- top glow ---------- */
+    .glow{
+      position:fixed;inset:-30% 0 auto 0;height:70vh;pointer-events:none;z-index:0;
+      background:radial-gradient(60% 55% at 50% 0%,rgba(138,180,255,.14),transparent 70%);
+    }
+
+    /* ---------- nav ---------- */
+    header.nav{
+      position:sticky;top:0;z-index:20;backdrop-filter:blur(14px);
+      background:rgba(8,9,11,.72);border-bottom:1px solid var(--line-soft);
+    }
+    .nav-inner{display:flex;align-items:center;justify-content:space-between;height:60px}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.02em}
+    .mark{
+      width:22px;height:22px;border-radius:6px;flex:0 0 auto;
+      background:conic-gradient(from 210deg,var(--accent),var(--accent-2),var(--accent));
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);
+    }
+    .brand span{font-size:15px}
+    .nav-links{display:flex;align-items:center;gap:26px;font-size:13.5px;color:var(--muted)}
+    .nav-links a:hover{color:var(--text)}
+    .nav-cta{
+      font-size:13px;font-weight:600;color:#0a0d14;background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      padding:8px 14px;border-radius:999px;white-space:nowrap;
+    }
+    @media(max-width:820px){.nav-links{display:none}}
+
+    /* ---------- hero ---------- */
+    main{position:relative;z-index:1}
+    .hero{padding:88px 0 64px;text-align:center}
+    .pill{
+      display:inline-flex;align-items:center;gap:10px;font-size:12.5px;color:var(--muted);
+      border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:6px 14px;
+      margin-bottom:34px;transition:border-color .2s,color .2s;
+    }
+    .pill:hover{border-color:rgba(138,180,255,.45);color:var(--text)}
+    .pill b{color:var(--accent);font-weight:600}
+    .dot{width:5px;height:5px;border-radius:50%;background:var(--accent-2);box-shadow:0 0 10px var(--accent-2)}
+    h1{
+      margin:0 auto 22px;max-width:960px;font-size:clamp(42px,7.2vw,88px);line-height:.98;
+      letter-spacing:-.035em;font-weight:650;
+    }
+    h1 .grad{
+      background:linear-gradient(92deg,var(--accent) 0%,var(--accent-2) 55%,#fff 100%);
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+    }
+    .hero p.sub{max-width:700px;margin:0 auto;color:var(--muted);font-size:clamp(15.5px,1.9vw,18.5px)}
+    .hero p.sub strong{color:var(--text);font-weight:600}
+    .cta{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:34px}
+    .btn{
+      display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:999px;
+      font-size:14px;font-weight:600;transition:transform .15s,opacity .2s;
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#080b12}
+    .btn-ghost{border:1px solid var(--line);color:var(--text);background:var(--panel)}
+    .btn-ghost:hover{border-color:rgba(255,255,255,.24)}
+
+    /* ---------- works with ---------- */
+    .works{padding:26px 0 6px;text-align:center}
+    .works .label{margin-bottom:18px}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+    .chip{
+      font-size:12.5px;color:var(--muted);border:1px solid var(--line-soft);
+      padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.015);
+    }
+
+    /* ---------- sections ---------- */
+    section{padding:84px 0;border-top:1px solid var(--line-soft)}
+    .section-head{display:flex;align-items:baseline;justify-content:space-between;gap:24px;margin-bottom:34px}
+    h2{margin:0;font-size:clamp(26px,3.4vw,40px);letter-spacing:-.025em;line-height:1.1;font-weight:620}
+    .lede{color:var(--muted);font-size:clamp(15px,1.7vw,17.5px);max-width:760px}
+    .lede strong{color:var(--text);font-weight:600}
+    .lede a{border-bottom:1px solid rgba(138,180,255,.4);color:var(--accent)}
+    .lede a:hover{border-bottom-color:var(--accent)}
+
+    .prose p{color:var(--muted);font-size:clamp(15px,1.75vw,17.5px);max-width:820px;margin:0 0 18px}
+    .prose p strong{color:var(--text);font-weight:600}
+    .prose p:last-child{margin-bottom:0}
+
+    /* ---------- figure ---------- */
+    figure{margin:44px 0 0}
+    .diagram{
+      display:flex;align-items:stretch;gap:10px;flex-wrap:wrap;justify-content:center;
+      border:1px solid var(--line);border-radius:16px;padding:28px 20px;
+      background:
+        radial-gradient(120% 100% at 50% 0%,rgba(138,180,255,.07),transparent 60%),
+        var(--panel);
+    }
+    .node{
+      flex:1 1 150px;min-width:140px;max-width:200px;border:1px solid var(--line);
+      border-radius:11px;padding:13px 12px;background:rgba(255,255,255,.02);text-align:left;
+    }
+    .node .k{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:6px}
+    .node .v{font-size:13.5px;font-weight:600;letter-spacing:-.01em}
+    .node .d{font-size:11.5px;color:var(--muted);margin-top:3px;line-height:1.4}
+    .node.hi{border-color:rgba(138,180,255,.42);background:rgba(138,180,255,.07)}
+    .arrow{align-self:center;color:var(--faint);font-family:var(--mono);font-size:15px;padding:0 2px}
+    @media(max-width:760px){
+      .diagram{flex-direction:column;align-items:stretch}
+      .node{max-width:none}
+      .arrow{transform:rotate(90deg);text-align:center;padding:2px 0}
+    }
+    figcaption{color:var(--faint);font-size:12px;margin-top:12px;text-align:center;font-family:var(--mono)}
+
+    /* ---------- three up ---------- */
+    .cards{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));margin-top:36px}
+    .card{
+      border:1px solid var(--line);border-radius:14px;padding:22px 20px;background:var(--panel);
+      transition:border-color .2s,background .2s;
+    }
+    .card:hover{border-color:rgba(138,180,255,.3);background:rgba(138,180,255,.04)}
+    .card h3{margin:0 0 8px;font-size:17px;letter-spacing:-.01em;font-weight:620}
+    .card p{margin:0;color:var(--muted);font-size:14px}
+    .card .num{font-family:var(--mono);font-size:11px;color:var(--faint);display:block;margin-bottom:12px}
+
+    /* ---------- metrics ---------- */
+    .stats{display:grid;grid-template-columns:1.35fr .65fr;gap:36px;align-items:start;margin-top:30px}
+    @media(max-width:820px){.stats{grid-template-columns:1fr;gap:28px}}
+    table{width:100%;border-collapse:collapse}
+    th{
+      text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;
+      text-transform:uppercase;color:var(--faint);font-weight:400;padding:0 0 10px;
+      border-bottom:1px solid var(--line);
+    }
+    th:not(:first-child),td:not(:first-child){text-align:right}
+    td{padding:15px 0;border-bottom:1px solid var(--line-soft);font-size:14px}
+    td:first-child{color:var(--muted)}
+    td .big{font-size:16px;font-weight:650;color:var(--text);font-variant-numeric:tabular-nums}
+    .side{display:grid;gap:12px}
+    .stat{border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--panel)}
+    .stat .n{font-size:26px;font-weight:650;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+    .stat .l{font-size:12px;color:var(--muted);margin-top:2px}
+    .note{color:var(--faint);font-size:12px;margin-top:14px;font-family:var(--mono)}
+
+    /* ---------- quote ---------- */
+    .quote{
+      border-left:2px solid var(--accent);padding:6px 0 6px 22px;margin:38px 0 0;
+      font-size:clamp(17px,2.2vw,22px);letter-spacing:-.015em;line-height:1.45;max-width:820px;
+    }
+    .quote footer{color:var(--faint);font-size:12px;font-family:var(--mono);margin-top:12px}
+
+    /* ---------- deploy ---------- */
+    .deploy{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:34px}
+    .dep{border-top:1px solid var(--line);padding-top:16px}
+    .dep .num{font-family:var(--mono);font-size:11px;color:var(--faint)}
+    .dep h4{margin:10px 0 6px;font-size:16px;font-weight:620;letter-spacing:-.01em}
+    .dep p{margin:0;color:var(--muted);font-size:13.5px}
+
+    /* ---------- security list ---------- */
+    .checks{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin-top:32px}
+    .check{display:flex;gap:11px;align-items:flex-start;font-size:14px;color:var(--muted)}
+    .check svg{flex:0 0 auto;margin-top:3px}
+    .check b{color:var(--text);font-weight:600}
+
+    /* ---------- writing ---------- */
+    .posts{margin-top:26px;border-top:1px solid var(--line-soft)}
+    .post{
+      display:flex;gap:20px;align-items:baseline;padding:16px 0;border-bottom:1px solid var(--line-soft);
+      transition:padding-left .18s;
+    }
+    .post:hover{padding-left:6px}
+    .post .n{font-family:var(--mono);font-size:11px;color:var(--faint);flex:0 0 28px}
+    .post .t{font-size:15.5px;font-weight:550}
+    .post .m{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--faint);white-space:nowrap}
+
+    /* ---------- final cta ---------- */
+    .final{
+      text-align:center;padding:96px 0;border-top:1px solid var(--line-soft);
+      background:radial-gradient(60% 100% at 50% 100%,rgba(138,180,255,.09),transparent 70%);
+    }
+    .final h2{margin-bottom:14px}
+    .final p{max-width:640px;margin:0 auto;color:var(--muted)}
+    .final .cta{margin-top:30px}
+
+    /* ---------- footer ---------- */
+    footer.site{border-top:1px solid var(--line-soft);padding:48px 0 40px;color:var(--muted)}
+    .foot-grid{display:grid;grid-template-columns:1.6fr repeat(3,1fr);gap:28px}
+    @media(max-width:760px){.foot-grid{grid-template-columns:1fr 1fr}}
+    .foot-grid h5{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin:0 0 12px;font-weight:400}
+    .foot-grid a{display:block;font-size:13.5px;padding:3px 0;color:var(--muted)}
+    .foot-grid a:hover{color:var(--text)}
+    .foot-brand p{font-size:13px;color:var(--faint);margin:12px 0 0;max-width:280px}
+    .foot-base{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:40px;padding-top:20px;border-top:1px solid var(--line-soft);font-size:12px;color:var(--faint);font-family:var(--mono)}
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo">Pascaal</div>
-    <h1>Resolve agent → human. Attribute every action.</h1>
-    <p class="sub">Imprints bind AI agents to a responsible human. Grants authorize exact actions with budgets. Barricade enforces, Freeroam observes, Trackline shows users what their agents did. Built on the open Hallmark protocol.</p>
+<div class="glow"></div>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top"><span class="mark" aria-hidden="true"></span><span>Pascaal</span></a>
+    <nav class="nav-links">
+      <a href="#protocol">Protocol</a>
+      <a href="#products">Products</a>
+      <a href="#numbers">Numbers</a>
+      <a href="#security">Security</a>
+      <a href="#writing">Writing</a>
+    </nav>
+    <a class="nav-cta" href="https://github.com/Addyx2/hallmark" target="_blank" rel="noopener">View on GitHub</a>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap hero">
+    <a class="pill" href="#protocol">
+      <span class="dot" aria-hidden="true"></span>
+      <b>New</b> Hallmark Agent Identity Spec v1 &mdash; 38 conformance vectors, all green
+      <span aria-hidden="true">&rarr;</span>
+    </a>
+    <h1>Pascaal is building the <span class="grad">accountability layer</span> for AI agents.</h1>
+    <p class="sub">
+      Every agent resolves to <strong>one responsible human</strong>. Imprints bind identity,
+      grants authorize exact actions with budgets, and Trackline proves what happened.
+      Available as an open protocol and a drop-in verification library.
+    </p>
     <div class="cta">
-      <a class="btn btn-primary" href="https://github.com/Addyx2/hallmark" target="_blank" rel="noopener">View on GitHub</a>
-      <a class="btn btn-ghost" href="https://github.com/Addyx2/hallmark/blob/main/spec/design/Product-Family.md" target="_blank" rel="noopener">Read Product Family</a>
-      <a class="btn btn-ghost" href="https://github.com/Addyx2/hallmark/blob/main/spec/Hallmark-Agent-Identity-Spec.md" target="_blank" rel="noopener">Read the Spec</a>
+      <a class="btn btn-primary" href="https://github.com/Addyx2/hallmark/blob/main/spec/Hallmark-Agent-Identity-Spec.md" target="_blank" rel="noopener">Read the spec</a>
+      <a class="btn btn-ghost" href="#numbers">See the numbers</a>
+      <a class="btn btn-ghost" href="https://github.com/Addyx2/hallmark/blob/main/spec/design/Product-Family.md" target="_blank" rel="noopener">Product family</a>
     </div>
-  </header>
-  <section>
-    <h2>The problem</h2>
-    <p class="muted">Agents hold emails, burn API spend, write to workspaces — and platforms can't answer: <strong>which paying user is responsible?</strong> Blocking them loses usage. Accepting them blind loses attribution and creates liability.</p>
-    <div class="grid">
-      <div class="card"><h3>Imprint</h3><p class="muted">Every agent wears a provable imprint tracing to a single human via verifiable lineage.</p></div>
-      <div class="card"><h3>Grants</h3><p class="muted">Computed authorizations: lineage + capability + budget + action + lifetime + jti. ~116µs to verify.</p></div>
-      <div class="card"><h3>Barricade</h3><p class="muted">Plugin enforcing imprint + grant per surface. Enroll at first responsibility, not first contact.</p></div>
-      <div class="card"><h3>Freeroam</h3><p class="muted">Zero-friction observation; cooperating agents self-identify. The wedge to Barricade.</p></div>
-      <div class="card"><h3>Trackline</h3><p class="muted">User receipts: what the agent did, cost, grant ref, budget remaining.</p></div>
-      <div class="card"><h3>Seal v2</h3><p class="muted">Ownership seals on original works (<code>hallmark+work</code>), enabling licensed use and payments.</p></div>
+  </div>
+
+  <div class="wrap works">
+    <div class="label">Works with</div>
+    <div class="chips">
+      <span class="chip">MCP</span>
+      <span class="chip">ChatGPT</span>
+      <span class="chip">Claude</span>
+      <span class="chip">Cursor</span>
+      <span class="chip">LangGraph</span>
+      <span class="chip">OpenAI Agents SDK</span>
+      <span class="chip">Vercel AI SDK</span>
+      <span class="chip">Any HTTP gateway</span>
+    </div>
+  </div>
+
+  <section id="protocol">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <div class="label" style="margin-bottom:14px">The problem</div>
+          <h2>Intelligence is no longer the constraint. Attribution is.</h2>
+        </div>
+      </div>
+      <div class="prose">
+        <p>
+          Agents hold emails, burn API spend, write to workspaces and move money &mdash; and platforms
+          still cannot answer the only question that matters when something goes wrong:
+          <strong>which paying human is responsible for this action?</strong>
+        </p>
+        <p>
+          Blocking agents loses usage. Accepting them blind loses attribution and creates liability.
+          The missing layer is not another detector or a better bot fingerprint &mdash; it is
+          <strong>identity that resolves to a human, authorization that names the exact action,
+          and provenance that survives the session</strong>.
+        </p>
+        <p>
+          Pascaal is that layer. Built on the open <a href="https://github.com/Addyx2/hallmark/blob/main/spec/Hallmark-Agent-Identity-Spec.md" target="_blank" rel="noopener">Hallmark protocol</a>:
+          Ed25519 with an ES256 fallback, RFC&nbsp;8785 canonical JSON, short-lived passes, and
+          budgets that are split &mdash; never shared &mdash; at spawn.
+        </p>
+      </div>
+
+      <figure>
+        <div class="diagram">
+          <div class="node">
+            <span class="k">Agent</span>
+            <div class="v">Passport</div>
+            <div class="d">Short-lived, signed lineage to a root attestation.</div>
+          </div>
+          <div class="arrow" aria-hidden="true">&rarr;</div>
+          <div class="node hi">
+            <span class="k">Gateway</span>
+            <div class="v">Verify</div>
+            <div class="d">Seal, chain, registry anchors, revocation, replay.</div>
+          </div>
+          <div class="arrow" aria-hidden="true">&rarr;</div>
+          <div class="node">
+            <span class="k">Grant</span>
+            <div class="v">Authorize</div>
+            <div class="d">Capability + budget slice + action + lifetime + jti.</div>
+          </div>
+          <div class="arrow" aria-hidden="true">&rarr;</div>
+          <div class="node">
+            <span class="k">Action</span>
+            <div class="v">Execute</div>
+            <div class="d">Charged against the slice actually observed.</div>
+          </div>
+          <div class="arrow" aria-hidden="true">&rarr;</div>
+          <div class="node">
+            <span class="k">Trackline</span>
+            <div class="v">Receipt</div>
+            <div class="d">What ran, what it cost, which grant, what remains.</div>
+          </div>
+        </div>
+        <figcaption>Figure 1 &middot; An agent acts only inside a grant, and every action leaves a receipt its human can read.</figcaption>
+      </figure>
     </div>
   </section>
-  <footer>
-    <div>Pascaal — powered by the Hallmark protocol</div>
-    <div>github.com/Addyx2/hallmark</div>
-  </footer>
+
+  <section id="products">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <div class="label" style="margin-bottom:14px">What we do</div>
+          <h2>Six products. One loop.</h2>
+        </div>
+      </div>
+      <p class="lede">
+        Identity that resolves. Authorization that names the action. Provenance you can show a user.
+        Each product is useful alone; together they close the loop from first contact to a receipt.
+      </p>
+      <div class="cards">
+        <div class="card">
+          <span class="num">01</span>
+          <h3>Imprint &mdash; identity that resolves</h3>
+          <p>A passport is a signed lineage from agent &rarr; parent &rarr; &hellip; &rarr; root attestation, bound to a human&rsquo;s passkey. Verification is stateless and measured in microseconds.</p>
+        </div>
+        <div class="card">
+          <span class="num">02</span>
+          <h3>Grants &mdash; authorization that names the action</h3>
+          <p>Capability, budget slice, action, lifetime and <span class="mono">jti</span> in one token. Route auth succeeds only when a capability matches; budgets are disjoint at spawn, charged on observed usage.</p>
+        </div>
+        <div class="card">
+          <span class="num">03</span>
+          <h3>Barricade &mdash; enforcement at the platform</h3>
+          <p>Provider-side plugin that requires an imprint and a grant per surface. Enroll users at their <em>first responsibility</em>, not their first contact.</p>
+        </div>
+        <div class="card">
+          <span class="num">04</span>
+          <h3>Freeroam &mdash; observation with zero friction</h3>
+          <p>Cooperative agents self-identify; you get attribution before you require anything. Observe-only, no accounts, no interception &mdash; the wedge to enforcement.</p>
+        </div>
+        <div class="card">
+          <span class="num">05</span>
+          <h3>Trackline &mdash; provenance users can read</h3>
+          <p>Every action becomes a receipt: what the agent did, what it cost, which grant authorized it, and how much budget remains.</p>
+        </div>
+        <div class="card">
+          <span class="num">06</span>
+          <h3>Seal v2 &mdash; ownership of original work</h3>
+          <p>Ownership seals on original works (<span class="mono">hallmark+work</span>), enabling licensed use and payment instead of silent copying.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="numbers">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <div class="label" style="margin-bottom:14px">In the open</div>
+          <h2>Numbers you can re-run.</h2>
+        </div>
+      </div>
+      <p class="lede">
+        Every claim below is produced by code in the repository &mdash; <span class="mono">npm test</span> and
+        <span class="mono">npm run bench</span>. If a number weakens, the suite fails.
+      </p>
+      <div class="stats">
+        <div>
+          <table>
+            <thead>
+              <tr><th>Measurement</th><th>Measured</th><th>Budget</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Passport verification</td><td><span class="big">~116 &micro;s</span></td><td>5 ms</td></tr>
+              <tr><td>Edge registry walk</td><td><span class="big">11.8 ns</span> / hop</td><td>&mdash;</td></tr>
+              <tr><td>Containment window</td><td><span class="big">&le; 150 s</span></td><td>300 s hard cap</td></tr>
+              <tr><td>Conformance suite</td><td><span class="big">38 vectors</span></td><td>46 checks</td></tr>
+              <tr><td>Dependencies</td><td><span class="big">0</span></td><td>Node built-ins</td></tr>
+            </tbody>
+          </table>
+          <p class="note">Means from bench.mjs. p99 must be measured on your traffic before any SLO is promised.</p>
+        </div>
+        <div class="side">
+          <div class="stat"><div class="n">2</div><div class="l">algorithms: EdDSA primary, ES256 fallback</div></div>
+          <div class="stat"><div class="n">1</div><div class="l">specification, 21 sections, fully asserted</div></div>
+          <div class="stat"><div class="n">6 / 32</div><div class="l">accept vectors / exact-error vectors</div></div>
+        </div>
+      </div>
+
+      <blockquote class="quote">
+        Where prose and code disagree, prose wins and this file is a bug.
+        <footer>&mdash; the spec&rsquo;s own rule, enforced by a crosscheck on every run</footer>
+      </blockquote>
+    </div>
+  </section>
+
+  <section id="security">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <div class="label" style="margin-bottom:14px">Security</div>
+          <h2>Designed to fail closed.</h2>
+        </div>
+      </div>
+      <p class="lede">
+        The passport is the only thing crossing the trust boundary, so it is small, canonical, and
+        boring on purpose. Everything that could be abused is either forbidden by the format or
+        pinned by the registry.
+      </p>
+      <div class="checks">
+        <div class="check">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7.5 5.5 11 12 3.5" stroke="#bff5ee" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div><b>Algorithm allowlist.</b> <span class="mono">[EdDSA, ES256]</span> &mdash; nothing else is accepted, ever.</div>
+        </div>
+        <div class="check">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7.5 5.5 11 12 3.5" stroke="#bff5ee" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div><b>Canonical JSON only.</b> RFC&nbsp;8785 JCS; duplicate keys and non-canonical encodings are rejected.</div>
+        </div>
+        <div class="check">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7.5 5.5 11 12 3.5" stroke="#bff5ee" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div><b>No key discovery by URL.</b> <span class="mono">jku</span>, <span class="mono">x5u</span> and <span class="mono">x5c</span> are forbidden; keys come from the registry.</div>
+        </div>
+        <div class="check">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7.5 5.5 11 12 3.5" stroke="#bff5ee" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div><b>Replay suppressed.</b> A <span class="mono">jti</span> cache plus a sequence window; reuse is a hard error, not a warning.</div>
+        </div>
+        <div class="check">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7.5 5.5 11 12 3.5" stroke="#bff5ee" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div><b>Revocation is per capability.</b> Stale revocation data fails closed for that capability only.</div>
+        </div>
+        <div class="check">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7.5 5.5 11 12 3.5" stroke="#bff5ee" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div><b>Short lifetimes by construction.</b> TTL &le; 120 s, hard cap 300 s &mdash; the containment window is a design constant, not a policy promise.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="deploy">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <div class="label" style="margin-bottom:14px">Deployment</div>
+          <h2>Pascaal runs where your traffic runs.</h2>
+        </div>
+      </div>
+      <p class="lede">
+        Verification is stateless and the passport carries no PII &mdash; only a lineage, a grant
+        reference and public key material. Put it in front of the thing that already sees agent traffic.
+      </p>
+      <div class="deploy">
+        <div class="dep">
+          <div class="num">001</div>
+          <h4>In your gateway</h4>
+          <p>One header check before routing. Reject, challenge, or allow with attribution &mdash; your call per route.</p>
+        </div>
+        <div class="dep">
+          <div class="num">002</div>
+          <h4>At the edge</h4>
+          <p>Stateless verification plus registry lookups; no per-request call back to a control plane.</p>
+        </div>
+        <div class="dep">
+          <div class="num">003</div>
+          <h4>In your VPC</h4>
+          <p>Self-host the verifier and the registry anchor. The passport format does not care where it is checked.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="writing">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <div class="label" style="margin-bottom:14px">Writing</div>
+          <h2>Design notes, in the open.</h2>
+        </div>
+      </div>
+      <div class="posts">
+        <a class="post" href="https://github.com/Addyx2/hallmark/blob/main/spec/Hallmark-Agent-Identity-Spec.md" target="_blank" rel="noopener">
+          <span class="n">01</span><span class="t">The Hallmark Agent Identity Protocol &mdash; normative spec v1</span><span class="m">21 sections</span>
+        </a>
+        <a class="post" href="https://github.com/Addyx2/hallmark/blob/main/spec/design/Product-Family.md" target="_blank" rel="noopener">
+          <span class="n">02</span><span class="t">Six products, one loop &mdash; how Imprint, Grants and Barricade fit</span><span class="m">design note</span>
+        </a>
+        <a class="post" href="https://github.com/Addyx2/hallmark/blob/main/spec/design/Seal-v2-Design.md" target="_blank" rel="noopener">
+          <span class="n">03</span><span class="t">Seal v2 &mdash; ownership of original work, and why seals beat DRM</span><span class="m">design note</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <div class="final">
+    <div class="wrap">
+      <div class="label" style="margin-bottom:14px">Running agents in production?</div>
+      <h2>You are one header away from attribution.</h2>
+      <p>
+        If your platform already sees agent traffic, start with Freeroam: observe-only, zero accounts,
+        no interception. Add Barricade when you are ready to enforce.
+      </p>
+      <div class="cta">
+        <a class="btn btn-primary" href="https://github.com/Addyx2/hallmark" target="_blank" rel="noopener">Read the protocol</a>
+        <a class="btn btn-ghost" href="https://github.com/Addyx2/hallmark/blob/main/spec/README.md" target="_blank" rel="noopener">Run the vectors</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" href="#top"><span class="mark" aria-hidden="true"></span><span>Pascaal</span></a>
+        <p>Accountability for AI agents. Powered by the open Hallmark protocol.</p>
+      </div>
+      <div>
+        <h5>Protocol</h5>
+        <a href="https://github.com/Addyx2/hallmark/blob/main/spec/Hallmark-Agent-Identity-Spec.md" target="_blank" rel="noopener">Specification</a>
+        <a href="https://github.com/Addyx2/hallmark/blob/main/spec/README.md" target="_blank" rel="noopener">Conformance</a>
+        <a href="https://github.com/Addyx2/hallmark" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <div>
+        <h5>Design</h5>
+        <a href="https://github.com/Addyx2/hallmark/blob/main/spec/design/Product-Family.md" target="_blank" rel="noopener">Product family</a>
+        <a href="https://github.com/Addyx2/hallmark/blob/main/spec/design/Seal-v2-Design.md" target="_blank" rel="noopener">Seal v2</a>
+        <a href="https://github.com/Addyx2/hallmark/blob/main/PASCAAL_BRAND_NOTE.md" target="_blank" rel="noopener">Brand note</a>
+      </div>
+      <div>
+        <h5>Status</h5>
+        <a href="https://github.com/Addyx2/hallmark" target="_blank" rel="noopener">Draft v1.0</a>
+        <a href="#numbers">Not ratified</a>
+        <a href="#security">No production deployment</a>
+      </div>
+    </div>
+    <div class="foot-base">
+      <span>&copy; 2026 Pascaal</span>
+      <span>hallmark &middot; EdDSA / ES256 &middot; RFC 8785</span>
+    </div>
+  </div>
+</footer>
 </body>
 </html>
