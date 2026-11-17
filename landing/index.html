@@ -52,7 +52,9 @@
     margin-inline:auto;align-items:start;position:relative;
   }
   .page:before{content:"";position:absolute;inset-block:0;left:calc(var(--rail-w) + 56px);width:1px;background:var(--rule)}
-  .rail{padding-block:64px 48px;position:sticky;top:0;height:fit-content}
+  .rail{padding-block:64px 48px;position:sticky;top:0;height:fit-content;max-height:100vh;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#c9c9c9 transparent}
+  .rail::-webkit-scrollbar{width:6px}
+  .rail::-webkit-scrollbar-thumb{background:#d7d7d7;border-radius:3px}
   .col{padding-block:64px 96px;min-width:0}
 
   /* ---------- brand ---------- */
@@ -316,7 +318,7 @@
   @media(max-width:1000px){
     .page{grid-template-columns:minmax(0,1fr);width:min(680px,100% - 48px)}
     .page:before{display:none}
-    .rail{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:16px 0;background:#fff;border-bottom:1px solid var(--rule);height:auto}
+    .rail{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:16px 0;background:#fff;border-bottom:1px solid var(--rule);height:auto;max-height:none;overflow:visible}
     .rail .nav{flex-flow:wrap;gap:6px 18px;margin-top:0}
     .rail-rule,.nav-here{display:none}
     .nav a{font-size:13.5px}
