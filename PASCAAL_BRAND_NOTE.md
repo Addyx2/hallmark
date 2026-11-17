@@ -1,17 +1,30 @@
-# Rename to Pascaal (product) while keeping Hallmark (protocol)
+# Pascaal — company, product map and launch note
 
 ## Rationale
-- Hallmark is heavily trademarked in US (Hallmark Cards Inc) — risky for a product name. Keep as protocol/spec/internal name.
-- Pascaal: domain pascaal.com appears available, distinctive (close to Pascal/Pascale but unique), blank slate, pronounceable. Fits "identity/provenance" brand.
-- Product family (Imprint, Grants, Barricade, Freeroam, Trackline, Seal v2) reads clean under Pascaal.
+- Hallmark is heavily trademarked in US (Hallmark Cards Inc) — risky as a company name, fine as a protocol name.
+- Pascaal: domain pascaal.com appears available, distinctive (close to Pascal/Pascale but unique), blank slate, pronounceable. Fits "AI components" brand.
+- The company needs room for multiple products: Hallmark today, Plots and Waterguard next.
 
 ## Naming map
-- Product/company: Pascaal
-- Protocol/spec: Hallmark (keep filenames/spec titles as-is for now to avoid breaking references; can alias later)
+- **Company: Pascaal** — "AI components for safety and adoption."
+- **Product 01: Hallmark** — agent identity and accountability (passport, grants, Trackline). Also the protocol name.
+- **Product 02: Plots** — autonomous work management. In design.
+- **Product 03: Waterguard** — agent security models. Research.
+- Protocol/spec: Hallmark (keep filenames/spec titles as-is to avoid breaking references; can alias later).
 - Repo stays `hallmark` (or rename later if desired) — not critical.
 
 ## Suggested tagline
-"Pascaal — resolve agent → human. Attribute every action."
+"Pascaal — AI components for safety and adoption."
+
+Sub-line: "Hallmark makes agents accountable. Plots puts them to work. Waterguard keeps them inside the lines."
+
+## Product map
+
+| Product | Job | Status |
+| --- | --- | --- |
+| Hallmark | Resolve agent → human; grants, budgets, receipts | Spec v1, open |
+| Plots | Plan, execute and report autonomous work | In design |
+| Waterguard | Threat model, policy and containment for agents | Research |
 
 ## GTM wedge (matches your thesis)
 "Accept agents. Attribute humans." — every SaaS can know which user owns the agents using their platform.
@@ -43,5 +56,6 @@ Pascaal is the right call. Distinctive, available-ish domain-wise, avoids Hallma
 - 2026-10-19: User chose Pascaal as product name; landing stays private for now.
 - 2026-10-19: DNS check `pascaal.com` — no A/NS records (consistent with unregistered). Register ASAP to lock it in.
 - 2026-10-19: Landing page rebranded to Pascaal (Hallmark kept as protocol name in footer + docs).
+- 2026-11-17: Structure changed to company-level. Pascaal is the homepage; Hallmark, Plots and Waterguard are products. Company line: "AI components for safety and adoption." Landing rebuilt around that IA.
 - TODO: USPTO word-mark search for "Pascaal" (Classes 9/38/42) before public launch.
 - TODO: Buy pascaal.com when ready to go public.

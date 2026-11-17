@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Pascaal — accountability for AI agents</title>
-<meta name="description" content="Pascaal is building the accountability layer for AI agents. Every agent resolves to one responsible human; every action is authorized by a grant; every outcome leaves a receipt. Powered by the open Hallmark protocol.">
+<title>Pascaal — AI components for safety and adoption</title>
+<meta name="description" content="Pascaal builds AI components for safety and adoption: Hallmark for agent accountability, Plots for autonomous work management, Waterguard for agent security models.">
 <meta name="theme-color" content="#ffffff">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -59,6 +59,7 @@
   .brand{display:inline-flex;align-items:center;gap:9px;font-weight:500;letter-spacing:-.02em;font-size:18px}
   .brand-mark{width:18px;height:18px;background:var(--blue);border-radius:4px;position:relative;flex:none}
   .brand-mark:after{content:"";position:absolute;inset:4px;border:1.5px solid #fff;border-radius:1px;border-bottom-color:transparent;border-right-color:transparent}
+  .brand-sub{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-45);display:block;margin-top:3px;font-weight:400}
 
   /* ---------- rail nav ---------- */
   .rail .nav{display:flex;flex-direction:column;align-items:flex-start;gap:13px;margin-top:40px}
@@ -84,6 +85,7 @@
   .note-live{width:6px;height:6px;border-radius:50%;background:var(--blue);flex:none}
   .note-cta{color:var(--blue);font-weight:500;display:inline-flex;align-items:center}
   .statement{font-size:40px;line-height:1.12;letter-spacing:-.03em;font-weight:400;text-wrap:balance;max-width:19em}
+  .statement b{font-weight:500}
   .dek{margin-top:22px;font-size:17px;line-height:1.6;letter-spacing:-.006em;color:var(--ink-68);max-width:33em;text-wrap:pretty}
   .dek b{color:var(--ink);font-weight:500}
 
@@ -141,6 +143,31 @@
   .more{display:inline-flex;align-items:center;font-size:14.5px;font-weight:500;color:var(--ink);margin-top:22px;transition:color .2s}
   .more:hover{color:var(--blue)}
 
+  /* ---------- products ---------- */
+  .products{margin-top:34px;border-top:1px solid var(--rule)}
+  .product{
+    display:grid;grid-template-columns:38px 1fr auto;gap:6px 14px;
+    padding:20px 0 22px;border-bottom:1px solid var(--rule-soft);transition:padding-left .2s var(--ease);
+  }
+  .product:hover{padding-left:4px}
+  .product .n{font-family:var(--mono);font-size:11px;color:var(--ink-45);padding-top:5px}
+  .product h3{font-size:19px;font-weight:500;letter-spacing:-.02em;line-height:1.3;transition:color .2s}
+  .product:hover h3{color:var(--blue)}
+  .product .tag{
+    align-self:start;margin-top:3px;font-family:var(--mono);font-size:9.5px;font-weight:500;
+    letter-spacing:.07em;text-transform:uppercase;border:1px solid var(--rule);border-radius:999px;
+    padding:2px 8px;color:var(--ink-60);white-space:nowrap;
+  }
+  .product .tag.live{border-color:#0562ef4d;background:var(--blue-7);color:var(--blue)}
+  .product .desc{grid-column:2/-1;font-size:14px;line-height:1.6;color:var(--ink-68);max-width:31em}
+  .product .desc a{color:var(--blue);text-decoration:underline;text-decoration-color:#0562ef4d;text-underline-offset:3px}
+  .product .desc a:hover{text-decoration-color:var(--blue)}
+  @media(max-width:520px){
+    .product{grid-template-columns:30px 1fr}
+    .product .tag{grid-column:2;justify-self:start;margin-top:6px}
+    .product .desc{grid-column:2}
+  }
+
   /* ---------- figure ---------- */
   figure.fig{position:relative;margin-top:34px;border:1px solid var(--rule);padding:22px 20px 18px;background:#fff}
   .tick{position:absolute;width:9px;height:9px;color:#0562ef8c;pointer-events:none}
@@ -164,7 +191,7 @@
     .step .what{max-width:34em}
   }
 
-  /* ---------- product rows ---------- */
+  /* ---------- component rows ---------- */
   .rows{margin-top:30px;border-top:1px solid var(--rule)}
   .row{display:grid;grid-template-columns:38px 1fr;gap:14px;padding:18px 0;border-bottom:1px solid var(--rule-soft);transition:padding-left .2s var(--ease)}
   .row:hover{padding-left:4px}
@@ -222,6 +249,20 @@
   .check b{color:var(--ink);font-weight:500}
   .check .mono{font-size:12.5px;background:var(--paper);padding:1px 5px;border-radius:3px}
 
+  /* ---------- product detail bullets ---------- */
+  .bullets{margin-top:26px;border-top:1px solid var(--rule)}
+  .bullet{display:grid;grid-template-columns:38px 1fr;gap:14px;padding:13px 0;border-bottom:1px solid var(--rule-soft)}
+  .bullet .n{font-family:var(--mono);font-size:11px;color:var(--ink-45);padding-top:3px}
+  .bullet p{font-size:14.5px;line-height:1.6;color:var(--ink-68);max-width:33em}
+  .bullet b{color:var(--ink);font-weight:500}
+  .status-line{
+    display:inline-flex;align-items:center;gap:8px;margin-top:18px;font-family:var(--mono);
+    font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-60);
+  }
+  .status-line i{width:6px;height:6px;border-radius:50%;background:#d08700;flex:none}
+  .status-line.live i{background:#10a86a}
+  .status-line.research i{background:#0562ef}
+
   /* ---------- writing ---------- */
   .posts{margin-top:30px;border-top:1px solid var(--rule)}
   .post{display:flex;align-items:baseline;gap:16px;padding:14px 0;border-bottom:1px solid var(--rule-soft);transition:padding-left .2s var(--ease)}
@@ -262,7 +303,7 @@
   @media(prefers-reduced-motion:reduce){
     html{scroll-behavior:auto}
     html.js [data-reveal]{opacity:1;translate:0;transition:none}
-    .arrow,.btn,.prompt,.post,.row,.nav-here a:before,.up{transition:none}
+    .arrow,.btn,.prompt,.post,.row,.product,.nav-here a:before,.up{transition:none}
   }
 
   /* ---------- responsive shell ---------- */
@@ -292,28 +333,31 @@
 
   <!-- ============ rail ============ -->
   <aside class="rail">
-    <a class="brand" href="#top" aria-label="Pascaal, home">
-      <span class="brand-mark" aria-hidden="true"></span>
-      <span>Pascaal</span>
-    </a>
+    <div>
+      <a class="brand" href="#top" aria-label="Pascaal, home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>Pascaal</span>
+      </a>
+      <span class="brand-sub">AI components</span>
+    </div>
 
     <nav class="nav nav-doors" aria-label="Site">
       <a href="#top" aria-current="page">Home</a>
-      <a href="#protocol">Protocol</a>
       <a href="#products">Products</a>
-      <a href="#numbers">Numbers</a>
-      <a href="#security">Security</a>
+      <a href="#hallmark">Hallmark</a>
+      <a href="#plots">Plots</a>
+      <a href="#waterguard">Waterguard</a>
       <a href="#writing">Writing</a>
     </nav>
 
     <hr class="rail-rule">
 
     <nav class="nav nav-here" aria-label="Sections">
-      <a href="#protocol">The problem</a>
-      <a href="#products">What we do</a>
+      <a href="#products">Products</a>
+      <a href="#hallmark">Hallmark</a>
       <a href="#numbers">In production</a>
-      <a href="#deploy">Deployment</a>
-      <a href="#security">Security</a>
+      <a href="#plots">Plots</a>
+      <a href="#waterguard">Waterguard</a>
       <a href="#writing">Writing</a>
     </nav>
   </aside>
@@ -322,27 +366,27 @@
   <main class="col" id="top">
 
     <div class="hero">
-      <a class="note" href="#protocol" data-reveal="load" style="--d:40ms">
+      <a class="note" href="#products" data-reveal="load" style="--d:40ms">
         <span class="note-live" aria-hidden="true"></span>
-        <span>Hallmark Agent Identity Spec v1</span>
-        <span class="note-cta">Read the spec<span class="arrow" aria-hidden="true">↗</span></span>
+        <span>Hallmark spec v1 is public</span>
+        <span class="note-cta">Explore products<span class="arrow" aria-hidden="true">↗</span></span>
       </a>
 
-      <h1 class="statement" data-reveal="load" style="--d:120ms">Pascaal is building the accountability layer for AI agents.</h1>
+      <h1 class="statement" data-reveal="load" style="--d:120ms">Pascaal builds <b>AI components</b> for safety and adoption.</h1>
 
       <p class="dek" data-reveal="load" style="--d:200ms">
-        Every agent resolves to <b>one responsible human</b>. Imprints bind identity, grants
-        authorize exact actions with budgets, and Trackline proves what happened. Available as an
-        open protocol, a verification library, and a plugin.
+        <b>Hallmark</b> makes agents accountable. <b>Plots</b> puts them to work.
+        <b>Waterguard</b> keeps them inside the lines. One thesis: agents should be
+        identifiable, employable, and defensible.
       </p>
 
       <div class="actions" data-reveal="load" style="--d:260ms">
-        <a class="btn btn-primary" href="https://github.com/Addyx2/hallmark" target="_blank" rel="noopener">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h13M12.5 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="square"/></svg>
-          Build with Pascaal
+        <a class="btn btn-primary" href="#products">
+          Explore products
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h13M12.5 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="square"/></svg>
         </a>
         <a class="btn btn-secondary" href="https://github.com/Addyx2/hallmark/blob/main/spec/Hallmark-Agent-Identity-Spec.md" target="_blank" rel="noopener">
-          Read the spec
+          Read the Hallmark spec
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M17.5 15V6.5H9M17.07 6.93 6.5 17.5" stroke="currentColor" stroke-width="2" stroke-linecap="square"/></svg>
         </a>
       </div>
@@ -369,9 +413,53 @@
       </div>
     </div>
 
-    <!-- 01 -->
-    <section id="protocol" data-reveal>
-      <div class="eyebrow"><i aria-hidden="true"></i>01 &middot; The problem</div>
+    <!-- 01 · PRODUCTS -->
+    <section id="products" data-reveal>
+      <div class="eyebrow"><i aria-hidden="true"></i>01 &middot; Products</div>
+      <h2 class="creed">Three components. <b>One thesis.</b></h2>
+      <p class="body">
+        Every product answers the same question from a different angle: can a human stay
+        responsible while an agent does the work? Hallmark is shipping. Plots and Waterguard
+        are in design, built on the same identity layer.
+      </p>
+
+      <div class="products">
+        <div class="product">
+          <span class="n">01</span>
+          <h3>Hallmark</h3>
+          <span class="tag live">Spec v1</span>
+          <p class="desc">
+            Agent identity and accountability. A short-lived passport resolves every agent to one
+            responsible human, with grants that name the action and budgets that cannot be shared.
+            <a href="https://github.com/Addyx2/hallmark" target="_blank" rel="noopener">Read the protocol ↗</a>
+          </p>
+        </div>
+        <div class="product">
+          <span class="n">02</span>
+          <h3>Plots</h3>
+          <span class="tag">In design</span>
+          <p class="desc">
+            Autonomous work management. Agents that plan, execute and report real work &mdash; with
+            the plan, the spend and every hand-off legible to the human who owns the outcome.
+            <a href="#plots">See the direction ↗</a>
+          </p>
+        </div>
+        <div class="product">
+          <span class="n">03</span>
+          <h3>Waterguard</h3>
+          <span class="tag">Research</span>
+          <p class="desc">
+            Agent security models. Threat models, policy and containment for agents acting on real
+            systems &mdash; what they may touch, what they may spend, and when they must stop.
+            <a href="#waterguard">See the direction ↗</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 · HALLMARK -->
+    <section id="hallmark" data-reveal>
+      <div class="eyebrow"><i aria-hidden="true"></i>02 &middot; Hallmark &middot; The problem</div>
       <h2 class="creed">Intelligence is no longer the constraint. <b>Attribution</b> is.</h2>
       <div class="body">
         <p>
@@ -386,10 +474,10 @@
           survives the session.
         </p>
         <p>
-          Pascaal is that layer, built on the open
-          <a href="https://github.com/Addyx2/hallmark/blob/main/spec/Hallmark-Agent-Identity-Spec.md" target="_blank" rel="noopener">Hallmark protocol</a>:
-          Ed25519 with an ES256 fallback, RFC&nbsp;8785 canonical JSON, short-lived passes, and
-          budgets split &mdash; never shared &mdash; at spawn.
+          Hallmark is that layer: Ed25519 with an ES256 fallback, RFC&nbsp;8785 canonical JSON,
+          short-lived passes, and budgets split &mdash; never shared &mdash; at spawn. The
+          <a href="https://github.com/Addyx2/hallmark/blob/main/spec/Hallmark-Agent-Identity-Spec.md" target="_blank" rel="noopener">specification</a>
+          and its executable conformance suite are open.
         </p>
       </div>
 
@@ -429,13 +517,13 @@
       </figure>
     </section>
 
-    <!-- 02 -->
-    <section id="products" data-reveal>
-      <div class="eyebrow"><i aria-hidden="true"></i>02 &middot; What we do</div>
-      <h2 class="creed">Six products. <b>One loop.</b></h2>
+    <!-- 03 · HALLMARK COMPONENTS -->
+    <section id="components" data-reveal>
+      <div class="eyebrow"><i aria-hidden="true"></i>03 &middot; Hallmark &middot; Components</div>
+      <h2 class="creed">Six components. <b>One loop.</b></h2>
       <p class="body">
         Identity that resolves. Authorization that names the action. Provenance you can show a user.
-        Each product is useful alone; together they close the loop from first contact to a receipt.
+        Each component is useful alone; together they close the loop from first contact to a receipt.
       </p>
 
       <div class="rows">
@@ -486,9 +574,9 @@
       <a class="more" href="https://github.com/Addyx2/hallmark/blob/main/spec/design/Product-Family.md" target="_blank" rel="noopener">Read the product family<span class="arrow" aria-hidden="true">↗</span></a>
     </section>
 
-    <!-- 03 -->
+    <!-- 04 · IN PRODUCTION -->
     <section id="numbers" data-reveal>
-      <div class="eyebrow"><i aria-hidden="true"></i>03 &middot; In production</div>
+      <div class="eyebrow"><i aria-hidden="true"></i>04 &middot; Hallmark &middot; In production</div>
       <h2 class="creed">Our <b>promise</b> is identity that resolves: the kind you can prove in a receipt, not just assert in a policy.</h2>
       <p class="body">
         Every number below is produced by code in the repository &mdash; <span class="mono">npm test</span>
@@ -539,10 +627,10 @@
       </div>
     </section>
 
-    <!-- 04 -->
+    <!-- 05 · DEPLOYMENT -->
     <section id="deploy" data-reveal>
-      <div class="eyebrow"><i aria-hidden="true"></i>04 &middot; Deployment</div>
-      <h2 class="creed">Pascaal runs <b>where your traffic runs.</b></h2>
+      <div class="eyebrow"><i aria-hidden="true"></i>05 &middot; Hallmark &middot; Deployment</div>
+      <h2 class="creed">Hallmark runs <b>where your traffic runs.</b></h2>
       <p class="body">
         Verification is stateless and the passport carries no PII &mdash; only a lineage, a grant
         reference and public key material. Put it in front of the thing that already sees agent traffic.
@@ -572,9 +660,9 @@
       </div>
     </section>
 
-    <!-- 05 -->
+    <!-- 06 · SECURITY -->
     <section id="security" data-reveal>
-      <div class="eyebrow"><i aria-hidden="true"></i>05 &middot; Security</div>
+      <div class="eyebrow"><i aria-hidden="true"></i>06 &middot; Hallmark &middot; Security</div>
       <h2 class="creed">Designed to <b>fail closed.</b></h2>
       <p class="body">
         The passport is the only thing crossing the trust boundary, so it is small, canonical, and
@@ -609,9 +697,61 @@
       </div>
     </section>
 
-    <!-- 06 -->
+    <!-- 07 · PLOTS -->
+    <section id="plots" data-reveal>
+      <div class="eyebrow"><i aria-hidden="true"></i>07 &middot; Plots &middot; In design</div>
+      <h2 class="creed">Autonomous work, <b>legibly owned.</b></h2>
+      <p class="body">
+        Plots is our work-management component. Agents plan, execute and report real work, while
+        the human who owns the outcome can see the plan, the spend and every hand-off. It is not a
+        task board with an agent bolted on; it is a work loop where accountability is the default.
+      </p>
+      <div class="bullets">
+        <div class="bullet">
+          <span class="n">01</span>
+          <p><b>Plan.</b> Decompose an objective into steps a human can read, approve and re-scope before anything runs.</p>
+        </div>
+        <div class="bullet">
+          <span class="n">02</span>
+          <p><b>Execute.</b> Run each step under a Hallmark grant, so scope and spend are bounded by construction.</p>
+        </div>
+        <div class="bullet">
+          <span class="n">03</span>
+          <p><b>Report.</b> Close the loop with a receipt the owner can audit &mdash; what ran, what it cost, what changed.</p>
+        </div>
+      </div>
+      <span class="status-line"><i aria-hidden="true"></i>In design &middot; not yet shipping</span>
+    </section>
+
+    <!-- 08 · WATERGUARD -->
+    <section id="waterguard" data-reveal>
+      <div class="eyebrow"><i aria-hidden="true"></i>08 &middot; Waterguard &middot; Research</div>
+      <h2 class="creed">Agent security, <b>as a model.</b></h2>
+      <p class="body">
+        Waterguard is our security-model component. Not a scanner and not a prompt filter: a way to
+        name the assets, the actions and the failure modes of an agent that touches real systems,
+        then enforce the answer where the action actually happens.
+      </p>
+      <div class="bullets">
+        <div class="bullet">
+          <span class="n">01</span>
+          <p><b>Model.</b> Name the assets, the actions and the failure modes before an agent is deployed.</p>
+        </div>
+        <div class="bullet">
+          <span class="n">02</span>
+          <p><b>Enforce.</b> Policy that fails closed at the gateway &mdash; not in a prompt, and not in a hope.</p>
+        </div>
+        <div class="bullet">
+          <span class="n">03</span>
+          <p><b>Contain.</b> A bounded window between detection and stop, backed by short-lived credentials.</p>
+        </div>
+      </div>
+      <span class="status-line research"><i aria-hidden="true"></i>Research &middot; direction only</span>
+    </section>
+
+    <!-- 09 · WRITING -->
     <section id="writing" data-reveal>
-      <div class="eyebrow"><i aria-hidden="true"></i>06 &middot; Writing</div>
+      <div class="eyebrow"><i aria-hidden="true"></i>09 &middot; Writing</div>
       <h2 class="creed">Design notes, <b>in the open.</b></h2>
       <div class="posts">
         <a class="post" href="https://github.com/Addyx2/hallmark/blob/main/spec/Hallmark-Agent-Identity-Spec.md" target="_blank" rel="noopener">
@@ -621,7 +761,7 @@
         </a>
         <a class="post" href="https://github.com/Addyx2/hallmark/blob/main/spec/design/Product-Family.md" target="_blank" rel="noopener">
           <span class="n">02</span>
-          <span class="t">Six products, one loop &mdash; how Imprint, Grants and Barricade fit</span>
+          <span class="t">Six components, one loop &mdash; how Imprint, Grants and Barricade fit</span>
           <span class="m">Design note</span>
         </a>
         <a class="post" href="https://github.com/Addyx2/hallmark/blob/main/spec/design/Seal-v2-Design.md" target="_blank" rel="noopener">
@@ -634,11 +774,12 @@
 
     <!-- final -->
     <div class="final" data-reveal>
-      <div class="eyebrow"><i aria-hidden="true"></i>Running agents in production?</div>
-      <h2>You are one header away from attribution.</h2>
+      <div class="eyebrow"><i aria-hidden="true"></i>Build with Pascaal</div>
+      <h2>Start with Hallmark. The rest plugs into the same identity.</h2>
       <p>
         If your platform already sees agent traffic, start with Freeroam: observe-only, zero accounts,
-        no interception. Add Barricade when you are ready to enforce.
+        no interception. Add Barricade when you are ready to enforce &mdash; and Plots and Waterguard
+        inherit the same lineage.
       </p>
       <div class="actions">
         <a class="btn btn-primary" href="https://github.com/Addyx2/hallmark" target="_blank" rel="noopener">
@@ -657,7 +798,13 @@
             <span class="brand-mark" aria-hidden="true"></span>
             <span>Pascaal</span>
           </a>
-          <p class="foot-line">Accountability for AI agents. Powered by the open Hallmark protocol.</p>
+          <p class="foot-line">AI components for safety and adoption.</p>
+        </div>
+        <div class="foot-group">
+          <span class="foot-head">Products</span>
+          <a href="#hallmark">Hallmark</a>
+          <a href="#plots">Plots</a>
+          <a href="#waterguard">Waterguard</a>
         </div>
         <div class="foot-group">
           <span class="foot-head">Protocol</span>
@@ -666,22 +813,16 @@
           <a href="https://github.com/Addyx2/hallmark" target="_blank" rel="noopener">GitHub</a>
         </div>
         <div class="foot-group">
-          <span class="foot-head">Design</span>
-          <a href="https://github.com/Addyx2/hallmark/blob/main/spec/design/Product-Family.md" target="_blank" rel="noopener">Product family</a>
-          <a href="https://github.com/Addyx2/hallmark/blob/main/spec/design/Seal-v2-Design.md" target="_blank" rel="noopener">Seal v2</a>
+          <span class="foot-head">Company</span>
+          <a href="#writing">Writing</a>
           <a href="https://github.com/Addyx2/hallmark/blob/main/PASCAAL_BRAND_NOTE.md" target="_blank" rel="noopener">Brand note</a>
-        </div>
-        <div class="foot-group">
-          <span class="foot-head">Status</span>
-          <a href="https://github.com/Addyx2/hallmark" target="_blank" rel="noopener">Draft v1.0</a>
-          <a href="#numbers">Not ratified</a>
-          <a href="#security">No production deployment</a>
+          <a href="https://github.com/Addyx2/hallmark/blob/main/README.md" target="_blank" rel="noopener">Repository</a>
         </div>
       </div>
       <div class="foot-legal">
         <span>&copy; 2026 Pascaal</span>
-        <span class="mono" style="font-size:11px">EdDSA / ES256 &middot; RFC 8785</span>
-        <a class="foot-status" href="#top"><span class="dot" aria-hidden="true"></span>Spec draft &mdash; v1.0</a>
+        <span class="mono" style="font-size:11px">Hallmark &middot; EdDSA / ES256 &middot; RFC 8785</span>
+        <a class="foot-status" href="#hallmark"><span class="dot" aria-hidden="true"></span>Hallmark spec v1 &mdash; draft</a>
         <a class="foot-top" href="#top">Back to top<span class="up" aria-hidden="true">&nbsp;&uarr;</span></a>
       </div>
     </footer>
