@@ -878,6 +878,11 @@
     });
   }
 
+  // ---- reveal on load (hero) ----
+  requestAnimationFrame(() => {
+    document.querySelectorAll('[data-reveal="load"]').forEach((el) => el.classList.add('is-visible'));
+  });
+
   // ---- reveal on scroll ----
   const reveal = document.querySelectorAll('[data-reveal]:not([data-reveal="load"])');
   if ('IntersectionObserver' in window) {
