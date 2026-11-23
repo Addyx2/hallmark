@@ -26,7 +26,7 @@ inherit the same lineage rather than invent a second identity system.
 | --- | --- |
 | [`spec/`](spec/) | Hallmark normative spec + executable reference implementation + conformance suite |
 | [`spec/design/`](spec/design/) | Non-normative design notes (Seal v2, product family) |
-| [`landing/`](landing/) | Company site (private for now) |
+| [`landing/`](landing/) | Company site source (public repo; Vercel deployment linked from About) |
 | [`PASCAAL_BRAND_NOTE.md`](PASCAAL_BRAND_NOTE.md) | Naming decision, product map and launch checklist |
 
 ## Verify Hallmark
