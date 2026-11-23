@@ -3,6 +3,8 @@
 Normative specification for the Hallmark Agent Identity Protocol, plus the
 executable reference implementation and its conformance suite.
 
+Protocol home: [hallmark.pascaal.com](https://hallmark.pascaal.com).
+
 > **Branding:** Hallmark is a product of **Pascaal** — AI components for safety
 > and adoption (see [`../PASCAAL_BRAND_NOTE.md`](../PASCAAL_BRAND_NOTE.md)).
 > "Hallmark" is both the product and the protocol name; `typ`, header and error

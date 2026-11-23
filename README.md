@@ -6,6 +6,9 @@ Pascaal builds the pieces that let agents do real work without losing the human
 who is responsible for it. Three products, one thesis: agents should be
 **identifiable, employable, and defensible**.
 
+- **Company:** [pascaal.com](https://pascaal.com)
+- **Hallmark:** [hallmark.pascaal.com](https://hallmark.pascaal.com) — product and protocol home
+
 | Product | What it is | Status |
 | --- | --- | --- |
 | **Hallmark** | Agent identity and accountability: a short-lived passport resolves every agent to one responsible human, with grants that name the action and budgets that cannot be shared. | Spec v1, open, executable |
@@ -18,7 +21,7 @@ inherit the same lineage rather than invent a second identity system.
 
 > Pascaal is the company; Hallmark is a product (and the protocol name). See
 > [`PASCAAL_BRAND_NOTE.md`](PASCAAL_BRAND_NOTE.md) for the naming decision and
-> remaining launch checks (domain, USPTO).
+> the remaining launch check (USPTO).
 
 ## Layout
 
@@ -26,7 +29,7 @@ inherit the same lineage rather than invent a second identity system.
 | --- | --- |
 | [`spec/`](spec/) | Hallmark normative spec + executable reference implementation + conformance suite |
 | [`spec/design/`](spec/design/) | Non-normative design notes (Seal v2, product family) |
-| [`landing/`](landing/) | Company site source (public repo; Vercel deployment linked from About) |
+| [`landing/`](landing/) | Site source, published at [hallmark.pascaal.com](https://hallmark.pascaal.com) |
 | [`PASCAAL_BRAND_NOTE.md`](PASCAAL_BRAND_NOTE.md) | Naming decision, product map and launch checklist |
 
 ## Verify Hallmark

@@ -29,21 +29,24 @@ Sub-line: "Hallmark makes agents accountable. Plots puts them to work. Waterguar
 ## GTM wedge (matches your thesis)
 "Accept agents. Attribute humans." — every SaaS can know which user owns the agents using their platform.
 
-## Domain + trademark quick checks (to do before public launch)
-- pascaal.com: appears available (based on search context). Buy before others do.
+## Domains + hosting
+- `pascaal.com`: **registered** and live — company marketing site, hosted on another platform (not Vercel).
+- `hallmark.pascaal.com`: **live** — serves the site in `landing/`, and is the canonical Hallmark / protocol entry point (GitHub About points here).
+- `hallmark-topaz.vercel.app`: original Vercel deployment, no longer the canonical URL.
 - USPTO: search "Pascaal" (word mark) across classes relevant to identity/auth/SaaS. Distinctive string reduces conflict risk vs. common words.
 - Global: UKIPO/WIPO later if going international.
 
-## Landing (public since 2026-11-23)
-`landing/index.html` is in the public repo and is deployed at
-`hallmark-topaz.vercel.app` (linked from the repo About). Custom domain
-`pascaal.com` is not registered yet — move the Vercel deployment there when it is.
+## Messaging note
+The company line in this repo is **"AI components for safety and adoption."**
+The current `pascaal.com` homepage uses **"Knowledge work, done for you."**
+Keep the former as the canonical line for the protocol/docs; align the marketing
+site when you next edit it.
 
 ## Next practical steps
-1. Register pascaal.com (if not yet) and attach it to the Vercel deployment
-2. Create USPTO TM search for "Pascaal" (word mark) in relevant classes (Class 42/38/9 for SaaS/auth/telecom) before heavy branding
+1. Run the USPTO TM search for "Pascaal" (word mark) in classes 9/38/42 before heavy branding
+2. Align the `pascaal.com` hero copy with the company line above, if you want one voice
 3. Create logo/brand (minimal)
-4. On the public landing, use product name Pascaal, keep "Hallmark protocol" in About/Docs
+4. On the public sites, use product name Pascaal, keep "Hallmark protocol" in About/Docs
 5. Plugin-first GTM (Freeroam → Barricade) as designed
 
 ## Answer to "how can people use this now?"
@@ -60,5 +63,6 @@ Pascaal is the right call. Distinctive, available-ish domain-wise, avoids Hallma
 - 2026-10-19: Landing page rebranded to Pascaal (Hallmark kept as protocol name in footer + docs).
 - 2026-11-17: Structure changed to company-level. Pascaal is the homepage; Hallmark, Plots and Waterguard are products. Company line: "AI components for safety and adoption." Landing rebuilt around that IA.
 - 2026-11-23: Repository flipped from private to public (`gh repo edit --visibility public`). Vercel deployment at hallmark-topaz.vercel.app was already live and serving the current landing; docs updated to match.
+- 2026-11-23: `pascaal.com` registered and live on another platform (company marketing site). `hallmark.pascaal.com` is live serving `landing/`; GitHub About and repo docs repointed there. Vercel URL kept only as a legacy preview.
 - TODO: USPTO word-mark search for "Pascaal" (Classes 9/38/42) before heavy branding.
-- TODO: Buy pascaal.com when ready to go public.
+- TODO: Align the `pascaal.com` hero with "AI components for safety and adoption" if a single company voice is wanted.
