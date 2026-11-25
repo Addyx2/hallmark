@@ -64,5 +64,13 @@ Pascaal is the right call. Distinctive, available-ish domain-wise, avoids Hallma
 - 2026-11-17: Structure changed to company-level. Pascaal is the homepage; Hallmark, Plots and Waterguard are products. Company line: "AI components for safety and adoption." Landing rebuilt around that IA.
 - 2026-11-23: Repository flipped from private to public (`gh repo edit --visibility public`). Vercel deployment at hallmark-topaz.vercel.app was already live and serving the current landing; docs updated to match.
 - 2026-11-23: `pascaal.com` registered and live on another platform (company marketing site). `hallmark.pascaal.com` is live serving `landing/`; GitHub About and repo docs repointed there. Vercel URL kept only as a legacy preview.
+- 2026-11-25: `pascaal.com` marketing homepage upgraded: hero "AI components for safety and adoption.", Hallmark-only lede, both Hallmark links repointed to `hallmark.pascaal.com`, old blog links removed, Philosophy section and final CTA untouched, skip link/focus styles/mobile Hallmark nav/canvas pause shipped.
+- 2026-11-25: Rank Math live head verified (title, description, canonical, OG/Twitter, robots, JSON-LD); global OG thumbnail and site icon live; sitemaps and robots.txt verified. Redirection 301 `/2026/11/22/introducing-hallmark/` → `https://hallmark.pascaal.com/` verified; old post set to draft.
+- 2026-11-25: Privacy Policy (`/privacy-policy/`) and Terms of Use (`/terms-of-use/`) published and linked from homepage footer. Fresh homepage content backup saved.
+- 2026-11-25: Three spec-theme posts published: "The attribution constraint", "Authority narrows. It does not spill.", and "A kill switch is a containment window". All link to `hallmark.pascaal.com`.
+- 2026-11-25: Wordfence hardening: 2FA enabled and required for administrators; XML-RPC authentication disabled. Free license registration and 2FA enrollment remain user actions.
+- 2026-11-25: Design merged around the Hallmark editorial rail as the master system: white/blue Geist + Geist Mono, numbered mono eyebrows, hairline rules, restrained accent. `pascaal.com` now carries a "From Pascaal" product strip in that language; `hallmark.pascaal.com` is Hallmark-led and links back to the company site. Philosophy copy and the final "Get your hours back." CTA left untouched.
+- TODO: Cal.com booking URL from user; 5 homepage `mailto:` CTAs remain until supplied. Mailchimp signup deferred by user.
+- TODO: User to complete Wordfence free license registration, enroll in 2FA, and revoke the exposed WordPress Application Password.
 - TODO: USPTO word-mark search for "Pascaal" (Classes 9/38/42) before heavy branding.
 - TODO: Align the `pascaal.com` hero with "AI components for safety and adoption" if a single company voice is wanted.
