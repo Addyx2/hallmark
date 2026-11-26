@@ -70,6 +70,7 @@ Pascaal is the right call. Distinctive, available-ish domain-wise, avoids Hallma
 - 2026-11-25: Three spec-theme posts published: "The attribution constraint", "Authority narrows. It does not spill.", and "A kill switch is a containment window". All link to `hallmark.pascaal.com`.
 - 2026-11-25: Wordfence hardening: 2FA enabled and required for administrators; XML-RPC authentication disabled. Free license registration and 2FA enrollment remain user actions.
 - 2026-11-25: Design merged around the Hallmark editorial rail as the master system: white/blue Geist + Geist Mono, numbered mono eyebrows, hairline rules, restrained accent. `pascaal.com` now carries a "From Pascaal" product strip in that language; `hallmark.pascaal.com` is Hallmark-led and links back to the company site. Philosophy copy and the final "Get your hours back." CTA left untouched.
+- 2026-11-26: Mirrored the Hallmark brand mark (blue rounded square with the white corner glyph) into the `pascaal.com` header wordmark. Philosophy and final CTA still untouched; homepage backup refreshed.
 - TODO: Cal.com booking URL from user; 5 homepage `mailto:` CTAs remain until supplied. Mailchimp signup deferred by user.
 - TODO: User to complete Wordfence free license registration, enroll in 2FA, and revoke the exposed WordPress Application Password.
 - TODO: USPTO word-mark search for "Pascaal" (Classes 9/38/42) before heavy branding.
