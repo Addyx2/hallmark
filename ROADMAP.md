@@ -8,7 +8,7 @@ Working plan, not dated commitments. Each phase has an exit criterion. Update th
 | 1 · Package the core | `packages/hallmark-core`, smoke test, CLI, npm dry-run | A clean install can sign and verify a JWS with zero dependencies | Done locally; npm publish pending scope claim |
 | 2 · Ship the provider wedge | `packages/freeroam`, `packages/barricade`, `examples/provider-demo`, `docs/quickstart.md` | One Express/Next.js/Fastify app gated in under 15 minutes | Done locally; npm publish pending scope claim |
 | 3 · Managed trust service | `services/registry`, `services/mint`, `docs/openapi.json`, status/SLA/DPA | Attestation minting and revocation freshness work without self-hosting | Planned |
-| 4 · Leash + Trackline | `apps/leash`, `apps/trackline` | A human can add agents, issue/revoke grants, kill a lineage and read receipts | Later |
+| 4 · Leash + Trackline | `apps/leash`, `apps/trackline` | A human can add agents, issue/revoke grants, kill a lineage and read receipts | Local preview in demo; hosted app later |
 | 5 · Trust + launch | conformance directory, GitHub releases, blog, §21 resolution | Providers can claim v1-draft conformance against a published commit | Ongoing |
 
 ## Phase 1 note
@@ -38,6 +38,16 @@ This phase is a **draft product harness**, not L2 conformance. Lineage anchoring
 attestation resolution, PoP, signed revocation manifests and a chained audit log
 remain outside these packages. Do not call the middleware ratified or
 production-ready.
+
+## Phase 4 preview note
+
+The provider demo now includes a local control-room dashboard at `/dashboard`.
+It shows agents, grants, budgets, revocation state, signed surface policy and
+safe audit events, with mint, checkout, revoke, kill-lineage and reset controls.
+This is a **preview of the Leash + Trackline surface**, not Phase 4 complete: it
+has no accounts, no persistence, no hosted registry, no key custody and no
+billing. The hosted `apps/leash` and `apps/trackline` product is still later
+work, gated on the Phase 3 managed trust service.
 
 ## Phase 5 note
 

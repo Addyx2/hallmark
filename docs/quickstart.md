@@ -29,7 +29,7 @@ Until then, use this repository's workspace links:
 
 ```bash
 npm install          # at the repository root
-npm run test:all     # 14 tests: 13 package tests + 1 end-to-end demo test
+npm run test:all     # 16 tests: 13 package tests + 3 demo/dashboard tests
 ```
 
 Node 18 or newer. All three packages are zero-dependency except for each other.
@@ -40,10 +40,16 @@ Node 18 or newer. All three packages are zero-dependency except for each other.
 npm run start --workspace @pascaal/provider-demo
 ```
 
+Open the printed `http://127.0.0.1:<port>/dashboard` URL. The local control room
+shows grants, budgets, revocation state, the signed surface policy and safe
+audit events. It also lets you mint, run checkout, revoke a session, kill the
+lineage and reset the demo. It is a **local preview of Leash + Trackline**, not
+the hosted product.
+
 In a second terminal:
 
 ```bash
-BASE=http://127.0.0.1:3000
+BASE=http://127.0.0.1:<printed-port>
 
 PASSPORT=$(curl -s "$BASE/api/mint" \
   | node -pe "JSON.parse(require('fs').readFileSync(0,'utf8')).passport")

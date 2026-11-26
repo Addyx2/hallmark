@@ -6,7 +6,7 @@
   "description": "Runnable Freeroam → Barricade provider demo",
   "scripts": {
     "start": "node server.mjs",
-    "test": "node --test test/demo.test.mjs"
+    "test": "node --test test/demo.test.mjs test/dashboard.test.mjs"
   },
   "dependencies": {
     "@pascaal/barricade": "0.1.0",

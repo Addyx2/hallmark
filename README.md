@@ -35,7 +35,7 @@ inherit the same lineage rather than invent a second identity system.
 | [`packages/hallmark-core/`](packages/hallmark-core/) | Installable v1 primitives package (`@pascaal/hallmark`, draft, not published yet) |
 | [`packages/freeroam/`](packages/freeroam/) | Observe-only attribution middleware (`@pascaal/freeroam`) |
 | [`packages/barricade/`](packages/barricade/) | Provider-side enforcement middleware (`@pascaal/barricade`) |
-| [`examples/provider-demo/`](examples/provider-demo/) | Runnable Freeroam → Barricade provider demo |
+| [`examples/provider-demo/`](examples/provider-demo/) | Runnable Freeroam → Barricade demo with a local control-room dashboard |
 | [`docs/quickstart.md`](docs/quickstart.md) | Provider setup, framework snippets and verification scope |
 | [`PRODUCT.md`](PRODUCT.md) | Buyer, wedge, MVP definition, non-goals and success metric |
 | [`ROADMAP.md`](ROADMAP.md) | Phases from core package → provider wedge → managed service → leash |
@@ -62,7 +62,7 @@ integration. [`PRODUCT.md`](PRODUCT.md) defines the buyer and the 15-minute MVP;
 
 ```bash
 npm install               # at the repo root; links the workspace packages
-npm run test:all          # 13 package tests + 1 end-to-end demo test
+npm run test:all          # 13 package tests + 3 demo/dashboard tests
 npm run start --workspace @pascaal/provider-demo
 ```
 
@@ -73,7 +73,8 @@ still runs from `spec/`. The npm packages are staged but not published until the
 
 The provider wedge is a **draft harness**, not L2 conformance: Freeroam observes
 without denying; Barricade enforces only on a signed surface; the demo proves
-the loop. See [`docs/quickstart.md`](docs/quickstart.md) for the exact boundary.
+the loop and exposes it in a local dashboard. See
+[`docs/quickstart.md`](docs/quickstart.md) for the exact boundary.
 
 ## Publish the site
 

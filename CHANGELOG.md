@@ -23,6 +23,9 @@ Versions are **SDK** versions. The protocol remains **draft v1** and is not rati
   `@pascaal/barricade`.
 - `examples/provider-demo`: runnable Node server proving T0 observation, T1
   grant enforcement, replay rejection and safe audit events.
+- Local control-room dashboard at `/dashboard`: agent, grant, budget, revocation
+  and safe audit views with mint, checkout, revoke, kill-lineage and reset
+  controls. A preview of Leash + Trackline, not the hosted product.
 - `docs/quickstart.md`: provider setup, framework snippets, explicit verification
   scope and conformance wording.
 - Root npm workspaces and `package-lock.json` for local package linking.

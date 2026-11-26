@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Hallmark demo control room · Pascaal</title>
+  <link rel="stylesheet" href="/dashboard/styles.css">
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <a class="brand" href="/dashboard" aria-label="Pascaal Hallmark demo dashboard">
+        <span class="brand-mark">P</span>
+        <span>Pascaal</span>
+        <span class="brand-slash">/</span>
+        <strong>Hallmark</strong>
+      </a>
+      <nav class="topnav" aria-label="Demo links">
+        <span class="demo-pill">Local demo</span>
+        <a href="/api/help">API</a>
+        <a href="https://hallmark.pascaal.com" target="_blank" rel="noreferrer">Protocol ↗</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <p class="eyebrow">04 · Leash + Trackline preview</p>
+        <h1>Control the grant.<br><span>Keep the receipt.</span></h1>
+        <p class="lede">
+          Freeroam reads attribution without blocking. Barricade stops the first
+          responsible action unless the exact grant is present. This local view
+          makes both halves visible.
+        </p>
+        <div class="hero-actions">
+          <button id="btn-mint" class="button button-primary" type="button">Mint grant</button>
+          <button id="btn-checkout" class="button" type="button" disabled>Run checkout</button>
+          <button id="btn-copy" class="button button-quiet" type="button" disabled>Copy passport</button>
+        </div>
+        <p id="passport-snippet" class="passport-snippet mono">No passport in browser memory</p>
+        <p id="run-result" class="run-result" aria-live="polite">Ready. Mint a grant, then run checkout.</p>
+      </section>
+
+      <section class="proof-strip" aria-label="Demo facts">
+        <div><span class="proof-label mono">Scope</span><span>Draft product harness</span></div>
+        <div><span class="proof-label mono">Protocol</span><span>Hallmark v1 draft</span></div>
+        <div><span class="proof-label mono">Vectors</span><span>38 / 38</span></div>
+        <div><span class="proof-label mono">Crypto</span><span>Ed25519 · ES256</span></div>
+        <div><span class="proof-label mono">State</span><span>In-memory only</span></div>
+      </section>
+
+      <div class="workspace">
+        <aside class="rail" aria-label="Dashboard sections">
+          <a class="rail-item" href="#overview"><span class="rail-num mono">01</span><span>Overview</span></a>
+          <a class="rail-item" href="#grants"><span class="rail-num mono">02</span><span>Grants</span></a>
+          <a class="rail-item" href="#audit"><span class="rail-num mono">03</span><span>Audit stream</span></a>
+          <a class="rail-item" href="#policy"><span class="rail-num mono">04</span><span>Surface policy</span></a>
+          <div class="rail-foot mono">
+            <span class="dot"></span>
+            <span id="rail-status">checking…</span>
+          </div>
+        </aside>
+
+        <div class="content">
+          <section id="overview" class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">01 · Overview</p>
+                <h2>What the provider sees</h2>
+              </div>
+              <span id="clock" class="mono muted">—</span>
+            </div>
+
+            <div class="stats">
+              <div class="stat"><span class="stat-label mono">Grants minted</span><strong id="stat-minted">0</strong></div>
+              <div class="stat"><span class="stat-label mono">Observed</span><strong id="stat-observed">0</strong></div>
+              <div class="stat"><span class="stat-label mono">Accepted</span><strong id="stat-accepted">0</strong></div>
+              <div class="stat"><span class="stat-label mono">Denied</span><strong id="stat-denied">0</strong></div>
+              <div class="stat"><span class="stat-label mono">Revocation age</span><strong id="stat-revocation">—</strong></div>
+            </div>
+
+            <div class="identity-grid">
+              <div class="identity-block">
+                <p class="field-label mono">Tenant</p>
+                <p id="identity-tenant" class="field-value mono">—</p>
+              </div>
+              <div class="identity-block">
+                <p class="field-label mono">Audience</p>
+                <p id="identity-audience" class="field-value mono">—</p>
+              </div>
+              <div class="identity-block">
+                <p class="field-label mono">Agent</p>
+                <p id="identity-agent" class="field-value">—</p>
+                <p id="identity-agent-key" class="field-note mono">—</p>
+              </div>
+              <div class="identity-block">
+                <p class="field-label mono">Root imprint</p>
+                <p id="identity-imprint" class="field-value mono">—</p>
+                <p id="identity-human" class="field-note mono">—</p>
+              </div>
+            </div>
+          </section>
+
+          <section id="grants" class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">02 · Grants</p>
+                <h2>Short-lived authority</h2>
+              </div>
+              <div class="panel-actions">
+                <button id="btn-kill" class="button button-danger" type="button">Kill lineage</button>
+                <button id="btn-reset" class="button button-quiet" type="button">Reset demo</button>
+              </div>
+            </div>
+            <p class="panel-note">
+              Each grant is minted for one responsible action. Revoke a session to
+              stop that grant; kill the lineage to stop everything bound to the
+              root imprint.
+            </p>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Grant</th>
+                    <th>Session</th>
+                    <th>State</th>
+                    <th>Req left</th>
+                    <th>Cost left</th>
+                    <th><span class="sr-only">Actions</span></th>
+                  </tr>
+                </thead>
+                <tbody id="grant-rows">
+                  <tr><td colspan="6" class="empty">No grants yet. Mint one above.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section id="audit" class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">03 · Audit stream</p>
+                <h2>Safe events, newest first</h2>
+              </div>
+              <span class="mono muted">PII redacted</span>
+            </div>
+            <ul id="audit-list" class="event-list">
+              <li class="event"><span class="event-name">No events yet.</span></li>
+            </ul>
+          </section>
+
+          <section id="policy" class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">04 · Surface policy</p>
+                <h2>The line Barricade holds</h2>
+              </div>
+              <span id="policy-id" class="mono muted">—</span>
+            </div>
+            <div class="policy-grid">
+              <div class="policy-cell">
+                <span class="field-label mono">Surface</span>
+                <span id="policy-surface" class="field-value">—</span>
+              </div>
+              <div class="policy-cell">
+                <span class="field-label mono">Gate / tier</span>
+                <span id="policy-gate" class="field-value">—</span>
+              </div>
+              <div class="policy-cell">
+                <span class="field-label mono">Capability</span>
+                <span id="policy-cap" class="field-value mono">—</span>
+              </div>
+              <div class="policy-cell">
+                <span class="field-label mono">Revocation</span>
+                <span id="policy-revocation" class="field-value">—</span>
+              </div>
+              <div class="policy-cell">
+                <span class="field-label mono">Route</span>
+                <span id="policy-route" class="field-value mono">—</span>
+              </div>
+              <div class="policy-cell">
+                <span class="field-label mono">Limits</span>
+                <span id="policy-limits" class="field-value mono">—</span>
+              </div>
+            </div>
+            <p id="policy-jws" class="policy-jws mono">—</p>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <p><strong>Demo boundary.</strong> No accounts, no persistence, no hosted registry, no signed revocation manifest. Restarting the process resets keys, grants and audit state.</p>
+      <a href="https://github.com/Addyx2/hallmark" target="_blank" rel="noreferrer">Source ↗</a>
+    </footer>
+  </div>
+
+  <script type="module" src="/dashboard/app.js"></script>
+</body>
+</html>

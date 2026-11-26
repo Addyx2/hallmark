@@ -23,7 +23,8 @@ model, key custody and incident response are in place.
 Email **Addy@proficienth.com** with:
 
 - affected artifact: spec, `spec/test-vectors/`, `packages/hallmark-core`,
-  `packages/freeroam`, `packages/barricade`, `examples/provider-demo`, or a Pascaal site,
+  `packages/freeroam`, `packages/barricade`, `examples/provider-demo` (including
+  its local dashboard), or a Pascaal site,
 - version or commit hash,
 - reproduction steps or a minimal vector,
 - impact you believe is possible.
