@@ -38,9 +38,9 @@ Sub-line: "Hallmark makes agents accountable. Plots puts them to work. Waterguar
 
 ## Messaging note
 The company line in this repo is **"AI components for safety and adoption."**
-The current `pascaal.com` homepage uses **"Knowledge work, done for you."**
-Keep the former as the canonical line for the protocol/docs; align the marketing
-site when you next edit it.
+The `pascaal.com` homepage hero now uses **"AI components for safety and adoption."**
+The company line is aligned across the marketing site, this repo and the
+Hallmark product site.
 
 ## Next practical steps
 1. Run the USPTO TM search for "Pascaal" (word mark) in classes 9/38/42 before heavy branding
@@ -73,7 +73,8 @@ Pascaal is the right call. Distinctive, available-ish domain-wise, avoids Hallma
 - 2026-11-26: Mirrored the Hallmark brand mark (blue rounded square with the white corner glyph) into the `pascaal.com` header wordmark. Philosophy and final CTA still untouched; homepage backup refreshed.
 - 2026-11-26: Hallmark headline and page title now read "Autonomy Provenance for Compliance and Safety"; body descriptions unchanged.
 - 2026-11-26: `pascaal.com` header refined with a hairline rule, taller 84px rail, small uppercase mono nav and a Geist CTA; visible email address removed from the nav (footer contact kept).
-- TODO: Cal.com booking URL from user; 5 homepage `mailto:` CTAs remain until supplied. Mailchimp signup deferred by user.
+- 2026-11-26: Hallmark site gained shareability and AEO surfaces: canonical/OG/Twitter metadata, 1200×630 `og.png`, Hallmark favicon, JSON-LD, a conformance proof strip, an in-browser WebCrypto seal verifier with PASS/TAMPER modes, and agent-readable `/llms.txt`, `/llms-full.txt` and `/agent/`. Plots/Waterguard/Writing renumbered to 08/09/10. Publishing steps captured in `DEPLOY.md`.
+- TODO: Cal.com booking URL from user; 4 homepage `mailto:` CTAs remain until supplied. Mailchimp signup deferred by user.
 - TODO: User to complete Wordfence free license registration, enroll in 2FA, and revoke the exposed WordPress Application Password.
 - TODO: USPTO word-mark search for "Pascaal" (Classes 9/38/42) before heavy branding.
 - TODO: Align the `pascaal.com` hero with "AI components for safety and adoption" if a single company voice is wanted.

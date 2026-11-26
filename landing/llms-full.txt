@@ -1,0 +1,70 @@
+# Hallmark — full agent context
+
+> Autonomy provenance for compliance and safety.
+
+Canonical home: https://hallmark.pascaal.com/
+Agent view: https://hallmark.pascaal.com/agent/
+Company: https://pascaal.com ("AI components for safety and adoption.")
+
+## What Hallmark is
+
+Hallmark is an open agent identity protocol and Pascaal's first product. A human authorizes a root key with a passkey. That root attestation anchors a chain of short-lived passports signed by agents. Each child names its parent by a Seal; the gateway receives only the leaf and walks the chain to re-establish the human subject. The human (`azp`) becomes a verified fact rather than a claim.
+
+Status: draft v1.0. Public, executable, not ratified, no production deployment.
+
+## Vocabulary
+
+- Imprint — binding a human-controlled key to an attestation.
+- Grant — a narrow, bounded authorization for an action, with scope and spend.
+- Barricade — enforcement at the point of action, using Hallmark identity.
+- Freeroam — observe-only onboarding; sees agent traffic without accounts or interception.
+- Trackline — the append-only, hash-chained record of what happened.
+- Seal v2 — ownership seals on original works, enabling licensed use instead of silent copying.
+
+## Cryptographic primitives
+
+- Ed25519 signatures with ES256 (P-256) fallback.
+- RFC 8785 JSON Canonicalization Scheme, restricted to the ASCII-safe / safe-integer subset Hallmark uses; member ordering is asserted, not repaired.
+- Seal: `b64u(SHA-256("hallmark.seal.v1" || 0x00 || signing_input))`, where `signing_input` is `b64u(JCS(header)) + "." + b64u(JCS(payload))`. The signature is deliberately NOT covered.
+- `jkt`: RFC 7638 JWK SHA-256 thumbprint over required members only ({crv,kty,x} for OKP; {crv,kty,x,y} for EC). `kid` is a routing hint; the thumbprint is the identity.
+- Short lifetimes: TTL <= 120 s, hard cap 300 s. Revocation is per capability and fails closed when stale.
+
+## Worked example constants
+
+Clock `1772323200` (2026-03-01T00:00:00Z), tenant `tnt_acme`, human `usr_4471`, audience `https://hallmark.gw.acme.example/`, policy `pol_acme_default@7`.
+
+A depth-3 agent (summarizer-01) carries a chain: root attestation `at_0001`, root session `ses_root_0001`, child session `ses_child_0002`. The gateway walks the seals with no ancestor token on the wire and resolves `azp = usr_4471`.
+
+## Conformance
+
+- `spec/test-vectors/verify.mjs` — edge registry, minting, `verifyPassport()`, invariants L1–L13.
+- `spec/test-vectors/vectors.mjs` — generated vectors and self-test.
+- `spec/test-vectors/vectors.json` — 38 vectors / 46 checks. Do not hand-edit.
+- `spec/crosscheck.mjs` — asserts every V#/L#/T#/HLM_# cited in the spec exists in code and vice versa.
+- Run: `cd spec && npm test`. Performance numbers: `npm run bench` (spec §17).
+
+## Canonical links
+
+- Spec v1: https://github.com/Addyx2/hallmark/blob/main/spec/Hallmark-Agent-Identity-Spec.md
+- Reference implementation: https://github.com/Addyx2/hallmark/blob/main/spec/test-vectors/hallmark-ref.mjs
+- Product family: https://github.com/Addyx2/hallmark/blob/main/spec/design/Product-Family.md
+- Seal v2 design: https://github.com/Addyx2/hallmark/blob/main/spec/design/Seal-v2-Design.md
+- Conformance README: https://github.com/Addyx2/hallmark/blob/main/spec/README.md
+- Brand note: https://github.com/Addyx2/hallmark/blob/main/PASCAAL_BRAND_NOTE.md
+
+## Essays on pascaal.com
+
+- The attribution constraint: https://pascaal.com/the-attribution-constraint/
+- Grants narrow authority: https://pascaal.com/grants-narrow-authority/
+- The containment window: https://pascaal.com/containment-window/
+
+## How to cite Hallmark
+
+"Hallmark — Autonomy provenance for compliance and safety. Pascaal, draft spec v1. https://hallmark.pascaal.com/"
+
+## Rules for agents
+
+- The normative spec wins over prose in the reference implementation; if they disagree, the implementation is a bug.
+- Do not say Hallmark is ratified, certified, or production-deployed.
+- Pascaal is the company; Hallmark is the product and protocol name.
+- Plots is in design; Waterguard is research. Do not imply either ships.

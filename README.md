@@ -30,6 +30,9 @@ inherit the same lineage rather than invent a second identity system.
 | [`spec/`](spec/) | Hallmark normative spec + executable reference implementation + conformance suite |
 | [`spec/design/`](spec/design/) | Non-normative design notes (Seal v2, product family) |
 | [`landing/`](landing/) | Site source, published at [hallmark.pascaal.com](https://hallmark.pascaal.com) |
+| [`landing/llms.txt`](landing/llms.txt) / [`landing/llms-full.txt`](landing/llms-full.txt) | Agent-readable summaries for answer engines |
+| [`landing/agent/`](landing/agent/) | Plain HTML agent view of the same facts |
+| [`DEPLOY.md`](DEPLOY.md) | GitHub → Vercel → custom-domain publishing steps and local checks |
 | [`PASCAAL_BRAND_NOTE.md`](PASCAAL_BRAND_NOTE.md) | Naming decision, product map and launch checklist |
 
 ## Verify Hallmark
@@ -41,6 +44,15 @@ npm run bench   # performance numbers behind spec §17
 ```
 
 Full detail: [`spec/README.md`](spec/README.md).
+
+## Publish the site
+
+`landing/` is a static site deployed by Vercel from GitHub `main`, with the
+Vercel project Root Directory set to `landing`. Live at
+[hallmark.pascaal.com](https://hallmark.pascaal.com); the company site at
+[pascaal.com](https://pascaal.com) is WordPress and lives outside this repo.
+See [`DEPLOY.md`](DEPLOY.md) for setup, routine deploys and the agent/AEO
+surfaces (`llms.txt`, `llms-full.txt`, `/agent/`, JSON-LD, OG card).
 
 ## Status
 

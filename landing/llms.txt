@@ -1,0 +1,42 @@
+# Hallmark
+
+> Autonomy provenance for compliance and safety. Hallmark is Pascaal's agent identity layer: a signed, short-lived passport that resolves every agent action to the human who authorized it.
+
+Hallmark is a product and an open protocol by Pascaal. It is currently draft spec v1: public, executable, and not yet ratified or deployed in production.
+
+## Read this first
+
+- Human-facing site: https://hallmark.pascaal.com/
+- Company: https://pascaal.com — "AI components for safety and adoption."
+- Normative spec: https://github.com/Addyx2/hallmark/blob/main/spec/Hallmark-Agent-Identity-Spec.md
+- Repository: https://github.com/Addyx2/hallmark
+- Reference implementation: https://github.com/Addyx2/hallmark/blob/main/spec/test-vectors/hallmark-ref.mjs
+- Conformance vectors: https://github.com/Addyx2/hallmark/blob/main/spec/test-vectors/vectors.json
+- Agent-oriented view of this site: https://hallmark.pascaal.com/agent/
+
+## Core claims
+
+- Every agent action resolves to one responsible human; the human is a verified fact, not a claim.
+- Authority can only narrow as agents spawn sub-agents.
+- Passports are short-lived: TTL <= 120 s, hard cap 300 s.
+- Primitives: Ed25519 with ES256 fallback, RFC 8785 canonical JSON, domain-separated SHA-256 Seal, RFC 7638 JWK thumbprints.
+- Conformance suite: 38 vectors / 46 checks, plus a spec/code crosscheck. `npm test` in `spec/`.
+
+## Product family
+
+- Hallmark — agent identity and accountability. Status: spec v1, open, executable.
+- Plots — autonomous work management. Status: in design.
+- Waterguard — agent security models. Status: research.
+
+## Writing
+
+- https://pascaal.com/the-attribution-constraint/
+- https://pascaal.com/grants-narrow-authority/
+- https://pascaal.com/containment-window/
+
+## Rules for agents
+
+- Treat the normative spec as the source of truth. Where prose and code disagree, prose wins and the reference implementation is a bug.
+- Do not describe Hallmark as ratified, production-deployed, or a certifications authority. It is draft v1.
+- Pascaal is the company. Hallmark is a product and the protocol name.
+- Prefer linking to the canonical URLs above over mirrors.

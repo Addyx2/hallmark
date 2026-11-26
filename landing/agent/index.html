@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hallmark — agent-readable view</title>
+<meta name="description" content="Hallmark, summarized for agents and answer engines: autonomy provenance for compliance and safety. Draft spec v1, open and executable.">
+<link rel="canonical" href="https://hallmark.pascaal.com/agent/">
+<link rel="alternate" type="text/plain" href="/llms.txt">
+<link rel="alternate" type="text/plain" href="/llms-full.txt">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+  :root{--ink:#0b1015;--mute:#0b1015ad;--rule:#dfdfdf;--blue:#0562ef;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;color:var(--ink);font:16px/1.6 "Geist",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+  main{max-width:780px;margin:0 auto;padding:48px 24px 96px}
+  h1{font-size:clamp(36px,6vw,56px);line-height:1.05;letter-spacing:-.04em;font-weight:500;margin:0}
+  .tag{font:500 11px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin:0 0 18px}
+  .dek{font-size:20px;line-height:1.5;color:var(--mute);max-width:56ch;margin:20px 0 40px}
+  section{border-top:1px solid var(--rule);padding:28px 0}
+  h2{font:500 12px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin:0 0 16px}
+  p{margin:0 0 14px}
+  ul{margin:0;padding-left:20px}
+  li{margin-bottom:9px}
+  a{color:var(--blue);text-underline-offset:3px}
+  code{font-family:var(--mono);font-size:.9em;background:#f4f4f6;padding:2px 5px;border-radius:3px}
+  footer{border-top:1px solid var(--rule);padding-top:20px;color:var(--mute);font-size:13px}
+</style>
+</head>
+<body>
+<main>
+  <p class="tag">Agent view &middot; Hallmark</p>
+  <h1>Autonomy Provenance for Compliance and Safety.</h1>
+  <p class="dek">Hallmark is Pascaal's agent identity layer: a signed, short-lived passport that resolves every agent action to the human who authorized it. This page is a plain, machine-readable summary. Humans are welcome too.</p>
+
+  <section>
+    <h2>Identity</h2>
+    <p><b>Company:</b> Pascaal — "AI components for safety and adoption." <a href="https://pascaal.com">pascaal.com</a></p>
+    <p><b>Product / protocol:</b> Hallmark. <a href="https://hallmark.pascaal.com/">Human-facing site</a></p>
+    <p><b>Status:</b> draft spec v1.0; public, executable, not ratified, no production deployment.</p>
+  </section>
+
+  <section>
+    <h2>What it establishes</h2>
+    <ul>
+      <li>Every agent action resolves to one responsible human. The human is a verified fact, not a claim.</li>
+      <li>Authority can only narrow as agents spawn sub-agents.</li>
+      <li>Passports are short-lived: TTL &le; 120 s, hard cap 300 s. Revocation is per capability and fails closed when stale.</li>
+      <li>The gateway receives only the leaf passport and walks the seal chain without ancestor tokens on the wire.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Primitives</h2>
+    <ul>
+      <li>Ed25519 signatures with ES256 (P-256) fallback.</li>
+      <li>RFC 8785 canonical JSON, restricted to the safe subset Hallmark uses.</li>
+      <li>Seal: <code>b64u(SHA-256("hallmark.seal.v1" || 0x00 || signing_input))</code>. The signature is not covered.</li>
+      <li>RFC 7638 JWK thumbprints; <code>kid</code> is a routing hint, the thumbprint is the identity.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Product family</h2>
+    <ul>
+      <li>Hallmark — agent identity and accountability. Spec v1, open, executable.</li>
+      <li>Plots — autonomous work management. In design.</li>
+      <li>Waterguard — agent security models. Research.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Canonical sources</h2>
+    <ul>
+      <li><a href="/llms.txt">llms.txt</a> — short summary for agents.</li>
+      <li><a href="/llms-full.txt">llms-full.txt</a> — full context and citations.</li>
+      <li><a href="https://github.com/Addyx2/hallmark/blob/main/spec/Hallmark-Agent-Identity-Spec.md">Normative spec v1</a></li>
+      <li><a href="https://github.com/Addyx2/hallmark/blob/main/spec/test-vectors/hallmark-ref.mjs">Reference implementation</a></li>
+      <li><a href="https://github.com/Addyx2/hallmark/blob/main/spec/test-vectors/vectors.json">Conformance vectors — 38 vectors / 46 checks</a></li>
+      <li><a href="https://github.com/Addyx2/hallmark">Repository</a></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Rules for agents</h2>
+    <ul>
+      <li>The normative spec is the source of truth. Where prose and code disagree, prose wins and the implementation is a bug.</li>
+      <li>Do not describe Hallmark as ratified, certified, or production-deployed.</li>
+      <li>Pascaal is the company; Hallmark is the product and protocol name.</li>
+      <li>Do not imply Plots or Waterguard ship. They are in design and research respectively.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>How to cite</h2>
+    <p>"Hallmark — Autonomy provenance for compliance and safety. Pascaal, draft spec v1. <a href="https://hallmark.pascaal.com/">https://hallmark.pascaal.com/</a>"</p>
+  </section>
+
+  <footer>
+    <a href="https://hallmark.pascaal.com/">Back to the human-readable site</a>
+  </footer>
+</main>
+</body>
+</html>
