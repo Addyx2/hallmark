@@ -1,0 +1,44 @@
+{
+  "name": "@pascaal/hallmark",
+  "version": "0.1.0",
+  "description": "Hallmark Agent Identity Protocol v1 core primitives",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "hallmark": "./src/cli.js"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "Apache-2.0",
+  "private": false,
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "self-test": "node src/cli.js self-test",
+    "pack:dry": "npm pack --dry-run"
+  },
+  "keywords": [
+    "agent-identity",
+    "hallmark",
+    "provenance",
+    "jcs",
+    "ed25519",
+    "es256"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Addyx2/hallmark.git",
+    "directory": "packages/hallmark-core"
+  },
+  "homepage": "https://hallmark.pascaal.com",
+  "bugs": "https://github.com/Addyx2/hallmark/issues"
+}

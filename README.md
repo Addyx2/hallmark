@@ -32,7 +32,12 @@ inherit the same lineage rather than invent a second identity system.
 | [`landing/`](landing/) | Site source, published at [hallmark.pascaal.com](https://hallmark.pascaal.com) |
 | [`landing/llms.txt`](landing/llms.txt) / [`landing/llms-full.txt`](landing/llms-full.txt) | Agent-readable summaries for answer engines |
 | [`landing/agent/`](landing/agent/) | Plain HTML agent view of the same facts |
+| [`packages/hallmark-core/`](packages/hallmark-core/) | Installable v1 primitives package (`@pascaal/hallmark`, draft, not published yet) |
+| [`PRODUCT.md`](PRODUCT.md) | Buyer, wedge, MVP definition, non-goals and success metric |
+| [`ROADMAP.md`](ROADMAP.md) | Phases from core package → provider wedge → managed service → leash |
 | [`DEPLOY.md`](DEPLOY.md) | GitHub → Vercel → custom-domain publishing steps and local checks |
+| [`CONFORMANCE.md`](CONFORMANCE.md) / [`SECURITY.md`](SECURITY.md) / [`CHANGELOG.md`](CHANGELOG.md) | Conformance levels, vulnerability reporting and version history |
+| [`LICENSE`](LICENSE) | Apache-2.0, including a patent grant |
 | [`PASCAAL_BRAND_NOTE.md`](PASCAAL_BRAND_NOTE.md) | Naming decision, product map and launch checklist |
 
 ## Verify Hallmark
@@ -44,6 +49,23 @@ npm run bench   # performance numbers behind spec §17
 ```
 
 Full detail: [`spec/README.md`](spec/README.md).
+
+## Build the product
+
+The protocol is the foundation; the product is the path from spec to a provider
+integration. [`PRODUCT.md`](PRODUCT.md) defines the buyer and the 15-minute MVP;
+[`ROADMAP.md`](ROADMAP.md) tracks the artifacts still to build.
+
+```bash
+cd packages/hallmark-core
+node --test test/*.test.mjs   # package smoke tests
+node src/cli.js self-test     # sign + verify with a fresh Ed25519 key
+```
+
+`packages/hallmark-core/src/index.js` is a semantic copy of
+`spec/test-vectors/hallmark-ref.mjs`; only the header changed. Full conformance
+still runs from `spec/`. The npm package is staged but not published until the
+`@pascaal` scope is claimed.
 
 ## Publish the site
 
