@@ -1,0 +1,46 @@
+{
+  "name": "@pascaal/freeroam",
+  "version": "0.1.0",
+  "description": "Observe-only Hallmark attribution middleware for Node providers",
+  "type": "module",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "Apache-2.0",
+  "private": false,
+  "dependencies": {
+    "@pascaal/hallmark": "0.1.0"
+  },
+  "scripts": {
+    "test": "node --test test/freeroam.test.mjs",
+    "pack:dry": "npm pack --dry-run"
+  },
+  "keywords": [
+    "hallmark",
+    "agent-identity",
+    "attribution",
+    "middleware",
+    "observability"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Addyx2/hallmark.git",
+    "directory": "packages/freeroam"
+  },
+  "homepage": "https://hallmark.pascaal.com",
+  "bugs": "https://github.com/Addyx2/hallmark/issues"
+}

@@ -1,0 +1,47 @@
+{
+  "name": "@pascaal/barricade",
+  "version": "0.1.0",
+  "description": "Provider-side Hallmark enforcement middleware for Node",
+  "type": "module",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "Apache-2.0",
+  "private": false,
+  "dependencies": {
+    "@pascaal/freeroam": "0.1.0",
+    "@pascaal/hallmark": "0.1.0"
+  },
+  "scripts": {
+    "test": "node --test test/barricade.test.mjs",
+    "pack:dry": "npm pack --dry-run"
+  },
+  "keywords": [
+    "hallmark",
+    "agent-identity",
+    "authorization",
+    "middleware",
+    "barricade"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Addyx2/hallmark.git",
+    "directory": "packages/barricade"
+  },
+  "homepage": "https://hallmark.pascaal.com",
+  "bugs": "https://github.com/Addyx2/hallmark/issues"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "@pascaal/provider-demo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Runnable Freeroam → Barricade provider demo",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test test/demo.test.mjs"
+  },
+  "dependencies": {
+    "@pascaal/barricade": "0.1.0",
+    "@pascaal/freeroam": "0.1.0",
+    "@pascaal/hallmark": "0.1.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "Apache-2.0"
+}

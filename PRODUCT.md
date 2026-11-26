@@ -57,13 +57,19 @@ Then:
 
 If that works, Hallmark is a product. If it only reads well, it is still a spec.
 
+The Phase 2 harness delivers this locally with Express-compatible middleware,
+Fastify hooks, a pure evaluator for Next.js App Router, TypeScript declarations,
+and a runnable demo. It is still a draft: lineage anchoring, attestation
+resolution, PoP, signed revocation manifests and a chained audit log are Phase 3+
+work. See [`docs/quickstart.md`](docs/quickstart.md).
+
 ## Product surface map
 
 | Layer | Artifact | Status |
 | --- | --- | --- |
 | Protocol | Spec v1, vectors, crosscheck | Draft v1, executable, not ratified |
 | Core SDK | `packages/hallmark-core` | Scaffolded here, not published to npm yet |
-| Provider wedge | `packages/freeroam`, `packages/barricade` | Next build |
+| Provider wedge | `packages/freeroam`, `packages/barricade` | Draft harness here; npm publish pending scope claim |
 | Managed trust | registry + minting service | Next build |
 | User leash | agents, grants, budgets, revoke, kill-switch | Later |
 | Trackline | human-readable receipts | Later |

@@ -3,8 +3,11 @@
 ## Current status
 
 Hallmark is **draft v1, not ratified, with no production deployment**. The
-reference implementation and `packages/hallmark-core` are suitable for
-evaluation, integration work and conformance testing. Do not treat them as a
+reference implementation, `packages/hallmark-core`, `packages/freeroam` and
+`packages/barricade` are suitable for evaluation, integration work and
+conformance testing. The provider packages are a draft harness, not L2 gateway:
+they do not walk lineage, resolve attestations, require PoP, verify signed
+revocation manifests, or persist a chained audit log. Do not treat them as a
 production authorization decision until spec §21 is closed and your own threat
 model, key custody and incident response are in place.
 
@@ -19,7 +22,8 @@ model, key custody and incident response are in place.
 
 Email **Addy@proficienth.com** with:
 
-- affected artifact: spec, `spec/test-vectors/`, `packages/hallmark-core`, or a Pascaal site,
+- affected artifact: spec, `spec/test-vectors/`, `packages/hallmark-core`,
+  `packages/freeroam`, `packages/barricade`, `examples/provider-demo`, or a Pascaal site,
 - version or commit hash,
 - reproduction steps or a minimal vector,
 - impact you believe is possible.
@@ -35,6 +39,8 @@ adjustable when a fix needs more time or a vendor needs notice.
 - Revocation freshness and fail-closed defaults.
 - Canonical JSON strictness, including duplicate-member rejection.
 - Key resolution rules: local `kid` lookup; `jku`, `x5u`, `x5c` forbidden.
+- Provider harness behaviour: signed surface policy, replay suppression,
+  budget charging and PII redaction in events.
 - The in-browser verifier on `hallmark.pascaal.com`.
 - `pascaal.com` authentication, plugins and redirects.
 

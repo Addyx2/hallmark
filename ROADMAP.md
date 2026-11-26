@@ -6,7 +6,7 @@ Working plan, not dated commitments. Each phase has an exit criterion. Update th
 | --- | --- | --- | --- |
 | 0 · Define the product | `PRODUCT.md`, `LICENSE`, `CHANGELOG.md`, `CONFORMANCE.md`, `SECURITY.md` | Buyer, wedge, MVP and non-goals written down | Done |
 | 1 · Package the core | `packages/hallmark-core`, smoke test, CLI, npm dry-run | A clean install can sign and verify a JWS with zero dependencies | Done locally; npm publish pending scope claim |
-| 2 · Ship the provider wedge | `packages/freeroam`, `packages/barricade`, `examples/provider-demo`, `docs/quickstart.md` | One Express/Next.js/Fastify app gated in under 15 minutes | Next |
+| 2 · Ship the provider wedge | `packages/freeroam`, `packages/barricade`, `examples/provider-demo`, `docs/quickstart.md` | One Express/Next.js/Fastify app gated in under 15 minutes | Done locally; npm publish pending scope claim |
 | 3 · Managed trust service | `services/registry`, `services/mint`, `docs/openapi.json`, status/SLA/DPA | Attestation minting and revocation freshness work without self-hosting | Planned |
 | 4 · Leash + Trackline | `apps/leash`, `apps/trackline` | A human can add agents, issue/revoke grants, kill a lineage and read receipts | Later |
 | 5 · Trust + launch | conformance directory, GitHub releases, blog, §21 resolution | Providers can claim v1-draft conformance against a published commit | Ongoing |
@@ -28,9 +28,16 @@ Before publishing:
 
 ## Phase 2 note
 
-Build Freeroam before Barricade. It delivers attribution with zero accounts and
-no interception, which is the adoption wedge in [`PRODUCT.md`](PRODUCT.md).
-Barricade then enforces only at the first responsible action.
+Freeroam observes, Barricade enforces, and the demo proves both in one process.
+The first integration target is Express-compatible `(req, res, next)`; Fastify
+hooks and a pure evaluator for Next.js App Router are included. The wedge is
+deliberate: attribution with zero accounts first, enforcement only at the first
+responsible action. See [`docs/quickstart.md`](docs/quickstart.md).
+
+This phase is a **draft product harness**, not L2 conformance. Lineage anchoring,
+attestation resolution, PoP, signed revocation manifests and a chained audit log
+remain outside these packages. Do not call the middleware ratified or
+production-ready.
 
 ## Phase 5 note
 

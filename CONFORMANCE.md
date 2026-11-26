@@ -68,3 +68,10 @@ Suggested badge text:
 
 Conformance covers the protocol and gateway behaviour. It does not certify the
 security of a hosting provider, a user's key custody, or a WordPress site.
+
+The Phase 2 provider packages (`@pascaal/freeroam`, `@pascaal/barricade`) are a
+**draft product harness**, not a conformance submission. They reuse v1
+primitives and pinned error codes, but do not implement the full §16 sequence:
+lineage anchoring, attestation resolution, PoP, signed revocation manifests and
+a chained audit log are still outside them. Describe them as “built on Hallmark
+v1 primitives”, never as “v1-draft conformant gateway”.

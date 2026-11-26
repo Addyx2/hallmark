@@ -33,6 +33,10 @@ inherit the same lineage rather than invent a second identity system.
 | [`landing/llms.txt`](landing/llms.txt) / [`landing/llms-full.txt`](landing/llms-full.txt) | Agent-readable summaries for answer engines |
 | [`landing/agent/`](landing/agent/) | Plain HTML agent view of the same facts |
 | [`packages/hallmark-core/`](packages/hallmark-core/) | Installable v1 primitives package (`@pascaal/hallmark`, draft, not published yet) |
+| [`packages/freeroam/`](packages/freeroam/) | Observe-only attribution middleware (`@pascaal/freeroam`) |
+| [`packages/barricade/`](packages/barricade/) | Provider-side enforcement middleware (`@pascaal/barricade`) |
+| [`examples/provider-demo/`](examples/provider-demo/) | Runnable Freeroam → Barricade provider demo |
+| [`docs/quickstart.md`](docs/quickstart.md) | Provider setup, framework snippets and verification scope |
 | [`PRODUCT.md`](PRODUCT.md) | Buyer, wedge, MVP definition, non-goals and success metric |
 | [`ROADMAP.md`](ROADMAP.md) | Phases from core package → provider wedge → managed service → leash |
 | [`DEPLOY.md`](DEPLOY.md) | GitHub → Vercel → custom-domain publishing steps and local checks |
@@ -57,15 +61,19 @@ integration. [`PRODUCT.md`](PRODUCT.md) defines the buyer and the 15-minute MVP;
 [`ROADMAP.md`](ROADMAP.md) tracks the artifacts still to build.
 
 ```bash
-cd packages/hallmark-core
-node --test test/*.test.mjs   # package smoke tests
-node src/cli.js self-test     # sign + verify with a fresh Ed25519 key
+npm install               # at the repo root; links the workspace packages
+npm run test:all          # 13 package tests + 1 end-to-end demo test
+npm run start --workspace @pascaal/provider-demo
 ```
 
 `packages/hallmark-core/src/index.js` is a semantic copy of
 `spec/test-vectors/hallmark-ref.mjs`; only the header changed. Full conformance
-still runs from `spec/`. The npm package is staged but not published until the
+still runs from `spec/`. The npm packages are staged but not published until the
 `@pascaal` scope is claimed.
+
+The provider wedge is a **draft harness**, not L2 conformance: Freeroam observes
+without denying; Barricade enforces only on a signed surface; the demo proves
+the loop. See [`docs/quickstart.md`](docs/quickstart.md) for the exact boundary.
 
 ## Publish the site
 

@@ -7,11 +7,29 @@ Versions are **SDK** versions. The protocol remains **draft v1** and is not rati
 
 ## [Unreleased]
 
+### Added
+
+- `packages/freeroam`: observe-only attribution middleware. Reads
+  `Authorization: Hallmark <jws>` and `X-Hallmark-*` headers, verifies JWS and
+  basic passport claims with local pinned keys, and emits PII-redacted events.
+  Never denies a request.
+- `packages/barricade`: enforcement middleware. Adds a signed
+  `hallmark+barricade-policy` (surfaces × gates × tiers), pinned `HLM_` denials,
+  replay suppression, fail-closed revocation freshness, capability/path/profile
+  authorization, and an in-memory budget ledger charged from observed usage.
+- Fastify hooks and a pure evaluator for Next.js App Router in both packages;
+  Express-compatible `(req, res, next)` is the primary target.
+- TypeScript declarations for `@pascaal/hallmark`, `@pascaal/freeroam` and
+  `@pascaal/barricade`.
+- `examples/provider-demo`: runnable Node server proving T0 observation, T1
+  grant enforcement, replay rejection and safe audit events.
+- `docs/quickstart.md`: provider setup, framework snippets, explicit verification
+  scope and conformance wording.
+- Root npm workspaces and `package-lock.json` for local package linking.
+
 ### Planned
 
-- `packages/freeroam` and `packages/barricade` provider middleware.
-- `examples/provider-demo` — 15-minute gated purchase demo.
-- `docs/quickstart.md` and `docs/openapi.json` for the managed service.
+- `docs/openapi.json` for the managed service — deliberately not invented yet.
 - Spec §21 resolution before calling v1 ratified.
 
 ## [0.1.0] - 2026-11-26
