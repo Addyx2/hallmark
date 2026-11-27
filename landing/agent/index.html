@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Hallmark — agent-readable view</title>
-<meta name="description" content="Hallmark, summarized for agents and answer engines: autonomy provenance for compliance and safety. Draft spec v1, open and executable.">
+<title>Hallmark provides a clean trail of use and ownership through tracable passports , resolving agents acts to authorised parties.</title>
+<meta name="description" content="Hallmark provides a clean trail of use and ownership through tracable passports , resolving agents acts to authorised parties.">
 <link rel="canonical" href="https://hallmark.pascaal.com/agent/">
 <link rel="alternate" type="text/plain" href="/llms.txt">
 <link rel="alternate" type="text/plain" href="/llms-full.txt">
@@ -14,7 +14,7 @@
   *{box-sizing:border-box}
   body{margin:0;background:#fff;color:var(--ink);font:16px/1.6 "Geist",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
   main{max-width:780px;margin:0 auto;padding:48px 24px 96px}
-  h1{font-size:clamp(36px,6vw,56px);line-height:1.05;letter-spacing:-.04em;font-weight:500;margin:0}
+  h1{font-size:clamp(34px,6vw,52px);line-height:1.08;letter-spacing:-.035em;font-weight:500;margin:0}
   .tag{font:500 11px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin:0 0 18px}
   .dek{font-size:20px;line-height:1.5;color:var(--mute);max-width:56ch;margin:20px 0 40px}
   section{border-top:1px solid var(--rule);padding:28px 0}
@@ -30,14 +30,14 @@
 <body>
 <main>
   <p class="tag">Agent view &middot; Hallmark</p>
-  <h1>Autonomy Provenance for Compliance and Safety.</h1>
-  <p class="dek">Hallmark is Pascaal's agent identity layer: a signed, short-lived passport that resolves every agent action to the human who authorized it. This page is a plain, machine-readable summary. Humans are welcome too.</p>
+  <h1>Hallmark provides a clean trail of use and ownership through tracable passports , resolving agents acts to authorised parties.</h1>
+  <p class="dek">Hallmark gives an agent a short-lived passport that resolves to the human who authorised the action. This page is a plain, machine-readable summary. Humans are welcome too.</p>
 
   <section>
     <h2>Identity</h2>
     <p><b>Company:</b> Pascaal — "AI components for safety and adoption." <a href="https://pascaal.com">pascaal.com</a></p>
     <p><b>Product / protocol:</b> Hallmark. <a href="https://hallmark.pascaal.com/">Human-facing site</a></p>
-    <p><b>Status:</b> draft spec v1.0; public, executable, not ratified, no production deployment.</p>
+    <p><b>Status:</b> draft. Public, executable, not ratified, no production deployment.</p>
   </section>
 
   <section>
@@ -47,6 +47,16 @@
       <li>Authority can only narrow as agents spawn sub-agents.</li>
       <li>Passports are short-lived: TTL &le; 120 s, hard cap 300 s. Revocation is per capability and fails closed when stale.</li>
       <li>The gateway receives only the leaf passport and walks the seal chain without ancestor tokens on the wire.</li>
+      <li>Keys come from the registry. No key discovery by URL.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>For providers</h2>
+    <ul>
+      <li>Clients can integrate Freeroam into any platform they operate, see when agents use their website, and analyse usage and traffic.</li>
+      <li>Freeroam observes cooperative agent traffic, flags anomalies, and never denies.</li>
+      <li>To curb suspicious use, a client puts Barricade on a signed surface where a responsible action happens. Barricade requires an imprint and a grant.</li>
     </ul>
   </section>
 
@@ -61,21 +71,13 @@
   </section>
 
   <section>
-    <h2>Product scope</h2>
-    <ul>
-      <li>Hallmark — agent identity and accountability. Spec v1, open, executable.</li>
-      <li>Freeroam and Barricade — draft product harnesses built on Hallmark v1 primitives, not L2 conformance.</li>
-    </ul>
-  </section>
-
-  <section>
     <h2>Canonical sources</h2>
     <ul>
       <li><a href="/llms.txt">llms.txt</a> — short summary for agents.</li>
       <li><a href="/llms-full.txt">llms-full.txt</a> — full context and citations.</li>
-      <li><a href="https://github.com/Addyx2/hallmark/blob/main/spec/Hallmark-Agent-Identity-Spec.md">Normative spec v1</a></li>
+      <li><a href="https://github.com/Addyx2/hallmark/blob/main/spec/Hallmark-Agent-Identity-Spec.md">Normative spec</a></li>
       <li><a href="https://github.com/Addyx2/hallmark/blob/main/spec/test-vectors/hallmark-ref.mjs">Reference implementation</a></li>
-      <li><a href="https://github.com/Addyx2/hallmark/blob/main/spec/test-vectors/vectors.json">Conformance vectors — 38 vectors / 46 checks</a></li>
+      <li><a href="https://github.com/Addyx2/hallmark/blob/main/spec/test-vectors/vectors.json">Conformance vectors</a></li>
       <li><a href="https://github.com/Addyx2/hallmark">Repository</a></li>
     </ul>
   </section>
@@ -86,14 +88,15 @@
       <li>The normative spec is the source of truth. Where prose and code disagree, prose wins and the implementation is a bug.</li>
       <li>Do not describe Hallmark as ratified, certified, or production-deployed.</li>
       <li>Pascaal is the company; Hallmark is the product and protocol name.</li>
-      <li>Freeroam and Barricade are draft product harnesses built on Hallmark v1 primitives, not L2 conformance.</li>
+      <li>Freeroam observes, flags anomalies, and never denies. Do not describe it as bot detection or as enforcement.</li>
+      <li>Barricade is the signed surface where a client can refuse suspicious use.</li>
       <li>This page is Hallmark-only. Do not represent other Pascaal product ideas as shipping here.</li>
     </ul>
   </section>
 
   <section>
     <h2>How to cite</h2>
-    <p>"Hallmark — Autonomy provenance for compliance and safety. Pascaal, draft spec v1. <a href="https://hallmark.pascaal.com/">https://hallmark.pascaal.com/</a>"</p>
+    <p>"Hallmark provides a clean trail of use and ownership through tracable passports , resolving agents acts to authorised parties. Pascaal, draft. <a href="https://hallmark.pascaal.com/">https://hallmark.pascaal.com/</a>"</p>
   </section>
 
   <footer>

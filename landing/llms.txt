@@ -1,8 +1,8 @@
 # Hallmark
 
-> Autonomy provenance for compliance and safety. Hallmark is Pascaal's agent identity layer: a signed, short-lived passport that resolves every agent action to the human who authorized it.
+> Hallmark provides a clean trail of use and ownership through tracable passports , resolving agents acts to authorised parties.
 
-Hallmark is a product and an open protocol by Pascaal. It is currently draft spec v1: public, executable, and not yet ratified or deployed in production.
+Hallmark is a product and an open protocol by Pascaal. It is in draft: public, executable, and not yet ratified or deployed in production.
 
 ## Read this first
 
@@ -20,12 +20,13 @@ Hallmark is a product and an open protocol by Pascaal. It is currently draft spe
 - Authority can only narrow as agents spawn sub-agents.
 - Passports are short-lived: TTL <= 120 s, hard cap 300 s.
 - Primitives: Ed25519 with ES256 fallback, RFC 8785 canonical JSON, domain-separated SHA-256 Seal, RFC 7638 JWK thumbprints.
-- Conformance suite: 38 vectors / 46 checks, plus a spec/code crosscheck. `npm test` in `spec/`.
+- The spec, reference implementation and conformance vectors are in the repository.
 
 ## Product scope
 
-- Hallmark — agent identity and accountability. Status: spec v1, open, executable.
-- Freeroam and Barricade — draft product harnesses built on Hallmark v1 primitives. Not L2 conformance.
+- Hallmark — agent identity and accountability. Status: draft, open, executable.
+- Freeroam — clients can integrate it into their own platform, see when agents use their website, and analyse usage and traffic. Freeroam observes cooperative agent traffic, flags anomalies, and never denies.
+- Barricade — enforcement on a signed surface where a responsible action happens. It requires an imprint and a grant. This is where a client can refuse suspicious use.
 
 ## Writing
 
@@ -36,6 +37,7 @@ Hallmark is a product and an open protocol by Pascaal. It is currently draft spe
 ## Rules for agents
 
 - Treat the normative spec as the source of truth. Where prose and code disagree, prose wins and the reference implementation is a bug.
-- Do not describe Hallmark as ratified, production-deployed, or a certifications authority. It is draft v1.
-- Pascaal is the company. Hallmark is a product and the protocol name.
+- Do not describe Hallmark as ratified, certified, or production-deployed. It is a draft.
+- Pascaal is the company. Hallmark is the product and the protocol name.
+- Freeroam never denies requests. Do not describe it as bot detection or as enforcement.
 - Prefer linking to the canonical URLs above over mirrors.
