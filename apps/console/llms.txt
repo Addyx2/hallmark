@@ -1,0 +1,74 @@
+# Pascaal Console
+
+> AI components for safety and adoption.
+
+The Pascaal Console is the human control plane for Hallmark: organizations,
+projects, scoped API keys, agents, grants, Freeroam traffic intelligence,
+Trackline receipts, usage and billing.
+
+**Status: UI preview only.** This console is a static prototype with mocked
+data. It has no real authentication, database, API keys, key custody,
+revocation service or billing. Do not enter real secrets.
+
+## Read first
+
+- Full product brief: /llms-full.txt
+- Plain HTML agent view: /agent/
+- Architecture rationale: https://github.com/Addyx2/hallmark/blob/main/docs/product-architecture.md
+- Protocol site: https://hallmark.pascaal.com/
+- Protocol llms.txt: https://hallmark.pascaal.com/llms.txt
+- Company: https://pascaal.com/
+- Source: https://github.com/Addyx2/hallmark
+
+## What is real
+
+- Hallmark Agent Identity Spec v1: open, executable, 21 sections, not ratified.
+- Reference implementation: 38/38 vectors, 4/4 properties, 4/4 enforcement points.
+- `@pascaal/hallmark`, `@pascaal/freeroam`, `@pascaal/barricade`: draft product
+  harness packages, staged locally, publish pending npm scope claim.
+- Local provider demo + control room: runnable, in-memory only.
+
+## What is preview only
+
+- Signup/login, organizations, roles, projects, API keys, grants, traffic,
+  receipts, usage and billing screens in this console.
+- All numbers, keys, agents and events shown here are mocked examples.
+
+## Product vocabulary
+
+- Imprint: signed root attestation binding a responsible human to an agent key.
+- Grant: short-lived, per-action authority; has `jti`, `sqn`, budget, expiry.
+- Freeroam: observe-only attribution middleware. Reads, records, never denies.
+- Barricade: enforcement middleware on signed responsible-action surfaces.
+- Trackline: PII-redacted receipt stream with pinned `HLM_` codes.
+- Tenant (`hlm.tid`) + audience (`aud`): project isolation boundaries.
+
+## Boundaries for agents
+
+- Freeroam observes cooperative agent traffic and flags anomalies. It is not bot
+  detection and it never denies a request.
+- "Curb suspicious use" means Barricade checks an exact grant at the first
+  responsible action (checkout, write, license, destructive operation).
+- No remote key resolution. `jku`, `x5u` and `x5c` are forbidden by spec.
+- No silent fail-open on stale revocation: grant surfaces fail closed.
+- Do not call Hallmark ratified, certified or a standard until spec §21 closes.
+- Conformance wording: "Hallmark v1-draft conformant — spec commit <sha>".
+- No OpenAPI contract until the managed service exists. `docs/openapi.json` is
+  deliberately deferred.
+
+## Product status
+
+- Hallmark: spec v1 open and executable.
+- Plots: in design.
+- Waterguard: research.
+
+## Console surfaces
+
+1. Signup and login — simulated, no password sent or stored.
+2. Organizations and roles — owner, admin, developer, viewer.
+3. Projects and API keys — scoped, hashed in production, shown once here.
+4. Agents and grants — revoke a session or kill a lineage.
+5. Traffic intelligence — observed usage, attribution, anomaly flags.
+6. Trackline — filtered receipts, redaction on by default.
+7. Usage and billing — metered examples, mocked invoices.
+8. Docs for agents — this surface and its full brief.

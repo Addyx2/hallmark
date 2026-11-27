@@ -17,6 +17,26 @@ record attribution, and nothing is blocked. Run **Barricade** on the first
 *responsible* action — purchase, content-use license, destructive operation.
 Wall the first responsibility, never first contact.
 
+## Console UI preview
+
+A Supermemory-like console preview runs locally with mocked data:
+
+```bash
+npm run start:console   # http://127.0.0.1:4320/
+npm run test:console    # static surfaces + agent docs
+```
+
+It previews signup/login, organizations and roles, projects and scoped API keys,
+agents and grants, Freeroam traffic intelligence, Trackline receipts,
+usage/billing and agent-readable docs at `/llms.txt`, `/llms-full.txt` and
+`/agent/`. Any email and password opens the demo; nothing is transmitted or
+stored. Do not enter real secrets.
+
+Freeroam on the traffic screen observes and flags anomalies; it never denies.
+To curb suspicious use, define a signed Barricade surface at the first
+responsible action. The full target architecture is in
+[`product-architecture.md`](product-architecture.md).
+
 ## 1. Install or link
 
 After the `@pascaal` npm scope is claimed:

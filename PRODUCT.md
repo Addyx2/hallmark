@@ -73,6 +73,7 @@ manifests and a chained audit log are Phase 3+ work. See
 | Protocol | Spec v1, vectors, crosscheck | Draft v1, executable, not ratified |
 | Core SDK | `packages/hallmark-core` | Scaffolded here, not published to npm yet |
 | Provider wedge | `packages/freeroam`, `packages/barricade` | Draft harness here; npm publish pending scope claim |
+| Console preview | `apps/console/`, `docs/product-architecture.md` | Clickable UI preview with mocked data; no hosted app |
 | Managed trust | registry + minting service | Next build |
 | User leash | agents, grants, budgets, revoke, kill-switch | Later |
 | Trackline | human-readable receipts | Later |

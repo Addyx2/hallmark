@@ -1,0 +1,15 @@
+{
+  "name": "@pascaal/console-preview",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Pascaal Console UI preview — mocked data, no auth backend, no keys, no billing",
+  "scripts": {
+    "start": "node serve.mjs",
+    "test": "node --test test/console.test.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "Apache-2.0"
+}

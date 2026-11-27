@@ -39,6 +39,17 @@ attestation resolution, PoP, signed revocation manifests and a chained audit log
 remain outside these packages. Do not call the middleware ratified or
 production-ready.
 
+## Console preview note
+
+`apps/console/` is a **UI preview of the hosted console**, built in the
+Supermemory-like shape: organizations, roles, projects, scoped API keys, usage
+and agent-readable docs. It covers signup/login, organizations and roles,
+projects and keys, agents and grants, Freeroam traffic intelligence, Trackline,
+usage/billing and docs for agents. It is static and mocked: no real auth,
+database, key custody, registry, revocation service or billing. The target
+architecture is in [`docs/product-architecture.md`](docs/product-architecture.md).
+Building the real console is Phase 3/4 work, gated on the managed trust service.
+
 ## Phase 4 preview note
 
 The provider demo now includes a local control-room dashboard at `/dashboard`.

@@ -36,6 +36,8 @@ inherit the same lineage rather than invent a second identity system.
 | [`packages/freeroam/`](packages/freeroam/) | Observe-only attribution middleware (`@pascaal/freeroam`) |
 | [`packages/barricade/`](packages/barricade/) | Provider-side enforcement middleware (`@pascaal/barricade`) |
 | [`examples/provider-demo/`](examples/provider-demo/) | Runnable Freeroam → Barricade demo with a local control-room dashboard |
+| [`apps/console/`](apps/console/) | Supermemory-like console UI preview: signup, orgs/roles, projects/keys, agents/grants, traffic, receipts, usage, agent docs |
+| [`docs/product-architecture.md`](docs/product-architecture.md) | Target architecture for the hosted Pascaal Console |
 | [`docs/quickstart.md`](docs/quickstart.md) | Provider setup, framework snippets and verification scope |
 | [`PRODUCT.md`](PRODUCT.md) | Buyer, wedge, MVP definition, non-goals and success metric |
 | [`ROADMAP.md`](ROADMAP.md) | Phases from core package → provider wedge → managed service → leash |
@@ -62,8 +64,9 @@ integration. [`PRODUCT.md`](PRODUCT.md) defines the buyer and the 15-minute MVP;
 
 ```bash
 npm install               # at the repo root; links the workspace packages
-npm run test:all          # 13 package tests + 3 demo/dashboard tests
+npm run test:all          # 13 package tests + 3 demo/dashboard tests + 2 console tests
 npm run start --workspace @pascaal/provider-demo
+npm run start:console     # console UI preview at http://127.0.0.1:4320/
 ```
 
 `packages/hallmark-core/src/index.js` is a semantic copy of
@@ -75,6 +78,14 @@ The provider wedge is a **draft harness**, not L2 conformance: Freeroam observes
 without denying; Barricade enforces only on a signed surface; the demo proves
 the loop and exposes it in a local dashboard. See
 [`docs/quickstart.md`](docs/quickstart.md) for the exact boundary.
+
+The console in `apps/console/` is a **clickable product specification**, not a
+hosted app. It previews signup/login, organizations and roles, projects and
+scoped API keys, agents and grants, Freeroam traffic intelligence, Trackline
+receipts, usage/billing and agent-readable docs. It uses mocked data: no real
+auth, database, keys, billing or registry. Freeroam observes and flags anomalies
+but never denies; enforcement belongs to Barricade on a signed responsible-action
+surface. See [`docs/product-architecture.md`](docs/product-architecture.md).
 
 ## Publish the site
 

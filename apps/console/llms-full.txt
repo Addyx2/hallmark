@@ -1,0 +1,161 @@
+# Pascaal Console — full product brief
+
+> AI components for safety and adoption.
+
+## 0. Status and honesty
+
+This console is a **UI preview**. It is a static site with mocked data. There is
+no real authentication, no database, no API key registry, no signing key custody,
+no revocation service, no usage meter and no payment processor. The sign-in form
+accepts any email and password; nothing is transmitted or stored.
+
+The target hosted console would live at `console.pascaal.com`. The design
+rationale is in `docs/product-architecture.md` in the repository.
+
+Canonical URLs:
+- Company: https://pascaal.com/
+- Protocol: https://hallmark.pascaal.com/
+- Repository: https://github.com/Addyx2/hallmark
+- Console architecture: https://github.com/Addyx2/hallmark/blob/main/docs/product-architecture.md
+
+## 1. What Hallmark is solving
+
+An agent acts on a provider's site. The provider needs to know who is
+responsible, whether the agent is allowed to do this specific action, and how to
+prove it later. Hallmark supplies a signed identity chain from a responsible
+human to a short-lived, per-action grant, and a receipt for the decision.
+
+The company builds AI components for safety and adoption. Adoption comes first:
+observe cooperative agents, make attribution easy, give platforms useful traffic
+intelligence. Safety comes second: at the responsible action, require an exact
+grant and keep a receipt.
+
+## 2. Identity model (target architecture)
+
+Human identities:
+- `User`: one human with a verified email; WebAuthn/OIDC preferred, magic link as
+  bootstrap.
+- `Session`: short-lived browser session, refresh token in an httpOnly cookie.
+- `Organization`: permission and billing boundary.
+- `Membership`: user × organization × role.
+- `Role`: `owner`, `admin`, `developer`, `viewer`.
+- `Invitation`: email + role + expiry + single-use token.
+
+Machine identities:
+- `Project`: belongs to an organization, carries `tenant` (`hlm.tid`) and an
+  audience (`aud`) used by gateways.
+- `ApiKey`: belongs to a project, has a prefix, scopes, environment, created and
+  last-used times, and a revocation state. Secret shown once; only a hash and
+  prefix are stored. Example scopes: `freeroam:observe`, `barricade:enforce`,
+  `grants:mint`, `registry:read`.
+- Isolation: every read/write is scoped by `organization_id` first, then
+  `project_id` / `tenant`. Unscoped requests fail closed.
+
+Protocol identities:
+- `Imprint`: signed root attestation binding a responsible human and an agent key
+  (`cnf.jkt`), with a root budget.
+- `Grant`: short-lived, single-action authority with `jti`, `sqn`, capability,
+  budget and expiry.
+- `RevocationManifest`: versioned denylist for keys, sessions, attestations and
+  tenants. Freshness is enforced, not assumed.
+
+## 3. Console screens in this preview
+
+1. **Overview** — counters, quick links, current plan, boundary notice.
+2. **Organizations** — switch org, create org, invite members, change roles,
+   remove members. Owner/admin/developer/viewer roles.
+3. **Projects & keys** — create projects with tenant + audience, issue scoped
+   keys, reveal once, revoke.
+4. **Agents & grants** — agents by SPID and imprint, active grants, sequence
+   numbers, budgets, revoke session, kill lineage.
+5. **Traffic intelligence** — Freeroam observations: attributed vs unattributed,
+   SPID, route, surface, method, anomaly flags, trend by day.
+6. **Trackline** — PII-redacted receipts with pinned `HLM_` codes, filters,
+   redaction toggle.
+7. **Usage & billing** — observed/enforced/minted/receipt volumes, plan tiers,
+   invoices, overage. All mocked.
+8. **Docs for agents** — links to `llms.txt`, `llms-full.txt`, `/agent/` and a
+   copyable setup prompt.
+9. **Settings** — profile, security notes, reset preview state.
+
+## 4. Freeroam framing (important)
+
+Freeroam is the adoption wedge and is highly adaptable on the client side. A
+platform can integrate it into any web surface and act as a vendor. The exact
+user framing preserved here:
+
+> "Freeroam seems to very adaptible on clients side as they can now decide to integrate it into any platform and be a vendor. They can easily see when agents use their website and analyse usage and traffic and even curb suspicous use."
+
+Precise product meaning:
+- Freeroam observes cooperative agent traffic and flags anomalies. It records
+  attribution, route breadth, method mixes and new SPIDs.
+- Freeroam **never denies** a request. It is not bot detection and makes no claim
+  about classifying humans versus agents.
+- To "curb suspicious use", the operator defines a **Barricade** surface at the
+  first responsible action — checkout, write, license, destructive operation.
+  Barricade checks the exact grant and emits a pinned `HLM_` denial when absent,
+  replayed, expired, over budget, capability-mismatched or stale-revoked.
+- Observation and enforcement are deliberately separate data paths. A visit is
+  an observation; a grant is authority.
+
+## 5. Trackline codes (examples used in this preview)
+
+- `HLM_1003` bad_signature
+- `HLM_1005` malformed
+- `HLM_2004` replay_detected
+- `HLM_6002` session_revoked
+- `HLM_6003` attestation_revoked
+- `HLM_6004` stale_revocation
+
+Denials are pinned and safe to log. Default redaction hides `azp`, `ln` and
+`cnf` values.
+
+## 6. Service boundaries (target, not built)
+
+Phase 3 adds `services/registry`, `services/mint`, `services/usage` and
+`services/console-api`, plus managed revocation freshness with signed manifests.
+The managed minting service never grants authority autonomously; it assists a
+human ceremony. `docs/openapi.json` stays deferred until those services exist.
+
+## 7. Security boundaries
+
+- This preview stores no password and no real secret.
+- Production must hash API keys, use short sessions, CSRF protection, rate
+  limits, org-scoped authorization and audit logging.
+- The console must never expose private signing keys.
+- No remote key resolution: `jku`, `x5u`, `x5c` forbidden by spec.
+- Grant surfaces fail closed on stale revocation. No silent fail-open.
+- Do not call Hallmark ratified, certified or a standard until spec §21 closes.
+  Use "Hallmark v1-draft conformant — spec commit <sha>".
+
+## 8. Verification that is real today
+
+- Spec: 21 sections, ~1,084 lines; 38/38 vectors, 4/4 properties, 4/4 enforcement
+  points, crosscheck clean.
+- Core SDK smoke: 6/6; CLI `self-test` and `verify`; tampered JWS yields
+  `HLM_1003 / bad_signature / HTTP 401`.
+- Provider wedge tests: 13 package tests + 1 end-to-end demo test.
+- Local dashboard tests: mint → checkout verified, revoke → `HLM_6002`,
+  kill-lineage → `HLM_6003`, reset.
+- Console preview tests: static surfaces and agent docs return 200.
+
+## 9. Product status
+
+- Hallmark: spec v1 open and executable, not ratified.
+- Plots: in design.
+- Waterguard: research.
+
+## 10. How to integrate (conceptual)
+
+1. Install `@pascaal/freeroam` on any web surface. It reads
+   `Authorization: Hallmark <jws>` and `X-Hallmark-*` headers, verifies locally
+   with pinned keys, emits safe events, and never blocks.
+2. Read traffic intelligence to understand which agents use the site and where
+   anomalies appear.
+3. Define a signed Barricade policy for the first responsible action.
+4. A human (leash) issues a short-lived grant for that exact action.
+5. Barricade checks the grant, fails closed on problems, and writes a Trackline
+   receipt.
+
+The npm packages are staged locally and publish is pending the `@pascaal` scope
+claim. Until then, use the repository workspaces.

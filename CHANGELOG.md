@@ -28,7 +28,17 @@ Versions are **SDK** versions. The protocol remains **draft v1** and is not rati
   controls. A preview of Leash + Trackline, not the hosted product.
 - `docs/quickstart.md`: provider setup, framework snippets, explicit verification
   scope and conformance wording.
-- Root npm workspaces and `package-lock.json` for local package linking.
+- `docs/product-architecture.md`: Supermemory-like target architecture for the
+  hosted console — identity model, org scoping, scoped keys, service boundaries
+  and security boundaries.
+- `apps/console/`: clickable console UI preview with simulated signup/login,
+  organizations and roles, projects and scoped API keys, agents and grants,
+  Freeroam traffic intelligence, Trackline receipts, usage/billing, docs for
+  agents and settings. Mocked data only: no real auth, keys or billing.
+- Agent-readable console surfaces: `/llms.txt`, `/llms-full.txt`, `/agent/` with
+  JSON-LD, preserving the exact Freeroam framing and all product boundaries.
+- Root npm workspaces and `package-lock.json` for local package linking, now
+  including `apps/*`.
 
 ### Planned
 

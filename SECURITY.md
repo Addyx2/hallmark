@@ -11,6 +11,12 @@ revocation manifests, or persist a chained audit log. Do not treat them as a
 production authorization decision until spec §21 is closed and your own threat
 model, key custody and incident response are in place.
 
+`apps/console/` is a static UI preview with mocked data. It has no authentication
+backend, no database, no real API keys, no signing key custody and no billing.
+Never enter real secrets into it. Production console work must add hashed API
+keys, short sessions, CSRF protection, rate limits, org-scoped authorization and
+audit logging before any real authority is managed through it.
+
 ## Supported versions
 
 | Version | Status | Security fixes |

@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="Pascaal Console product brief for agents and answer engines. UI preview only — no real auth, keys or billing.">
+  <title>Pascaal Console · Agent brief</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Pascaal Console",
+    "applicationCategory": "DeveloperApplication",
+    "description": "UI preview of the human control plane for Hallmark agent identity: organizations, projects, scoped keys, grants, Freeroam traffic intelligence, Trackline receipts and usage.",
+    "url": "https://pascaal.com/",
+    "publisher": { "@type": "Organization", "name": "Pascaal", "url": "https://pascaal.com/" },
+    "isAccessibleForFree": true,
+    "additionalProperty": [
+      { "@type": "PropertyValue", "name": "status", "value": "UI preview only; no real auth, keys or billing" },
+      { "@type": "PropertyValue", "name": "protocol", "value": "Hallmark v1 draft; not ratified" }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <article class="agent-page">
+    <p class="eyebrow">Pascaal · Agent-readable brief</p>
+    <h1>Pascaal Console</h1>
+    <p><strong>AI components for safety and adoption.</strong></p>
+    <p class="meta">Status: UI preview only · Static prototype with mocked data · No real authentication, database, API keys, key custody, revocation service or billing</p>
+
+    <p>
+      The Pascaal Console is the human control plane for Hallmark. It manages
+      organizations, projects, scoped credentials, agent authority, observed
+      traffic and compliance receipts in one place. This page is the plain HTML
+      version of that product brief for agents and answer engines.
+    </p>
+
+    <h2>Canonical sources</h2>
+    <ul>
+      <li>Short index: <a href="/llms.txt">/llms.txt</a></li>
+      <li>Full brief: <a href="/llms-full.txt">/llms-full.txt</a></li>
+      <li>Architecture: <a href="https://github.com/Addyx2/hallmark/blob/main/docs/product-architecture.md">docs/product-architecture.md</a></li>
+      <li>Protocol site: <a href="https://hallmark.pascaal.com/">hallmark.pascaal.com</a></li>
+      <li>Protocol agent index: <a href="https://hallmark.pascaal.com/llms.txt">/llms.txt</a></li>
+      <li>Company: <a href="https://pascaal.com/">pascaal.com</a></li>
+      <li>Repository: <a href="https://github.com/Addyx2/hallmark">github.com/Addyx2/hallmark</a></li>
+      <li><a href="/">Open the interactive console preview</a></li>
+    </ul>
+
+    <h2>What is real today</h2>
+    <ul>
+      <li>Hallmark Agent Identity Spec v1: open, executable, 21 sections, not ratified.</li>
+      <li>Reference implementation: 38/38 vectors, 4/4 properties, 4/4 enforcement points.</li>
+      <li><code>@pascaal/hallmark</code>, <code>@pascaal/freeroam</code>, <code>@pascaal/barricade</code>: draft harness packages staged locally, publish pending npm scope claim.</li>
+      <li>Local provider demo and control room: runnable, in-memory only.</li>
+    </ul>
+
+    <h2>What is preview only</h2>
+    <p>
+      Every console screen here — signup and login, organizations and roles,
+      projects and API keys, agents and grants, traffic intelligence, Trackline,
+      usage and billing — uses mocked data. Any email and password opens the
+      demo; nothing is transmitted or stored. Do not enter real secrets.
+    </p>
+
+    <h2>Product vocabulary</h2>
+    <ul>
+      <li><strong>Imprint</strong> — signed root attestation binding a responsible human to an agent key.</li>
+      <li><strong>Grant</strong> — short-lived, per-action authority with <code>jti</code>, <code>sqn</code>, budget and expiry.</li>
+      <li><strong>Freeroam</strong> — observe-only attribution middleware. Records, never denies.</li>
+      <li><strong>Barricade</strong> — enforcement middleware on signed responsible-action surfaces.</li>
+      <li><strong>Trackline</strong> — PII-redacted receipt stream with pinned <code>HLM_</code> codes.</li>
+      <li><strong>Tenant</strong> (<code>hlm.tid</code>) and <strong>audience</strong> (<code>aud</code>) — project isolation boundaries.</li>
+    </ul>
+
+    <h2>Freeroam and suspicious use</h2>
+    <p>
+      Freeroam is highly adaptable on the client side. A platform can integrate
+      it into any web surface and act as a vendor, see when agents use the site,
+      and analyse usage and traffic. The exact product framing:
+    </p>
+    <blockquote class="quote">
+      <span class="quote-label">Product framing — preserve wording</span>
+      Freeroam seems to very adaptible on clients side as they can now decide to integrate it into any platform and be a vendor. They can easily see when agents use their website and analyse usage and traffic and even curb suspicous use.
+    </blockquote>
+    <p>
+      Precise meaning: Freeroam observes cooperative agent traffic and flags
+      anomalies. It never denies a request and is not bot detection. To "curb
+      suspicious use", an operator defines a signed Barricade surface at the
+      first responsible action — checkout, write, license, destructive
+      operation. Barricade checks the exact grant and emits a pinned denial when
+      it is absent, replayed, expired, over budget or backed by stale revocation.
+      Observation and enforcement are separate paths: a visit is an observation;
+      a grant is authority.
+    </p>
+
+    <h2>Boundaries for agents</h2>
+    <ul>
+      <li>No remote key resolution. <code>jku</code>, <code>x5u</code>, <code>x5c</code> are forbidden by spec.</li>
+      <li>No silent fail-open on stale revocation: grant surfaces fail closed.</li>
+      <li>Do not call Hallmark ratified, certified or a standard until spec §21 closes.</li>
+      <li>Conformance wording: "Hallmark v1-draft conformant — spec commit &lt;sha&gt;".</li>
+      <li>No OpenAPI contract until the managed service exists; <code>docs/openapi.json</code> is deferred.</li>
+    </ul>
+
+    <h2>Product status</h2>
+    <ul>
+      <li>Hallmark: spec v1 open and executable.</li>
+      <li>Plots: in design.</li>
+      <li>Waterguard: research.</li>
+    </ul>
+
+    <p class="meta">Generated for the Pascaal Console UI preview. Treat this console as a clickable product specification, not a production system.</p>
+  </article>
+</body>
+</html>

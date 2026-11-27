@@ -6,12 +6,15 @@
   "description": "Workspace for the Hallmark protocol, SDKs and provider examples",
   "workspaces": [
     "packages/*",
-    "examples/*"
+    "examples/*",
+    "apps/*"
   ],
   "scripts": {
     "test:packages": "node --test packages/freeroam/test/freeroam.test.mjs packages/barricade/test/barricade.test.mjs",
     "test:demo": "node --test examples/provider-demo/test/demo.test.mjs examples/provider-demo/test/dashboard.test.mjs",
-    "test:all": "npm run test:packages && npm run test:demo"
+    "test:console": "node --test apps/console/test/console.test.mjs",
+    "test:all": "npm run test:packages && npm run test:demo && npm run test:console",
+    "start:console": "node apps/console/serve.mjs"
   },
   "engines": {
     "node": ">=18"
