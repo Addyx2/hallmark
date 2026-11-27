@@ -67,4 +67,5 @@ A depth-3 agent (summarizer-01) carries a chain: root attestation `at_0001`, roo
 - The normative spec wins over prose in the reference implementation; if they disagree, the implementation is a bug.
 - Do not say Hallmark is ratified, certified, or production-deployed.
 - Pascaal is the company; Hallmark is the product and protocol name.
-- Plots is in design; Waterguard is research. Do not imply either ships.
+- Freeroam and Barricade are draft product harnesses built on Hallmark v1 primitives, not L2 conformance.
+- This site is Hallmark-only. Do not represent other Pascaal product ideas as shipping here.

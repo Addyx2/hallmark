@@ -13,7 +13,8 @@
     "test:packages": "node --test packages/freeroam/test/freeroam.test.mjs packages/barricade/test/barricade.test.mjs",
     "test:demo": "node --test examples/provider-demo/test/demo.test.mjs examples/provider-demo/test/dashboard.test.mjs",
     "test:console": "node --test apps/console/test/console.test.mjs",
-    "test:all": "npm run test:packages && npm run test:demo && npm run test:console",
+    "test:landing": "node --test landing/test/landing.test.mjs",
+    "test:all": "npm run test:packages && npm run test:demo && npm run test:console && npm run test:landing",
     "start:console": "node apps/console/serve.mjs"
   },
   "engines": {

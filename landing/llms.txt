@@ -22,11 +22,10 @@ Hallmark is a product and an open protocol by Pascaal. It is currently draft spe
 - Primitives: Ed25519 with ES256 fallback, RFC 8785 canonical JSON, domain-separated SHA-256 Seal, RFC 7638 JWK thumbprints.
 - Conformance suite: 38 vectors / 46 checks, plus a spec/code crosscheck. `npm test` in `spec/`.
 
-## Product family
+## Product scope
 
 - Hallmark — agent identity and accountability. Status: spec v1, open, executable.
-- Plots — autonomous work management. Status: in design.
-- Waterguard — agent security models. Status: research.
+- Freeroam and Barricade — draft product harnesses built on Hallmark v1 primitives. Not L2 conformance.
 
 ## Writing
 

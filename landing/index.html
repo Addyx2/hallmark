@@ -315,13 +315,15 @@
   .foot-group a{color:var(--ink-68);transition:color .2s;width:fit-content}
   .foot-group a:hover{color:var(--ink)}
   .foot-legal{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:30px;padding-top:14px;border-top:1px solid var(--rule);font-size:12px}
-  .foot-status{display:inline-flex;align-items:center;gap:7px;margin-left:auto;white-space:nowrap}
+  .foot-status{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
   .foot-status .dot{width:7px;height:7px;border-radius:50%;background:#10a86a;flex:none}
   .foot-top:hover .up{translate:0 -2px}
   .up{display:inline-block;transition:translate .2s var(--ease)}
   @media(max-width:640px){
     .foot-grid{grid-template-columns:1fr 1fr}
     .foot-brand{grid-column:1/-1}
+    .foot-legal{align-items:flex-start}
+    .foot-status{margin-left:0}
   }
 
   /* ---------- reveal ---------- */
@@ -343,20 +345,25 @@
     .nav a{font-size:13.5px}
     .col{padding-block:48px 80px}
   }
+  @media(max-width:760px){.ledger{display:block;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch}}
   @media(max-width:560px){
     .page{width:calc(100% - 36px)}
     .rail{flex-wrap:wrap;row-gap:10px}
     .rail .nav{order:3;flex-basis:100%;gap:6px 14px}
+    .rail .nav a{max-width:100%;overflow-wrap:anywhere}
     .statement{font-size:34px;letter-spacing:-.025em}
     .creed{font-size:21px}
     .stat-n{font-size:34px}
     .final h2{font-size:26px}
     .actions .btn{flex:1 1 auto;justify-content:center}
+    .works-list{gap:6px 12px}
+    .works-list span:after{margin-left:12px}
+    .product .desc,.row p,.dep p,.check p,.bullet p,.body{max-width:none}
   }
 
   /* ---------- proof + interactive verifier ---------- */
-  .proof{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
-  .proof span{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-60);border:1px solid var(--rule);border-radius:2px;padding:5px 9px}
+  .proof-chip{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+  .proof-chip span{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-60);border:1px solid var(--rule);border-radius:2px;padding:5px 9px}
   .verify{border-top:1px solid var(--rule);padding-block:clamp(56px,8vw,96px)}
   .verify-panel{border:1px solid var(--rule);border-radius:6px;background:var(--paper);overflow:hidden;margin-top:28px}
   .verify-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 18px;border-bottom:1px solid var(--rule);font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-60)}
@@ -395,8 +402,6 @@
       <a href="#top" aria-current="page">Home</a>
       <a href="#products">Products</a>
       <a href="#hallmark">Hallmark</a>
-      <a href="#plots">Plots</a>
-      <a href="#waterguard">Waterguard</a>
       <a href="#writing">Writing</a>
       <a href="https://pascaal.com" target="_blank" rel="noopener">pascaal.com<span class="arrow" aria-hidden="true">↗</span></a>
     </nav>
@@ -415,8 +420,6 @@
           <a href="#verify">Verify it</a>
         </div>
       </div>
-      <a href="#plots">Plots</a>
-      <a href="#waterguard">Waterguard</a>
       <a href="#writing">Writing</a>
     </nav>
   </aside>
@@ -449,7 +452,7 @@
         </a>
       </div>
 
-      <div class="proof" data-reveal="load" style="--d:280ms" aria-label="Conformance summary">
+      <div class="proof-chip" data-reveal="load" style="--d:280ms" aria-label="Conformance summary">
         <span>Spec v1</span><span>38 vectors</span><span>46 checks</span><span>Ed25519 / ES256</span><span>RFC 8785</span><span>reproducible</span>
       </div>
 
@@ -478,10 +481,10 @@
     <!-- 01 · PRODUCTS -->
     <section id="products" data-reveal>
       <div class="eyebrow"><i aria-hidden="true"></i>01 &middot; From Pascaal</div>
-      <h2 class="creed">Three components. <b>One thesis.</b></h2>
+      <h2 class="creed">One component. <b>One thesis.</b></h2>
       <p class="body">
-        Every product answers the same question from a different angle: can a human stay
-        responsible while an agent does the work? Hallmark is the first to ship.
+        Hallmark answers the question that matters when an agent acts: can a human stay
+        responsible while the work gets done? It is an open spec v1, ready to implement.
       </p>
 
       <div class="products">
@@ -493,26 +496,6 @@
             Agent identity and accountability. A short-lived passport resolves every agent to one
             responsible human, with grants that name the action and budgets that cannot be shared.
             <a href="https://github.com/Addyx2/hallmark" target="_blank" rel="noopener">Read the protocol ↗</a>
-          </p>
-        </div>
-        <div class="product">
-          <span class="n">02</span>
-          <h3>Plots</h3>
-          <span class="tag">In design</span>
-          <p class="desc">
-            Autonomous work management. Agents that plan, execute and report real work &mdash; with
-            the plan, the spend and every hand-off legible to the human who owns the outcome.
-            <a href="#plots">See the direction ↗</a>
-          </p>
-        </div>
-        <div class="product">
-          <span class="n">03</span>
-          <h3>Waterguard</h3>
-          <span class="tag">Research</span>
-          <p class="desc">
-            Agent security models. Threat models, policy and containment for agents acting on real
-            systems &mdash; what they may touch, what they may spend, and when they must stop.
-            <a href="#waterguard">See the direction ↗</a>
           </p>
         </div>
       </div>
@@ -783,61 +766,9 @@
       <span class="status-line"><i aria-hidden="true"></i>Illustrative verifier. Full conformance: <a href="https://github.com/Addyx2/hallmark/blob/main/spec/test-vectors/vectors.json" target="_blank" rel="noopener">38 vectors, 46 checks</a>.</span>
     </section>
 
-    <!-- 08 · PLOTS -->
-    <section id="plots" data-reveal>
-      <div class="eyebrow"><i aria-hidden="true"></i>08 &middot; Plots &middot; In design</div>
-      <h2 class="creed">Autonomous work, <b>legibly owned.</b></h2>
-      <p class="body">
-        Plots is our work-management component. Agents plan, execute and report real work, while
-        the human who owns the outcome can see the plan, the spend and every hand-off. It is not a
-        task board with an agent bolted on; it is a work loop where accountability is the default.
-      </p>
-      <div class="bullets">
-        <div class="bullet">
-          <span class="n">01</span>
-          <p><b>Plan.</b> Decompose an objective into steps a human can read, approve and re-scope before anything runs.</p>
-        </div>
-        <div class="bullet">
-          <span class="n">02</span>
-          <p><b>Execute.</b> Run each step under a Hallmark grant, so scope and spend are bounded by construction.</p>
-        </div>
-        <div class="bullet">
-          <span class="n">03</span>
-          <p><b>Report.</b> Close the loop with a receipt the owner can audit &mdash; what ran, what it cost, what changed.</p>
-        </div>
-      </div>
-      <span class="status-line"><i aria-hidden="true"></i>In design &middot; not yet shipping</span>
-    </section>
-
-    <!-- 09 · WATERGUARD -->
-    <section id="waterguard" data-reveal>
-      <div class="eyebrow"><i aria-hidden="true"></i>09 &middot; Waterguard &middot; Research</div>
-      <h2 class="creed">Agent security, <b>as a model.</b></h2>
-      <p class="body">
-        Waterguard is our security-model component. Not a scanner and not a prompt filter: a way to
-        name the assets, the actions and the failure modes of an agent that touches real systems,
-        then enforce the answer where the action actually happens.
-      </p>
-      <div class="bullets">
-        <div class="bullet">
-          <span class="n">01</span>
-          <p><b>Model.</b> Name the assets, the actions and the failure modes before an agent is deployed.</p>
-        </div>
-        <div class="bullet">
-          <span class="n">02</span>
-          <p><b>Enforce.</b> Policy that fails closed at the gateway &mdash; not in a prompt, and not in a hope.</p>
-        </div>
-        <div class="bullet">
-          <span class="n">03</span>
-          <p><b>Contain.</b> A bounded window between detection and stop, backed by short-lived credentials.</p>
-        </div>
-      </div>
-      <span class="status-line research"><i aria-hidden="true"></i>Research &middot; direction only</span>
-    </section>
-
-    <!-- 10 · WRITING -->
+    <!-- 08 · WRITING -->
     <section id="writing" data-reveal>
-      <div class="eyebrow"><i aria-hidden="true"></i>10 &middot; Writing</div>
+      <div class="eyebrow"><i aria-hidden="true"></i>08 &middot; Writing</div>
       <h2 class="creed">Design notes, <b>in the open.</b></h2>
       <div class="posts">
         <a class="post" href="https://github.com/Addyx2/hallmark/blob/main/spec/Hallmark-Agent-Identity-Spec.md" target="_blank" rel="noopener">
@@ -876,11 +807,11 @@
     <!-- final -->
     <div class="final" data-reveal>
       <div class="eyebrow"><i aria-hidden="true"></i>Build with Pascaal</div>
-      <h2>Start with Hallmark. The rest plugs into the same identity.</h2>
+      <h2>Start with Hallmark. Prove autonomy before you trust it.</h2>
       <p>
-        If your platform already sees agent traffic, start with Freeroam: observe-only, zero accounts,
-        no interception. Add Barricade when you are ready to enforce &mdash; and Plots and Waterguard
-        inherit the same lineage.
+        Implement the open spec v1, run the conformance vectors, and resolve every agent action to
+        one responsible human. Freeroam and Barricade are draft product harnesses built on the same
+        primitives.
       </p>
       <div class="actions">
         <a class="btn btn-primary" href="https://github.com/Addyx2/hallmark" target="_blank" rel="noopener">
@@ -904,8 +835,6 @@
         <div class="foot-group">
           <span class="foot-head">Products</span>
           <a href="#hallmark">Hallmark</a>
-          <a href="#plots">Plots</a>
-          <a href="#waterguard">Waterguard</a>
         </div>
         <div class="foot-group">
           <span class="foot-head">Protocol</span>
