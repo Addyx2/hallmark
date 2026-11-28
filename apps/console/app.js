@@ -16,13 +16,44 @@ const ago = (iso) => {
   return `${Math.floor(secs / 86400)}d ago`;
 };
 const clock = (iso) => new Date(iso).toLocaleString([], { hour12: false, month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+// Future grant expiry must read as a countdown, never as "0s ago".
+const until = (iso) => {
+  const secs = Math.ceil((new Date(iso).getTime() - Date.now()) / 1000);
+  if (!Number.isFinite(secs) || secs <= 0) return `expired ${ago(iso)}`;
+  if (secs < 60) return `in ${secs}s`;
+  if (secs < 3600) return `in ${Math.floor(secs / 60)}m`;
+  if (secs < 86400) return `in ${Math.floor(secs / 3600)}h`;
+  return `in ${Math.floor(secs / 86400)}d`;
+};
+const isExpired = (iso) => new Date(iso).getTime() <= Date.now();
 
 const VENDOR_FRAME = 'Freeroam seems to very adaptible on clients side as they can now decide to integrate it into any platform and be a vendor. They can easily see when agents use their website and analyse usage and traffic and even curb suspicous use.';
+
+// Cost is expressed in mock cost units throughout the Console and the demo.
+// 100 cost units = $1 in this preview; no billing processor is connected.
+const COST_UNIT_NOTE = 'Mock cost units: 100 units = $1. No billing is connected.';
+
+// Role model for this clickable preview. The hosted product would enforce the
+// same matrix server-side; here it gates controls so the banner is not decorative.
+const ROLE_MODEL = {
+  owner: { label: 'owner', may: ['members', 'projects', 'keys', 'grants', 'billing'] },
+  admin: { label: 'admin', may: ['members', 'projects', 'keys', 'grants', 'billing'] },
+  developer: { label: 'developer', may: ['projects', 'keys', 'grants'] },
+  viewer: { label: 'viewer', may: [] },
+};
+const ROLE_BANNER = 'Role model (preview): owner · admin · developer · viewer. Roles are per organization and enforced client-side here; the hosted product enforces them server-side.';
+
+const PLANS = {
+  Starter: { included: '5,000', overage: '$0.60 per 1,000', seats: '3 members', retention: '7 day receipts' },
+  Growth: { included: '50,000', overage: '$0.40 per 1,000', seats: '10 members', retention: '30 day receipts' },
+  Scale: { included: '250,000', overage: '$0.25 per 1,000', seats: 'Unlimited members', retention: '90 day receipts' },
+};
+const TIME_WINDOWS = { '24h': 86400000, '7d': 7 * 86400000, '14d': 14 * 86400000, all: Infinity };
 
 // Deterministic pseudo-random so the mocked data is stable across reloads.
 let seed = 20261127;
 const rnd = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
-const pick = (arr) => arr[Math.floor(rnd() * arr.length)];
+const pick = (arr) => (arr.length ? arr[Math.floor(rnd() * arr.length)] : undefined);
 const daysAgo = (n) => new Date(Date.now() - n * 86400000).toISOString();
 
 // ---------------------------------------------------------------------------
@@ -43,8 +74,12 @@ const state = {
   session: null,
   activeOrg: null,
   authMode: 'signin',
-  filters: { trafficSurface: 'all', trafficAttribution: 'all', eventCode: 'all', eventSearch: '', redaction: true },
-  reveal: null,
+  filters: {
+    trafficSurface: 'all', trafficAttribution: 'all', trafficProject: 'all', trafficAgent: 'all', trafficTime: 'all',
+    eventCode: 'all', eventSearch: '', eventProject: 'all', eventAgent: 'all', eventTime: 'all',
+    redaction: true,
+  },
+  reveal: null, // { secret, orgId, projectId } — scoped to one org/project and cleared on navigation
   orgs: [
     { id: 'org_northstar', name: 'Northstar Labs', slug: 'northstar-labs', role: 'owner', plan: 'Scale', created: daysAgo(120) },
     { id: 'org_brightline', name: 'Brightline Retail', slug: 'brightline-retail', role: 'admin', plan: 'Growth', created: daysAgo(64) },
@@ -81,9 +116,10 @@ const state = {
   grants: [
     { id: 'gr_1', orgId: 'org_northstar', agentId: 'agt_1', jti: 'grant_ns_0142', session: 'ses_ns_0142', sqn: 142, cap: 'commerce.checkout.v1', status: 'used', expires: daysAgo(-0.02), remaining: '4 / 5 req', human: 'alex@northstar.example' },
     { id: 'gr_2', orgId: 'org_northstar', agentId: 'agt_2', jti: 'grant_ns_0143', session: 'ses_ns_0143', sqn: 143, cap: 'catalog.read.v1', status: 'active', expires: daysAgo(-0.04), remaining: '18 / 20 req', human: 'priya@northstar.example' },
-    { id: 'gr_3', orgId: 'org_northstar', agentId: 'agt_1', jti: 'grant_ns_0144', session: 'ses_ns_0144', sqn: 144, cap: 'commerce.checkout.v1', status: 'revoked', expires: daysAgo(-0.01), remaining: '0 / 5 req', human: 'devon@northstar.example' },
+    { id: 'gr_3', orgId: 'org_northstar', agentId: 'agt_1', jti: 'grant_ns_0144', session: 'ses_ns_0144', sqn: 144, cap: 'commerce.checkout.v1', status: 'revoked', expires: daysAgo(-0.01), remaining: '3 / 5 req', human: 'devon@northstar.example' },
     { id: 'gr_4', orgId: 'org_brightline', agentId: 'agt_3', jti: 'grant_br_0091', session: 'ses_br_0091', sqn: 91, cap: 'catalog.read.v1', status: 'active', expires: daysAgo(-0.03), remaining: '12 / 20 req', human: 'rina@brightline.example' },
-    { id: 'gr_5', orgId: 'org_civic', agentId: 'agt_4', jti: 'grant_cv_0007', session: 'ses_cv_0007', sqn: 7, cap: 'records.read.v1', status: 'revoked', expires: daysAgo(-0.01), remaining: '0 / 20 req', human: 'alex@northstar.example' },
+    { id: 'gr_5', orgId: 'org_civic', agentId: 'agt_4', jti: 'grant_cv_0007', session: 'ses_cv_0007', sqn: 7, cap: 'records.read.v1', status: 'revoked', expires: daysAgo(-0.01), remaining: '14 / 20 req', human: 'alex@northstar.example' },
+    { id: 'gr_6', orgId: 'org_northstar', agentId: 'agt_2', jti: 'grant_ns_0145', session: 'ses_ns_0145', sqn: 145, cap: 'catalog.read.v1', status: 'used', expires: daysAgo(1), remaining: '0 / 20 req', human: 'priya@northstar.example' },
   ],
   traffic: [],
   events: [],
@@ -137,17 +173,24 @@ for (let i = 0; i < 40; i += 1) {
   const [event, code, tone] = pick(EVENT_TYPES);
   const org = pick(state.orgs).id;
   const agent = pick(state.agents.filter((a) => a.orgId === org)) || state.agents[0];
+  const orgGrants = state.grants.filter((g) => g.orgId === org);
+  const human = pick(['alex@northstar.example', 'priya@northstar.example', 'rina@brightline.example']);
   state.events.push({
     id: `evt_${String(i + 1).padStart(4, '0')}`,
     orgId: org,
+    projectId: state.projects.find((p) => p.orgId === org)?.id || 'prj_demo',
     ts: daysAgo(rnd() * 10),
     event,
     code,
     tone,
     surface: pick(['checkout', 'account.update', 'api.write']),
     spid: agent.spid,
-    jti: pick(state.grants.filter((g) => g.orgId === org)).jti || 'grant_demo_0001',
-    human: pick(['alex@northstar.example', 'priya@northstar.example', 'rina@brightline.example']),
+    jti: (orgGrants.length ? pick(orgGrants).jti : 'grant_demo_0001'),
+    human,
+    // Explicit fields so the redaction toggle can reveal azp, ln and cnf.
+    azp: human,
+    ln: `ln_demo_${String(i + 1).padStart(4, '0')}`,
+    cnf: `jkt_demo_${String((i * 37) % 991).padStart(4, '0')}`,
   });
 }
 state.events.sort((a, b) => new Date(b.ts) - new Date(a.ts));
@@ -174,25 +217,78 @@ const orgName = (id) => state.orgs.find((o) => o.id === id)?.name || id;
 const projectName = (id) => state.projects.find((p) => p.id === id)?.name || id;
 const forOrg = (arr) => arr.filter((item) => item.orgId === state.activeOrg);
 const keysForOrg = () => state.keys.filter((k) => state.projects.some((p) => p.id === k.projectId && p.orgId === state.activeOrg));
+const can = (ability) => (ROLE_MODEL[org().role]?.may || []).includes(ability);
+
+// Signed-in identity appears in the member list instead of being decorative.
+function syncSignedInMember(email) {
+  if (!email) return;
+  state.orgs.forEach((o) => {
+    if (state.members.some((m) => m.orgId === o.id && m.email.toLowerCase() === email.toLowerCase())) return;
+    state.members.push({
+      id: `usr_${o.id}_${state.members.length + 1}`, orgId: o.id, name: email.split('@')[0],
+      email, role: o.role, status: 'active', joined: new Date().toISOString(),
+    });
+  });
+}
+
+function createOrgWithStarter(name, email) {
+  const id = `org_${Date.now()}`;
+  const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'workspace';
+  state.orgs.push({ id, name, slug, role: 'owner', plan: 'Starter', created: new Date().toISOString() });
+  state.members.push({
+    id: `usr_${Date.now()}`, orgId: id, name: (email || 'you@company.com').split('@')[0],
+    email: email || 'you@company.com', role: 'owner', status: 'active', joined: new Date().toISOString(),
+  });
+  const suffix = Math.random().toString(36).slice(2, 7);
+  state.projects.push({
+    id: `prj_${suffix}`, orgId: id, name: 'Starter project', env: 'development',
+    tenant: `tnt_${suffix}`, audience: `https://gw.${suffix}.example/`, created: new Date().toISOString(), starter: true,
+  });
+  state.activeOrg = id;
+  return id;
+}
 
 let toastTimer;
 function toast(message) {
+  // The live region stays in the DOM; visibility is CSS-only.
   const el = $('toast');
   el.textContent = message;
-  el.hidden = false;
+  el.classList.add('visible');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { el.hidden = true; }, 3200);
+  toastTimer = setTimeout(() => { el.classList.remove('visible'); }, 3200);
 }
 
 function confirmAction(message) {
   return window.confirm(message);
 }
 
+// Capture the focused control before a render replaces the DOM, then put focus
+// back on the equivalent control (filters, selects and action buttons included).
+function focusDescriptor(el) {
+  if (!el || !$('screen').contains(el)) return null;
+  const parts = [el.tagName.toLowerCase()];
+  for (const attr of ['data-action', 'data-filter', 'data-org', 'data-member', 'data-key', 'data-grant', 'data-agent', 'id']) {
+    if (el.hasAttribute(attr)) parts.push(`[${attr}="${CSS.escape(el.getAttribute(attr))}"]`);
+  }
+  if (parts.length === 1) return null;
+  return { selector: parts.join(''), start: el.selectionStart };
+}
+
+function restoreFocus(descriptor) {
+  if (!descriptor) return;
+  const next = $('screen').querySelector(descriptor.selector);
+  if (!next || next.disabled) return;
+  next.focus();
+  if (descriptor.start !== null && descriptor.start !== undefined && next.setSelectionRange) {
+    try { next.setSelectionRange(descriptor.start, descriptor.start); } catch { /* not a text input */ }
+  }
+}
+
 function head(num, title, sub, actions = '') {
   return `
     <div class="screen-head">
       <div>
-        <p class="eyebrow">${esc(num)} · Pascaal console</p>
+        <p class="eyebrow">${esc(num)} · Pascaal Console</p>
         <h2>${esc(title)}</h2>
         <p class="sub">${sub}</p>
       </div>
@@ -204,14 +300,64 @@ function badge(text, tone = '') {
   return `<span class="badge ${esc(tone)}">${esc(text)}</span>`;
 }
 
-function barChart(rows, key) {
+function barChart(rows, key, label = 'Observed') {
   if (!rows.length) return '<p class="hint">No mocked observations for this organization yet.</p>';
   const max = Math.max(1, ...rows.map((r) => r[key]));
+  // The table is the accessible data equivalent of the visual bars.
+  const data = `
+    <table class="sr-only">
+      <caption>${esc(label)} per day (mocked)</caption>
+      <thead><tr><th scope="col">Day</th><th scope="col">${esc(label)}</th></tr></thead>
+      <tbody>${rows.map((r) => `<tr><td>${esc(r.day.slice(0, 10))}</td><td>${number.format(r[key])}</td></tr>`).join('')}</tbody>
+    </table>`;
   return `
-    <div class="bar-chart">
+    <div class="bar-chart" role="img" aria-label="${esc(label)} per day; exact values in the following table">
       ${rows.map((r) => `<div class="bar" style="height:${Math.max(4, Math.round((r[key] / max) * 100))}%" title="${number.format(r[key])}"></div>`).join('')}
     </div>
-    <div class="chart-labels"><span>${ago(rows[0].day)}</span><span>today</span></div>`;
+    <div class="chart-labels"><span>${ago(rows[0].day)}</span><span>today</span></div>${data}`;
+}
+
+// Shared mocked filters for the traffic and receipt screens.
+function filterControls(prefix) {
+  const suffix = prefix === 'traffic' ? 'surface' : 'code';
+  const options = prefix === 'traffic'
+    ? SURFACES.map((s) => `<option value="${esc(s)}" ${s === state.filters.trafficSurface ? 'selected' : ''}>${esc(s)}</option>`).join('')
+    : ['HLM_1003', 'HLM_1005', 'HLM_2004', 'HLM_6002', 'HLM_6003', 'HLM_6004'].map((c) => `<option value="${c}" ${c === state.filters.eventCode ? 'selected' : ''}>${c}</option>`).join('');
+  const agentOptions = forOrg(state.agents).map((a) => `<option value="${esc(a.spid)}" ${a.spid === state.filters[`${prefix}Agent`] ? 'selected' : ''}>${esc(a.name)}</option>`).join('');
+  const projectOptions = state.projects.filter((p) => p.orgId === state.activeOrg).map((p) => `<option value="${esc(p.id)}" ${p.id === state.filters[`${prefix}Project`] ? 'selected' : ''}>${esc(p.name)}</option>`).join('');
+  return `
+    <div class="filter-row">
+      <label class="mono muted filter-label" for="${prefix}-${suffix}">${prefix === 'traffic' ? 'Surface' : 'Code'}</label>
+      <select id="${prefix}-${suffix}" data-action="filter-${prefix}" data-filter="${prefix}${prefix === 'traffic' ? 'Surface' : 'Code'}">
+        <option value="all">All ${prefix === 'traffic' ? 'surfaces' : 'codes'}</option>${options}
+      </select>
+      <label class="mono muted filter-label" for="${prefix}-project">Project</label>
+      <select id="${prefix}-project" data-action="filter-${prefix}" data-filter="${prefix}Project">
+        <option value="all">All projects</option>${projectOptions}
+      </select>
+      <label class="mono muted filter-label" for="${prefix}-agent">Agent</label>
+      <select id="${prefix}-agent" data-action="filter-${prefix}" data-filter="${prefix}Agent">
+        <option value="all">All agents</option>${agentOptions}
+      </select>
+      <label class="mono muted filter-label" for="${prefix}-time">Time window</label>
+      <select id="${prefix}-time" data-action="filter-${prefix}" data-filter="${prefix}Time">
+        ${Object.keys(TIME_WINDOWS).map((w) => `<option value="${w}" ${w === state.filters[`${prefix}Time`] ? 'selected' : ''}>${w === 'all' ? 'All time' : `Last ${w}`}</option>`).join('')}
+      </select>
+      ${prefix === 'traffic' ? `
+      <label class="mono muted filter-label" for="traffic-attribution">Attribution</label>
+      <select id="traffic-attribution" data-action="filter-traffic" data-filter="trafficAttribution">
+        <option value="all">All traffic</option>
+        <option value="attributed" ${state.filters.trafficAttribution === 'attributed' ? 'selected' : ''}>Attributed</option>
+        <option value="unattributed" ${state.filters.trafficAttribution === 'unattributed' ? 'selected' : ''}>Unattributed</option>
+      </select>` : `
+      <label class="mono muted filter-label" for="event-search">Search</label>
+      <input id="event-search" type="search" data-action="filter-events" data-filter="eventSearch" value="${esc(state.filters.eventSearch)}" placeholder="Search event or code">`}
+    </div>`;
+}
+
+function inTimeWindow(ts, windowKey) {
+  const span = TIME_WINDOWS[windowKey] ?? Infinity;
+  return new Date(ts).getTime() >= Date.now() - span;
 }
 
 // ---------------------------------------------------------------------------
@@ -231,6 +377,10 @@ function screenOverview() {
       <strong>Preview boundary.</strong> Sign-in is simulated; no password, key,
       grant or invoice here is real. Use the local provider demo for the working
       Freeroam → Barricade flow.
+    </div>
+    <div class="callout section" role="note">
+      <strong>Role model.</strong> ${ROLE_BANNER} Active role in ${esc(org().name)}:
+      ${badge(org().role, org().role === 'owner' ? 'info' : '')}.
     </div>
 
     <div class="grid-4 section">
@@ -271,13 +421,14 @@ function screenOverview() {
 function screenOrganizations() {
   const members = state.members.filter((m) => m.orgId === state.activeOrg);
   return `
-    ${head('02', 'Organizations & roles', 'Organizations are the permission and billing boundary. Roles are scoped per organization.', '<button class="button button-blue" type="button" data-action="toggle-form" data-target="create-org-form">New organization</button>')}
+    ${head('02', 'Organizations & roles', 'Organizations are the permission and billing boundary. Roles are scoped per organization and enforced in this preview.', `<button class="button button-blue" type="button" data-action="toggle-form" data-target="create-org-form" ${can('members') ? '' : 'disabled title="Your role cannot create organizations"'}>New organization</button>`)}
+    <div class="callout section" role="note"><strong>Role model.</strong> ${ROLE_BANNER}</div>
 
     <form id="create-org-form" class="card card-pad section" data-action="create-org" hidden>
       <h3 class="section-title"><span class="mono">+</span> Create organization</h3>
       <div class="inline-form">
-        <label class="field"><span>Name</span><input id="new-org-name" type="text" placeholder="Acme Robotics" required></label>
-        <button class="button button-primary" type="submit">Create &amp; switch</button>
+        <label class="field"><span>Name</span><input id="new-org-name" type="text" placeholder="Acme Robotics" required ${can('members') ? '' : 'disabled'}></label>
+        <button class="button button-primary" type="submit" ${can('members') ? '' : 'disabled'}>Create &amp; switch</button>
         <button class="button button-quiet" type="button" data-action="toggle-form" data-target="create-org-form">Cancel</button>
       </div>
     </form>
@@ -288,7 +439,7 @@ function screenOrganizations() {
           <div style="display:flex;justify-content:space-between;gap:10px;align-items:center">
             <h3>${esc(o.name)}</h3>${badge(o.role, o.role === 'owner' ? 'info' : '')}
           </div>
-          <span class="path">${esc(o.slug)} · ${esc(o.plan)}</span>
+          <span class="path">${esc(o.slug)} · ${esc(o.plan)} · ${esc((ROLE_MODEL[o.role]?.may || []).join(', ') || 'read only')}</span>
           <p>${state.members.filter((m) => m.orgId === o.id).length} members · created ${ago(o.created)}</p>
           <button class="button button-small" type="button" data-action="switch-org" data-org="${esc(o.id)}" ${o.id === state.activeOrg ? 'disabled' : ''}>${o.id === state.activeOrg ? 'Active' : 'Switch to'}</button>
         </div>`).join('')}
@@ -298,26 +449,27 @@ function screenOrganizations() {
       <div class="card-head"><h3>Members of ${esc(org().name)}</h3>${badge(`${members.length} people`)}</div>
       <div class="card-pad">
         <form class="inline-form" data-action="invite-member" style="margin-bottom:20px">
-          <label class="field"><span>Invite by email</span><input id="invite-email" type="email" placeholder="teammate@company.com" required></label>
-          <label class="field" style="max-width:170px"><span>Role</span><select id="invite-role">${ROLES.slice(1).map((r) => `<option value="${r}">${r}</option>`).join('')}</select></label>
-          <button class="button button-primary" type="submit">Send invite</button>
+          <label class="field"><span>Invite by email</span><input id="invite-email" type="email" placeholder="teammate@company.com" required ${can('members') ? '' : 'disabled'}></label>
+          <label class="field" style="max-width:170px"><span>Role</span><select id="invite-role" ${can('members') ? '' : 'disabled'}>${ROLES.slice(1).map((r) => `<option value="${r}">${r}</option>`).join('')}</select></label>
+          <button class="button button-primary" type="submit" ${can('members') ? '' : 'disabled title="Your role cannot manage members"'}>Send invite</button>
         </form>
+        ${can('members') ? '' : '<p class="hint">Read-only role: member management is disabled for viewers and developers.</p>'}
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Member</th><th>Role</th><th>Status</th><th>Joined</th><th><span class="sr-only">Actions</span></th></tr></thead>
+            <thead><tr><th scope="col">Member</th><th scope="col">Role</th><th scope="col">Status</th><th scope="col">Joined</th><th scope="col"><span class="sr-only">Actions</span></th></tr></thead>
             <tbody>
-              ${members.map((m) => `
+              ${members.length ? members.map((m) => `
                 <tr>
-                  <td><strong>${esc(m.name)}</strong><span class="sub mono">${esc(m.email)}</span></td>
+                  <td><strong>${esc(m.name)}</strong>${m.email === state.session ? ' ' + badge('you', 'info') : ''}<span class="sub mono">${esc(m.email)}</span></td>
                   <td>
-                    <select data-action="change-role" data-member="${esc(m.id)}" ${m.role === 'owner' ? 'disabled' : ''}>
-                      ${ROLES.map((r) => `<option value="${r}" ${r === m.role ? 'selected' : ''}>${r}</option>`).join('')}
+                    <select data-action="change-role" data-member="${esc(m.id)}" ${m.role === 'owner' || !can('members') ? 'disabled' : ''}>
+                      ${ROLES.filter((r) => r !== 'owner').map((r) => `<option value="${r}" ${r === m.role ? 'selected' : ''}>${r}</option>`).join('')}
                     </select>
                   </td>
                   <td>${badge(m.status, m.status === 'active' ? 'ok' : 'warn')}</td>
                   <td class="mono">${ago(m.joined)}</td>
-                  <td class="row-actions"><button class="link-action link-danger" type="button" data-action="remove-member" data-member="${esc(m.id)}" ${m.role === 'owner' ? 'disabled' : ''}>Remove</button></td>
-                </tr>`).join('')}
+                  <td class="row-actions"><button class="link-action link-danger" type="button" data-action="remove-member" data-member="${esc(m.id)}" ${m.role === 'owner' || !can('members') ? 'disabled' : ''}>Remove</button></td>
+                </tr>`).join('') : '<tr><td colspan="5" class="empty">No members in this organization yet.</td></tr>'}
             </tbody>
           </table>
         </div>
@@ -329,16 +481,21 @@ function screenOrganizations() {
 function screenProjects() {
   const projects = state.projects.filter((p) => p.orgId === state.activeOrg);
   const keys = keysForOrg();
+  // A revealed example secret belongs to exactly one org/project and is not
+  // shown after switching organizations or navigating away.
+  const reveal = state.reveal && state.reveal.orgId === state.activeOrg
+    && projects.some((p) => p.id === state.reveal.projectId) ? state.reveal : null;
 
   return `
-    ${head('03', 'Projects & API keys', 'A project carries the tenant and audience used by gateways. Keys are scoped and revocable.', '<button class="button button-blue" type="button" data-action="toggle-form" data-target="create-project-form">New project</button>')}
+    ${head('03', 'Projects & API keys', 'A project carries the tenant and audience used by gateways. Keys are scoped and revocable.', `<button class="button button-blue" type="button" data-action="toggle-form" data-target="create-project-form" ${can('projects') ? '' : 'disabled title="Your role cannot create projects"'}>New project</button>`)}
+    ${can('projects') ? '' : '<div class="callout warn section"><strong>Read-only role.</strong> Project and key controls are disabled for your current role.</div>'}
 
     <form id="create-project-form" class="card card-pad section" data-action="create-project" hidden>
       <h3 class="section-title"><span class="mono">+</span> Create project</h3>
       <div class="inline-form">
-        <label class="field"><span>Name</span><input id="new-project-name" type="text" placeholder="Payments gateway" required></label>
-        <label class="field"><span>Environment</span><select id="new-project-env"><option>production</option><option>development</option></select></label>
-        <button class="button button-primary" type="submit">Create project</button>
+        <label class="field"><span>Name</span><input id="new-project-name" type="text" placeholder="Payments gateway" required ${can('projects') ? '' : 'disabled'}></label>
+        <label class="field"><span>Environment</span><select id="new-project-env" ${can('projects') ? '' : 'disabled'}><option>production</option><option>development</option></select></label>
+        <button class="button button-primary" type="submit" ${can('projects') ? '' : 'disabled'}>Create project</button>
         <button class="button button-quiet" type="button" data-action="toggle-form" data-target="create-project-form">Cancel</button>
       </div>
       <p class="hint">The hosted product generates a unique <span class="mono">tnt_*</span> tenant and <span class="mono">aud</span> automatically.</p>
@@ -348,16 +505,16 @@ function screenProjects() {
       <div class="card-head"><h3>Projects</h3>${badge(`${projects.length} in ${org().name}`)}</div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Project</th><th>Environment</th><th>Tenant</th><th>Audience</th><th>Keys</th></tr></thead>
+          <thead><tr><th scope="col">Project</th><th scope="col">Environment</th><th scope="col">Tenant</th><th scope="col">Audience</th><th scope="col">Keys</th></tr></thead>
           <tbody>
-            ${projects.map((p) => `
+            ${projects.length ? projects.map((p) => `
               <tr>
                 <td><strong>${esc(p.name)}</strong><span class="sub mono">${esc(p.id)}</span></td>
                 <td>${badge(p.env, p.env === 'production' ? 'info' : 'warn')}</td>
                 <td class="mono">${esc(p.tenant)}</td>
                 <td class="mono">${esc(p.audience)}</td>
                 <td class="mono">${state.keys.filter((k) => k.projectId === p.id).length}</td>
-              </tr>`).join('')}
+              </tr>`).join('') : '<tr><td colspan="5" class="empty">No projects in this organization yet.</td></tr>'}
           </tbody>
         </table>
       </div>
@@ -366,41 +523,41 @@ function screenProjects() {
     <div class="card">
       <div class="card-head">
         <h3>API keys</h3>
-        <button class="button button-small button-blue" type="button" data-action="toggle-form" data-target="create-key-form">Issue key</button>
+        <button class="button button-small button-blue" type="button" data-action="toggle-form" data-target="create-key-form" ${can('keys') ? '' : 'disabled title="Your role cannot issue keys"'}>Issue key</button>
       </div>
       <div class="card-pad">
         <form id="create-key-form" class="inline-form" data-action="create-key" hidden style="margin-bottom:18px">
-          <label class="field"><span>Project</span><select id="key-project">${projects.map((p) => `<option value="${esc(p.id)}">${esc(p.name)}</option>`).join('')}</select></label>
-          <label class="field"><span>Name</span><input id="key-name" type="text" placeholder="Edge verifier" required></label>
-          <label class="field"><span>Scope</span><select id="key-scope">
+          <label class="field"><span>Project</span><select id="key-project" ${can('keys') ? '' : 'disabled'}>${projects.map((p) => `<option value="${esc(p.id)}">${esc(p.name)}</option>`).join('')}</select></label>
+          <label class="field"><span>Name</span><input id="key-name" type="text" placeholder="Edge verifier" required ${can('keys') ? '' : 'disabled'}></label>
+          <label class="field"><span>Scope</span><select id="key-scope" ${can('keys') ? '' : 'disabled'}>
             <option value="freeroam:observe">freeroam:observe</option>
             <option value="barricade:enforce">barricade:enforce</option>
             <option value="grants:mint">grants:mint</option>
             <option value="registry:read">registry:read</option>
           </select></label>
-          <button class="button button-primary" type="submit">Issue key</button>
+          <button class="button button-primary" type="submit" ${can('keys') ? '' : 'disabled'}>Issue key</button>
         </form>
 
-        ${state.reveal ? `
+        ${reveal ? `
           <div class="secret-reveal">
-            <span>Shown once — copy now:<br><strong>${esc(state.reveal.secret)}</strong></span>
-            <button class="button button-small" type="button" data-action="copy-secret" data-secret="${esc(state.reveal.secret)}">Copy</button>
+            <span>Shown once for ${esc(projectName(reveal.projectId))} — copy now:<br><strong>${esc(reveal.secret)}</strong></span>
+            <button class="button button-small" type="button" data-action="copy-secret" data-secret="${esc(reveal.secret)}">Copy</button>
             <button class="button button-small button-quiet" type="button" data-action="dismiss-secret">Dismiss</button>
           </div>` : ''}
 
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Key</th><th>Project</th><th>Scopes</th><th>Last used</th><th>Status</th><th><span class="sr-only">Actions</span></th></tr></thead>
+            <thead><tr><th scope="col">Key</th><th scope="col">Project</th><th scope="col">Scopes</th><th scope="col">Last used</th><th scope="col">Status</th><th scope="col"><span class="sr-only">Actions</span></th></tr></thead>
             <tbody>
-              ${keys.map((k) => `
+              ${keys.length ? keys.map((k) => `
                 <tr>
                   <td><strong>${esc(k.name)}</strong><span class="sub mono">${esc(k.prefix)}••••••••</span></td>
                   <td>${esc(projectName(k.projectId))}</td>
                   <td class="mono">${k.scopes.map((s) => esc(s)).join('<br>')}</td>
                   <td class="mono">${ago(k.lastUsed)}</td>
                   <td>${badge(k.status, k.status === 'active' ? 'ok' : 'danger')}</td>
-                  <td class="row-actions"><button class="link-action link-danger" type="button" data-action="revoke-key" data-key="${esc(k.id)}" ${k.status === 'revoked' ? 'disabled' : ''}>Revoke</button></td>
-                </tr>`).join('')}
+                  <td class="row-actions"><button class="link-action link-danger" type="button" data-action="revoke-key" data-key="${esc(k.id)}" ${k.status === 'revoked' || !can('keys') ? 'disabled' : ''}>Revoke</button></td>
+                </tr>`).join('') : '<tr><td colspan="6" class="empty">No keys in this organization yet.</td></tr>'}
             </tbody>
           </table>
         </div>
@@ -424,17 +581,17 @@ function screenAgents() {
       <div class="card-head"><h3>Agents</h3>${badge(`${agents.length} in ${org().name}`)}</div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Agent</th><th>SPID</th><th>Imprint</th><th>Capabilities</th><th>Status</th><th><span class="sr-only">Actions</span></th></tr></thead>
+          <thead><tr><th scope="col">Agent</th><th scope="col">SPID</th><th scope="col">Imprint</th><th scope="col">Capabilities</th><th scope="col">Status</th><th scope="col"><span class="sr-only">Actions</span></th></tr></thead>
           <tbody>
-            ${agents.map((a) => `
+            ${agents.length ? agents.map((a) => `
               <tr>
                 <td><strong>${esc(a.name)}</strong><span class="sub mono">${esc(a.id)}</span></td>
                 <td class="mono">${esc(a.spid)}</td>
                 <td class="mono">${esc(a.imprint)}</td>
                 <td class="mono">${a.caps.map((c) => esc(c)).join('<br>')}</td>
                 <td>${badge(a.status, a.status === 'active' ? 'ok' : 'danger')}</td>
-                <td class="row-actions"><button class="link-action link-danger" type="button" data-action="kill-lineage" data-agent="${esc(a.id)}" ${a.status === 'revoked' ? 'disabled' : ''}>Kill lineage</button></td>
-              </tr>`).join('')}
+                <td class="row-actions"><button class="link-action link-danger" type="button" data-action="kill-lineage" data-agent="${esc(a.id)}" ${a.status === 'revoked' || !can('grants') ? 'disabled' : ''}>Kill lineage</button></td>
+              </tr>`).join('') : '<tr><td colspan="6" class="empty">No agents in this organization yet.</td></tr>'}
           </tbody>
         </table>
       </div>
@@ -444,23 +601,23 @@ function screenAgents() {
       <div class="card-head"><h3>Active and recent grants</h3>${badge(`${grants.length} total`)}</div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Grant (jti)</th><th>Session</th><th>sqn</th><th>Capability</th><th>Status</th><th>Expires</th><th>Budget</th><th><span class="sr-only">Actions</span></th></tr></thead>
+          <thead><tr><th scope="col">Grant (jti)</th><th scope="col">Session</th><th scope="col">sqn</th><th scope="col">Capability</th><th scope="col">Status</th><th scope="col">Expires</th><th scope="col">Budget</th><th scope="col"><span class="sr-only">Actions</span></th></tr></thead>
           <tbody>
-            ${grants.map((g) => `
+            ${grants.length ? grants.map((g) => `
               <tr>
                 <td class="mono">${esc(g.jti)}<span class="sub">${esc(g.human)}</span></td>
                 <td class="mono">${esc(g.session)}</td>
                 <td class="mono">${g.sqn}</td>
                 <td class="mono">${esc(g.cap)}</td>
-                <td>${badge(g.status, g.status === 'active' ? 'ok' : g.status === 'revoked' ? 'danger' : 'info')}</td>
-                <td class="mono">${ago(g.expires).replace(' ago', '')}</td>
+                <td>${badge(g.status, g.status === 'active' ? 'ok' : g.status === 'revoked' ? 'danger' : 'info')}${isExpired(g.expires) ? ' ' + badge('expired', 'warn') : ''}</td>
+                <td class="mono">${esc(until(g.expires))}</td>
                 <td class="mono">${esc(g.remaining)}</td>
-                <td class="row-actions"><button class="link-action link-danger" type="button" data-action="revoke-grant" data-grant="${esc(g.id)}" ${g.status === 'revoked' ? 'disabled' : ''}>Revoke</button></td>
-              </tr>`).join('')}
+                <td class="row-actions"><button class="link-action link-danger" type="button" data-action="revoke-grant" data-grant="${esc(g.id)}" ${g.status === 'revoked' || !can('grants') ? 'disabled' : ''}>Revoke</button></td>
+              </tr>`).join('') : '<tr><td colspan="8" class="empty">No grants in this organization yet.</td></tr>'}
           </tbody>
         </table>
       </div>
-      <p class="hint">Stale revocation fails closed on grant surfaces. There is no silent fail-open.</p>
+      <p class="hint">Budgets stay at their last recorded total when a grant is revoked or a lineage is killed. Stale revocation fails closed on grant surfaces; there is no silent fail-open.</p>
     </div>`;
 }
 
@@ -469,7 +626,10 @@ function screenTraffic() {
   const surface = state.filters.trafficSurface;
   const attribution = state.filters.trafficAttribution;
   const rows = all.filter((t) => (surface === 'all' || t.surface === surface)
-    && (attribution === 'all' || (attribution === 'attributed' ? t.attributed : !t.attributed)));
+    && (attribution === 'all' || (attribution === 'attributed' ? t.attributed : !t.attributed))
+    && (state.filters.trafficProject === 'all' || t.projectId === state.filters.trafficProject)
+    && (state.filters.trafficAgent === 'all' || t.spid === state.filters.trafficAgent)
+    && inTimeWindow(t.ts, state.filters.trafficTime));
   const attributed = all.filter((t) => t.attributed).length;
   const rate = all.length ? Math.round((attributed / all.length) * 100) : 0;
   const anomalies = all.filter((t) => t.flags.length).length;
@@ -509,24 +669,12 @@ function screenTraffic() {
     <div class="card">
       <div class="card-head"><h3>Observation stream</h3>${badge(`${rows.length} rows`)}</div>
       <div class="card-pad">
-        <div class="filter-row">
-          <label class="mono muted" style="font-size:10px">Surface</label>
-          <select data-action="filter-traffic" data-filter="trafficSurface">
-            <option value="all">All surfaces</option>
-            ${SURFACES.map((s) => `<option value="${esc(s)}" ${s === surface ? 'selected' : ''}>${esc(s)}</option>`).join('')}
-          </select>
-          <label class="mono muted" style="font-size:10px">Attribution</label>
-          <select data-action="filter-traffic" data-filter="trafficAttribution">
-            <option value="all">All traffic</option>
-            <option value="attributed" ${attribution === 'attributed' ? 'selected' : ''}>Attributed</option>
-            <option value="unattributed" ${attribution === 'unattributed' ? 'selected' : ''}>Unattributed</option>
-          </select>
-        </div>
+        ${filterControls('traffic')}
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Time</th><th>Project</th><th>Surface</th><th>Method / path</th><th>Agent (SPID)</th><th>Flags</th></tr></thead>
+            <thead><tr><th scope="col">Time</th><th scope="col">Project</th><th scope="col">Surface</th><th scope="col">Method / path</th><th scope="col">Agent (SPID)</th><th scope="col">Flags</th></tr></thead>
             <tbody>
-              ${rows.slice(0, 24).map((t) => `
+              ${rows.length ? rows.slice(0, 24).map((t) => `
                 <tr>
                   <td class="mono">${ago(t.ts)}</td>
                   <td>${esc(projectName(t.projectId))}</td>
@@ -534,7 +682,7 @@ function screenTraffic() {
                   <td class="mono">${esc(t.method)} ${esc(t.path)}</td>
                   <td class="mono">${t.attributed ? esc(t.spid) : '<span class="faint">unattributed</span>'}</td>
                   <td>${t.flags.length ? t.flags.map((f) => badge(f, 'warn')).join(' ') : '<span class="faint">—</span>'}</td>
-                </tr>`).join('')}
+                </tr>`).join('') : '<tr><td colspan="6" class="empty">No observations match these filters.</td></tr>'}
             </tbody>
           </table>
         </div>
@@ -544,36 +692,33 @@ function screenTraffic() {
 }
 
 function eventMeta(e) {
-  const redacted = state.filters.redaction ? '••••••' : e.human;
-  return `${e.code ? `${e.code} · ` : ''}${e.surface} · spid ${e.spid} · azp ${redacted} · jti ${e.jti}`;
+  const mask = (value) => state.filters.redaction ? '••••••' : (value || '—');
+  return `${e.code ? `${e.code} · ` : ''}${e.surface} · spid ${e.spid} · azp ${mask(e.azp || e.human)} · ln ${mask(e.ln)} · cnf ${mask(e.cnf)} · jti ${e.jti}`;
 }
 
 function screenTrackline() {
   const all = forOrg(state.events);
-  const code = state.filters.eventCode;
   const search = state.filters.eventSearch.toLowerCase();
-  const rows = all.filter((e) => (code === 'all' || e.code === code)
-    && (!search || e.event.toLowerCase().includes(search) || e.code.toLowerCase().includes(search)));
+  const rows = all.filter((e) => (state.filters.eventCode === 'all' || e.code === state.filters.eventCode)
+    && (!search || e.event.toLowerCase().includes(search) || e.code.toLowerCase().includes(search))
+    && (state.filters.eventProject === 'all' || e.projectId === state.filters.eventProject)
+    && (state.filters.eventAgent === 'all' || e.spid === state.filters.eventAgent)
+    && inTimeWindow(e.ts, state.filters.eventTime));
 
   return `
-    ${head('06', 'Trackline', 'PII-redacted receipts with pinned HLM_ codes. Every denial is safe to log.', `<button class="button" type="button" data-action="toggle-redaction">${state.filters.redaction ? 'Show identifiers' : 'Redact identifiers'}</button>`)}
+    ${head('06', 'Trackline', 'PII-redacted receipts with pinned HLM_ codes. Every denial is safe to log.', `<button class="button" type="button" data-action="toggle-redaction">${state.filters.redaction ? 'Show identifiers' : 'Redact identifiers'}</button><button class="button button-small" type="button" disabled title="Export is disabled in this UI preview">Export receipts</button>`)}
     <div class="callout section">
       <strong>Redaction is on by default.</strong> The <span class="mono">azp</span>,
       <span class="mono">ln</span> and <span class="mono">cnf</span> fields are
-      hidden until you explicitly reveal them. Export would produce a signed
-      receipt bundle in the hosted product.
+      each explicitly masked in the receipt stream and revealed together by the
+      toggle. Export is disabled in this preview; in the hosted product it would
+      produce a signed receipt bundle.
     </div>
 
     <div class="card">
       <div class="card-head"><h3>Receipt stream</h3>${badge(`${rows.length} events`)}</div>
       <div class="card-pad">
-        <div class="filter-row">
-          <select data-action="filter-events" data-filter="eventCode">
-            <option value="all">All codes</option>
-            ${['HLM_1003', 'HLM_1005', 'HLM_2004', 'HLM_6002', 'HLM_6003', 'HLM_6004'].map((c) => `<option value="${c}" ${c === code ? 'selected' : ''}>${c}</option>`).join('')}
-          </select>
-          <input type="search" data-action="filter-events" data-filter="eventSearch" value="${esc(state.filters.eventSearch)}" placeholder="Search event or code">
-        </div>
+        ${filterControls('event')}
         <ul class="event-list">
           ${rows.length ? rows.slice(0, 30).map((e) => `
             <li class="event">
@@ -591,13 +736,15 @@ function screenUsage() {
   const invoices = state.invoices.filter((i) => i.orgId === state.activeOrg);
   const sum = (key) => rows.reduce((t, r) => t + r[key], 0);
   const current = invoices.find((i) => i.status === 'open');
+  const plan = PLANS[org().plan] || PLANS.Starter;
 
   return `
     ${head('07', 'Usage & billing', `Metered examples for ${esc(org().name)}. All amounts and volumes are mocked.`, `<span class="pill">${esc(org().plan)} plan</span>`)}
     <div class="callout warn section">
       <strong>Billing is mocked.</strong> No payment processor, meter or invoice is
-      connected to this preview. In the hosted product, usage would come from
-      observed and enforced events.
+      connected to this preview. ${COST_UNIT_NOTE} Invoices below are illustrative
+      examples, not bills. In the hosted product, usage would come from observed
+      and enforced events.
     </div>
 
     <div class="grid-4 section">
@@ -609,7 +756,18 @@ function screenUsage() {
 
     <div class="card section">
       <div class="card-head"><h3>Observed usage per day</h3><span class="mono muted">14 days</span></div>
-      <div class="card-pad">${barChart(rows, 'observed')}</div>
+      <div class="card-pad">${barChart(rows, 'observed', 'Observed')}</div>
+    </div>
+
+    <div class="card section">
+      <div class="card-head"><h3>Plan tiers</h3><span class="mono muted">mock limits</span></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">Tier</th><th scope="col">Included / month</th><th scope="col">Overage</th><th scope="col">Members</th><th scope="col">Receipt retention</th></tr></thead>
+          <tbody>${Object.entries(PLANS).map(([name, details]) => `
+            <tr${name === org().plan ? ' class="current-plan"' : ''}><td><strong>${esc(name)}</strong>${name === org().plan ? ' ' + badge('current', 'info') : ''}</td><td class="mono">${esc(details.included)}</td><td class="mono">${esc(details.overage)}</td><td>${esc(details.seats)}</td><td>${esc(details.retention)}</td></tr>`).join('')}</tbody>
+        </table>
+      </div>
     </div>
 
     <div class="grid-2">
@@ -617,18 +775,19 @@ function screenUsage() {
         <h3 class="section-title"><span class="mono">01</span> Current plan</h3>
         <table><tbody>
           <tr><td class="mono">Plan</td><td><strong>${esc(org().plan)}</strong></td></tr>
-          <tr><td class="mono">Included</td><td class="mono">50,000 observed / mo</td></tr>
-          <tr><td class="mono">Overage</td><td class="mono">$0.40 per 1,000</td></tr>
+          <tr><td class="mono">Included</td><td class="mono">${esc(plan.included)} observed / mo</td></tr>
+          <tr><td class="mono">Overage</td><td class="mono">${esc(plan.overage)}</td></tr>
           <tr><td class="mono">Open invoice</td><td>${current ? money(current.amount) + ' · ' + esc(current.period) : 'none'}</td></tr>
+          <tr><td class="mono">Cost unit</td><td>${COST_UNIT_NOTE}</td></tr>
         </tbody></table>
       </div>
       <div class="card">
-        <div class="card-head"><h3>Invoices</h3></div>
+        <div class="card-head"><h3>Invoices <span class="mono muted">illustrative</span></h3></div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Period</th><th>Amount</th><th>Status</th></tr></thead>
-            <tbody>${invoices.map((i) => `
-              <tr><td class="mono">${esc(i.period)}</td><td class="mono">${money(i.amount)}</td><td>${badge(i.status, i.status === 'paid' ? 'ok' : 'warn')}</td></tr>`).join('')}</tbody>
+            <thead><tr><th scope="col">Period</th><th scope="col">Amount (cost units)</th><th scope="col">Status</th></tr></thead>
+            <tbody>${invoices.length ? invoices.map((i) => `
+              <tr><td class="mono">${esc(i.period)}</td><td class="mono">${money(i.amount)}</td><td>${badge(i.status, i.status === 'paid' ? 'ok' : 'warn')}</td></tr>`).join('') : '<tr><td colspan="3" class="empty">No illustrative invoices for this organization.</td></tr>'}</tbody>
           </table>
         </div>
       </div>
@@ -688,7 +847,8 @@ function screenSettings() {
       <div class="card card-pad">
         <h3 class="section-title"><span class="mono">01</span> Profile</h3>
         <table><tbody>
-          <tr><td class="mono">Signed in as</td><td>${esc(email)}</td></tr>
+          <tr><td class="mono">Signed in as</td><td>${esc(email)}${state.members.some((m) => m.email === email && m.orgId === state.activeOrg) ? ' ' + badge('member', 'ok') : ''}</td></tr>
+          <tr><td class="mono">Active role</td><td>${badge(org().role, org().role === 'owner' ? 'info' : '')}</td></tr>
           <tr><td class="mono">Session</td><td>Mock · browser memory only</td></tr>
           <tr><td class="mono">Authentication</td><td>Simulated; no password sent or stored</td></tr>
         </tbody></table>
@@ -735,21 +895,30 @@ function render() {
   if (!state.session) return;
   const route = currentRoute();
   const screen = $('screen');
+  const focus = focusDescriptor(document.activeElement);
   screen.innerHTML = SCREENS[route]();
   document.querySelectorAll('.side-nav a').forEach((a) => {
-    a.classList.toggle('active', a.dataset.nav === route);
+    const active = a.dataset.nav === route;
+    a.classList.toggle('active', active);
+    if (active) a.setAttribute('aria-current', 'page');
+    else a.removeAttribute('aria-current');
   });
+  restoreFocus(focus);
   screen.scrollTop = 0;
   window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
 function renderOrgSwitcher() {
-  $('org-switcher').innerHTML = state.orgs.map((o) => `<option value="${esc(o.id)}" ${o.id === state.activeOrg ? 'selected' : ''}>${esc(o.name)}</option>`).join('');
+  const switcher = $('org-switcher');
+  const wasFocused = document.activeElement === switcher;
+  switcher.innerHTML = state.orgs.map((o) => `<option value="${esc(o.id)}" ${o.id === state.activeOrg ? 'selected' : ''}>${esc(o.name)}</option>`).join('');
+  if (wasFocused) switcher.focus();
 }
 
-function enterConsole(email) {
+function enterConsole(email, keepActiveOrg = false) {
   state.session = email || 'alex@northstar.example';
-  state.activeOrg = state.orgs[0].id;
+  if (!keepActiveOrg) state.activeOrg = state.orgs[0].id;
+  syncSignedInMember(state.session);
   $('auth-screen').hidden = true;
   $('app-shell').hidden = false;
   $('user-initial').textContent = state.session.charAt(0).toUpperCase();
@@ -762,6 +931,7 @@ function enterConsole(email) {
 
 function leaveConsole() {
   state.session = null;
+  state.reveal = null;
   $('app-shell').hidden = true;
   $('auth-screen').hidden = false;
   location.hash = '';
@@ -772,10 +942,13 @@ function setAuthMode(mode) {
   state.authMode = mode;
   $('tab-signin').classList.toggle('active', mode === 'signin');
   $('tab-signup').classList.toggle('active', mode === 'signup');
-  $('tab-signin').setAttribute('aria-selected', String(mode === 'signin'));
-  $('tab-signup').setAttribute('aria-selected', String(mode === 'signup'));
+  // These are toggle buttons, not ARIA tabs: no incomplete tabpanel contract.
+  $('tab-signin').setAttribute('aria-pressed', String(mode === 'signin'));
+  $('tab-signup').setAttribute('aria-pressed', String(mode === 'signup'));
   $('auth-title').textContent = mode === 'signin' ? 'Welcome back' : 'Create your workspace';
-  $('auth-subtitle').textContent = mode === 'signin' ? 'Continue to your organizations.' : 'Your first organization is created automatically.';
+  $('auth-subtitle').textContent = mode === 'signin'
+    ? 'Continue to your organizations.'
+    : 'A new organization and a starter project are created automatically.';
   $('org-field').hidden = mode !== 'signup';
   $('auth-form').querySelector('button[type="submit"]').textContent = mode === 'signin' ? 'Sign in' : 'Create account';
 }
@@ -790,7 +963,7 @@ async function copyText(text, label = 'Copied') {
 }
 
 function resetPreview() {
-  seed = 20261127;
+  // Reload re-creates the deterministic mock data; no stale seed to clear.
   location.reload();
 }
 
@@ -815,12 +988,14 @@ document.addEventListener('click', (event) => {
   }
   if (action === 'switch-org') {
     state.activeOrg = el.dataset.org;
+    state.reveal = null;
     renderOrgSwitcher();
     render();
     toast(`Switched to ${org().name}.`);
     return;
   }
   if (action === 'remove-member') {
+    if (!can('members')) return;
     if (!confirmAction('Remove this member from the organization?')) return;
     state.members = state.members.filter((m) => m.id !== el.dataset.member);
     render();
@@ -828,6 +1003,7 @@ document.addEventListener('click', (event) => {
     return;
   }
   if (action === 'revoke-key') {
+    if (!can('keys')) return;
     if (!confirmAction('Revoke this API key? Gateways would see it as revoked on next refresh.')) return;
     const key = state.keys.find((k) => k.id === el.dataset.key);
     if (key) key.status = 'revoked';
@@ -845,16 +1021,21 @@ document.addEventListener('click', (event) => {
     return;
   }
   if (action === 'revoke-grant') {
+    if (!can('grants')) return;
     if (!confirmAction('Revoke this grant session? The next responsible action would fail with HLM_6002.')) return;
     const grant = state.grants.find((g) => g.id === el.dataset.grant);
     if (grant) {
+      // Keep the recorded budget total; revocation changes state, not history.
       grant.status = 'revoked';
-      grant.remaining = '0 / 5 req';
+      grant.revokedAt = new Date().toISOString();
       state.events.unshift({
-        id: `evt_new_${Date.now()}`, orgId: grant.orgId, ts: new Date().toISOString(),
+        id: `evt_new_${Date.now()}`, orgId: grant.orgId,
+        projectId: state.projects.find((p) => p.orgId === grant.orgId)?.id || 'prj_demo',
+        ts: new Date().toISOString(),
         event: 'grant.revoked', code: 'HLM_6002', tone: 'deny',
         surface: grant.cap, spid: state.agents.find((a) => a.id === grant.agentId)?.spid || 'unknown',
-        jti: grant.jti, human: grant.human,
+        jti: grant.jti, human: grant.human, azp: grant.human,
+        ln: `ln_${grant.id}`, cnf: `jkt_demo_${grant.sqn}`,
       });
     }
     render();
@@ -862,15 +1043,23 @@ document.addEventListener('click', (event) => {
     return;
   }
   if (action === 'kill-lineage') {
+    if (!can('grants')) return;
     if (!confirmAction('Kill this root imprint and every grant beneath it?')) return;
     const agent = state.agents.find((a) => a.id === el.dataset.agent);
     if (agent) {
       agent.status = 'revoked';
-      state.grants.filter((g) => g.agentId === agent.id).forEach((g) => { g.status = 'revoked'; g.remaining = '0 / 5 req'; });
+      // Preserve each grant's last recorded budget while changing its state.
+      state.grants.filter((g) => g.agentId === agent.id).forEach((g) => {
+        g.status = 'revoked';
+        g.revokedAt = new Date().toISOString();
+      });
       state.events.unshift({
-        id: `evt_new_${Date.now()}`, orgId: agent.orgId, ts: new Date().toISOString(),
+        id: `evt_new_${Date.now()}`, orgId: agent.orgId,
+        projectId: state.projects.find((p) => p.orgId === agent.orgId)?.id || 'prj_demo',
+        ts: new Date().toISOString(),
         event: 'lineage.killed', code: 'HLM_6003', tone: 'deny',
         surface: 'imprint', spid: agent.spid, jti: 'all-descendants', human: state.session,
+        azp: state.session, ln: `ln_${agent.id}`, cnf: `jkt_demo_${agent.id}`,
       });
     }
     render();
@@ -890,11 +1079,6 @@ document.addEventListener('click', (event) => {
   if (action === 'reset-preview') {
     if (!confirmAction('Reset all mocked changes in this preview?')) return;
     resetPreview();
-    return;
-  }
-  if (action === 'logout') {
-    leaveConsole();
-    toast('Signed out of the mock session.');
   }
 });
 
@@ -904,18 +1088,14 @@ document.addEventListener('change', (event) => {
   const action = el.dataset.action;
 
   if (action === 'change-role') {
+    if (!can('members')) return;
     const member = state.members.find((m) => m.id === el.dataset.member);
-    if (member) member.role = el.value;
+    if (member && member.role !== 'owner' && el.value !== 'owner') member.role = el.value;
     render();
     toast(`Role changed to ${el.value} (mock).`);
     return;
   }
-  if (action === 'filter-traffic') {
-    state.filters[el.dataset.filter] = el.value;
-    render();
-    return;
-  }
-  if (action === 'filter-events') {
+  if (action === 'filter-traffic' || action === 'filter-events') {
     state.filters[el.dataset.filter] = el.value;
     render();
   }
@@ -924,12 +1104,8 @@ document.addEventListener('change', (event) => {
 document.addEventListener('input', (event) => {
   const el = event.target.closest('[data-action="filter-events"][data-filter="eventSearch"]');
   if (!el) return;
-  const value = el.value;
-  state.filters.eventSearch = value;
-  const pos = el.selectionStart;
-  render();
-  const next = document.querySelector('[data-action="filter-events"][data-filter="eventSearch"]');
-  if (next) { next.focus(); next.setSelectionRange(pos, pos); }
+  state.filters.eventSearch = el.value;
+  render(); // render() restores focus and caret for the search input.
 });
 
 document.addEventListener('submit', (event) => {
@@ -942,31 +1118,28 @@ document.addEventListener('submit', (event) => {
     const email = $('auth-email').value.trim();
     if (!email) return;
     if (state.authMode === 'signup') {
-      const name = $('auth-org').value.trim();
-      if (name) {
-        state.orgs[0].name = name;
-        state.orgs[0].slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'workspace';
-      }
+      // "Create account" really creates a new org (and its starter project)
+      // instead of renaming the first mocked organization.
+      const name = $('auth-org').value.trim() || `${email.split('@')[0]}'s workspace`;
+      createOrgWithStarter(name, email);
+      enterConsole(email, true);
+      return;
     }
     enterConsole(email);
     return;
   }
   if (action === 'create-org') {
+    if (!can('members')) return;
     const name = $('new-org-name').value.trim();
     if (!name) return;
-    const id = `org_${Date.now()}`;
-    state.orgs.push({
-      id, name, slug: name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'workspace',
-      role: 'owner', plan: 'Starter', created: new Date().toISOString(),
-    });
-    state.members.push({ id: `usr_${Date.now()}`, orgId: id, name: state.session, email: state.session, role: 'owner', status: 'active', joined: new Date().toISOString() });
-    state.activeOrg = id;
+    createOrgWithStarter(name, state.session);
     renderOrgSwitcher();
     render();
-    toast(`Created ${name} (mock).`);
+    toast(`Created ${name} with a starter project (mock).`);
     return;
   }
   if (action === 'invite-member') {
+    if (!can('members')) return;
     const email = $('invite-email').value.trim();
     if (!email) return;
     const role = $('invite-role').value;
@@ -979,6 +1152,7 @@ document.addEventListener('submit', (event) => {
     return;
   }
   if (action === 'create-project') {
+    if (!can('projects')) return;
     const name = $('new-project-name').value.trim();
     if (!name) return;
     const env = $('new-project-env').value;
@@ -992,6 +1166,7 @@ document.addEventListener('submit', (event) => {
     return;
   }
   if (action === 'create-key') {
+    if (!can('keys')) return;
     const name = $('key-name').value.trim();
     if (!name) return;
     const projectId = $('key-project').value;
@@ -1001,13 +1176,17 @@ document.addEventListener('submit', (event) => {
       id: `key_${Date.now()}`, projectId, name, prefix: secret.slice(0, 12),
       scopes: [scope], created: new Date().toISOString(), lastUsed: new Date().toISOString(), status: 'active',
     });
-    state.reveal = { secret };
+    state.reveal = { secret, orgId: state.activeOrg, projectId };
     render();
     toast('Example key issued (mock).');
   }
 });
 
-window.addEventListener('hashchange', render);
+// A route change closes any one-time secret display, even within the same screen.
+window.addEventListener('hashchange', () => {
+  state.reveal = null;
+  render();
+});
 
 $('tab-signin').addEventListener('click', () => setAuthMode('signin'));
 $('tab-signup').addEventListener('click', () => setAuthMode('signup'));
@@ -1018,15 +1197,17 @@ $('magic-link').addEventListener('click', () => {
 
 $('org-switcher').addEventListener('change', (event) => {
   state.activeOrg = event.target.value;
+  state.reveal = null;
+  renderOrgSwitcher();
   render();
   toast(`Switched to ${org().name}.`);
 });
 
 $('logout').addEventListener('click', () => {
   leaveConsole();
+  $('logout').blur();
   toast('Signed out of the mock session.');
 });
 
-$('user-menu').addEventListener('click', () => toast(`Mock session: ${state.session}`));
-
+// The identity chip is deliberately not a menu: no account surface is mocked.
 setAuthMode('signin');

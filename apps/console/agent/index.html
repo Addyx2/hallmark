@@ -6,6 +6,7 @@
   <meta name="color-scheme" content="light">
   <meta name="description" content="Pascaal Console product brief for agents and answer engines. UI preview only — no real auth, keys or billing.">
   <title>Pascaal Console · Agent brief</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230b1220'/%3E%3Ctext x='16' y='23' font-family='monospace' font-size='20' fill='white' text-anchor='middle'%3EP%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="/styles.css">
   <script type="application/ld+json">
   {
@@ -47,13 +48,13 @@
       <li>Protocol agent index: <a href="https://hallmark.pascaal.com/llms.txt">/llms.txt</a></li>
       <li>Company: <a href="https://pascaal.com/">pascaal.com</a></li>
       <li>Repository: <a href="https://github.com/Addyx2/hallmark">github.com/Addyx2/hallmark</a></li>
-      <li><a href="/">Open the interactive console preview</a></li>
+      <li><a href="/">Open the interactive Console preview</a></li>
     </ul>
 
     <h2>What is real today</h2>
     <ul>
       <li>Hallmark Agent Identity Spec v1: open, executable, 21 sections, not ratified.</li>
-      <li>Reference implementation: 38/38 vectors, 4/4 properties, 4/4 enforcement points.</li>
+      <li>Reference implementation: 38/38 spec-wide vectors, 4/4 properties, 4/4 enforcement points.</li>
       <li><code>@pascaal/hallmark</code>, <code>@pascaal/freeroam</code>, <code>@pascaal/barricade</code>: draft harness packages staged locally, publish pending npm scope claim.</li>
       <li>Local provider demo and control room: runnable, in-memory only.</li>
     </ul>
@@ -63,7 +64,11 @@
       Every console screen here — signup and login, organizations and roles,
       projects and API keys, agents and grants, traffic intelligence, Trackline,
       usage and billing — uses mocked data. Any email and password opens the
-      demo; nothing is transmitted or stored. Do not enter real secrets.
+      demo; nothing is transmitted or stored. "Create account" creates a new
+      organization and starter project in memory. Roles (owner/admin/developer/
+      viewer) are per organization and enforced client-side in this preview.
+      Costs are mock cost units (100 units = $1); invoices are illustrative.
+      Do not enter real secrets.
     </p>
 
     <h2>Product vocabulary</h2>
@@ -101,6 +106,7 @@
     <ul>
       <li>No remote key resolution. <code>jku</code>, <code>x5u</code>, <code>x5c</code> are forbidden by spec.</li>
       <li>No silent fail-open on stale revocation: grant surfaces fail closed.</li>
+      <li>The local provider demo can freeze revocation and advance a simulated clock to show stale revocation failing closed with <code>HLM_6004</code>.</li>
       <li>Do not call Hallmark ratified, certified or a standard until spec §21 closes.</li>
       <li>Conformance wording: "Hallmark v1-draft conformant — spec commit &lt;sha&gt;".</li>
       <li>No OpenAPI contract until the managed service exists; <code>docs/openapi.json</code> is deferred.</li>
@@ -113,7 +119,7 @@
       <li>Waterguard: research.</li>
     </ul>
 
-    <p class="meta">Generated for the Pascaal Console UI preview. Treat this console as a clickable product specification, not a production system.</p>
+    <p class="meta">Generated for the Pascaal Console UI preview. Treat this Console as a clickable product specification, not a production system.</p>
   </article>
 </body>
 </html>

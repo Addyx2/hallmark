@@ -30,12 +30,21 @@ export function createConsole({ port = 4320 } = {}) {
   const server = http.createServer(async (req, res) => {
     const path = (req.url || '/').split('?')[0];
     const file = FILES.get(path);
+    const head = req.method === 'HEAD';
 
-    if (!file || req.method !== 'GET') {
+    if (path === '/favicon.ico' && (req.method === 'GET' || head)) {
+      // Pages use an inline data-URI icon; this keeps probes off the 404 path.
+      res.statusCode = 204;
+      res.setHeader('Cache-Control', 'no-store');
+      res.end();
+      return;
+    }
+
+    if (!file || (req.method !== 'GET' && !head)) {
       res.statusCode = 404;
       res.setHeader('Content-Type', 'application/json; charset=utf-8');
       res.setHeader('Cache-Control', 'no-store');
-      res.end(JSON.stringify({ error: 'not_found', path }));
+      res.end(head ? undefined : JSON.stringify({ error: 'not_found', path }));
       return;
     }
 
@@ -44,7 +53,7 @@ export function createConsole({ port = 4320 } = {}) {
       res.statusCode = 200;
       res.setHeader('Content-Type', TYPES[extname(file)] || 'application/octet-stream');
       res.setHeader('Cache-Control', 'no-store');
-      res.end(body);
+      res.end(head ? undefined : body);
     } catch (err) {
       res.statusCode = 500;
       res.setHeader('Content-Type', 'application/json; charset=utf-8');

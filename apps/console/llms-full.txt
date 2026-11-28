@@ -38,7 +38,9 @@ Human identities:
 - `Session`: short-lived browser session, refresh token in an httpOnly cookie.
 - `Organization`: permission and billing boundary.
 - `Membership`: user × organization × role.
-- `Role`: `owner`, `admin`, `developer`, `viewer`.
+- `Role`: `owner`, `admin`, `developer`, `viewer`. In this UI preview the role
+  matrix is shown in a banner and enforced client-side; the hosted product must
+  enforce it server-side. Roles are scoped per organization.
 - `Invitation`: email + role + expiry + single-use token.
 
 Machine identities:
@@ -62,18 +64,22 @@ Protocol identities:
 ## 3. Console screens in this preview
 
 1. **Overview** — counters, quick links, current plan, boundary notice.
-2. **Organizations** — switch org, create org, invite members, change roles,
-   remove members. Owner/admin/developer/viewer roles.
+2. **Organizations** — switch org, create org (with a starter project), invite
+   members, change roles, remove members. Owner/admin/developer/viewer roles,
+   enforced in this preview and shown in a role-model banner.
 3. **Projects & keys** — create projects with tenant + audience, issue scoped
-   keys, reveal once, revoke.
+   keys, reveal once (scoped to that org/project, cleared on navigation or sign
+   out), revoke.
 4. **Agents & grants** — agents by SPID and imprint, active grants, sequence
    numbers, budgets, revoke session, kill lineage.
 5. **Traffic intelligence** — Freeroam observations: attributed vs unattributed,
    SPID, route, surface, method, anomaly flags, trend by day.
-6. **Trackline** — PII-redacted receipts with pinned `HLM_` codes, filters,
-   redaction toggle.
-7. **Usage & billing** — observed/enforced/minted/receipt volumes, plan tiers,
-   invoices, overage. All mocked.
+6. **Trackline** — PII-redacted receipts with pinned `HLM_` codes, mocked
+   project/agent/time filters, and a redaction toggle that reveals `azp`, `ln`
+   and `cnf` together. Receipt export is disabled in this preview.
+7. **Usage & billing** — observed/enforced/minted/receipt volumes, four tier
+   limits, illustrative invoices and overage. All mocked; costs are in mock cost
+   units (100 units = $1).
 8. **Docs for agents** — links to `llms.txt`, `llms-full.txt`, `/agent/` and a
    copyable setup prompt.
 9. **Settings** — profile, security notes, reset preview state.
@@ -107,8 +113,10 @@ Precise product meaning:
 - `HLM_6003` attestation_revoked
 - `HLM_6004` stale_revocation
 
-Denials are pinned and safe to log. Default redaction hides `azp`, `ln` and
-`cnf` values.
+Denials are pinned and safe to log. Default redaction masks each of `azp`, `ln`
+and `cnf`; the toggle reveals all three fields explicitly. Grant expiry is shown
+as a countdown (`in 29m`) and expired grants carry an expired badge. Revoking or
+killing a grant preserves its last recorded budget total.
 
 ## 6. Service boundaries (target, not built)
 
@@ -130,13 +138,14 @@ human ceremony. `docs/openapi.json` stays deferred until those services exist.
 
 ## 8. Verification that is real today
 
-- Spec: 21 sections, ~1,084 lines; 38/38 vectors, 4/4 properties, 4/4 enforcement
-  points, crosscheck clean.
+- Spec: 21 sections, ~1,084 lines; 38/38 spec-wide vectors, 4/4 properties,
+  4/4 enforcement points, crosscheck clean.
 - Core SDK smoke: 6/6; CLI `self-test` and `verify`; tampered JWS yields
   `HLM_1003 / bad_signature / HTTP 401`.
 - Provider wedge tests: 13 package tests + 1 end-to-end demo test.
 - Local dashboard tests: mint → checkout verified, revoke → `HLM_6002`,
-  kill-lineage → `HLM_6003`, reset.
+  kill-lineage → `HLM_6003`, frozen revocation + advanced clock → `HLM_6004`,
+  reset. Counters are monotonic outside the audit ring buffer.
 - Console preview tests: static surfaces and agent docs return 200.
 
 ## 9. Product status

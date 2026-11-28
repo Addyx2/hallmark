@@ -18,8 +18,10 @@ function escapeHtml(value) {
   })[char]);
 }
 
-function money(units) {
-  return `$${number.format(Math.max(0, Math.round((units ?? 0) / 100)))}`;
+// Budget cost is denominated in mock cost units, not dollars.
+// 100 cost units = $1 in this preview; no billing processor is connected.
+function costUnits(value) {
+  return `${number.format(Math.max(0, Math.round(value ?? 0)))} units`;
 }
 
 function clock(ms) {
@@ -42,6 +44,7 @@ async function api(path, options = {}) {
 
 function grantBadge(grant) {
   if (grant.revoked) return ['revoked', 'Revoked'];
+  if (grant.expiresAt && grant.expiresAt <= Date.now() / 1000) return ['expired', 'Expired'];
   if (grant.status === 'used') return ['used', 'Used'];
   return ['minted', 'Minted'];
 }
@@ -62,7 +65,7 @@ function renderGrants(grants) {
         <td class="mono">${escapeHtml(grant.session)}</td>
         <td><span class="badge ${className}">${label}</span></td>
         <td class="mono">${escapeHtml(remaining.req ?? 0)} / 5</td>
-        <td class="mono">${money(remaining.cost)}</td>
+        <td class="mono">${costUnits(remaining.cost)}</td>
         <td style="text-align:right">
           <button class="link-button" type="button" data-revoke="${escapeHtml(grant.session)}" ${grant.revoked ? 'disabled' : ''}>Revoke</button>
         </td>
@@ -80,7 +83,9 @@ function renderAudit(events) {
   list.innerHTML = events.slice(0, 16).map((event) => {
     let tone = '';
     if (event.event === 'passport.accepted' || event.event === 'budget.charged') tone = 'accept';
-    if (event.code || /revoked|killed|reset/.test(event.event)) tone = 'deny';
+    if ((event.event === 'passport.rejected' && event.gate) || /revoked|killed/.test(event.event)) tone = 'deny';
+    // Resets and clock controls are operations, not denials.
+    if (/reset|frozen|advanced|resumed/.test(event.event)) tone = 'neutral';
     const meta = [
       event.code ? `${event.code}${event.reason ? ` ${event.reason}` : ''}` : '',
       event.surface,
@@ -118,7 +123,15 @@ function render() {
   if (!snapshot) return;
 
   const revocation = snapshot.revocation;
-  const fresh = revocation.ageSec <= 30 && revocation.expiresAt > Date.now() / 1000;
+  const limit = revocation.maxStalenessSec ?? 30;
+  const fresh = revocation.ageSec <= limit && revocation.expiresAt > Date.now() / 1000;
+
+  $('clock-status').textContent = fresh
+    ? `fresh · v${revocation.version}${revocation.frozen ? ' · frozen' : ''}`
+    : 'stale · checkout denies HLM_6004';
+  $('clock-age').textContent = `${revocation.ageSec}s / ≤${limit}s`;
+  $('clock-offset').textContent = `+${revocation.clockOffsetSec ?? 0}s${revocation.frozen ? ' · frozen' : ''}`;
+  $('clock-limit').textContent = `${limit}s`;
 
   $('clock').textContent = `snapshot ${new Date(snapshot.generatedAt).toLocaleTimeString([], { hour12: false })}`;
   $('stat-minted').textContent = snapshot.counters.minted;
@@ -166,7 +179,11 @@ async function refresh() {
 
 async function mint() {
   try {
-    const grant = await api('/api/mint');
+    const grant = await api('/api/mint', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: '{}',
+    });
     state.passport = grant.passport;
     state.passportUsed = false;
     setResult(`Minted ${grant.jti} · session ${grant.session}`, 'ok');
@@ -176,28 +193,71 @@ async function mint() {
   }
 }
 
+async function postCheckout(passport) {
+  const response = await fetch('/api/checkout', {
+    method: 'POST',
+    headers: {
+      Authorization: `Hallmark ${passport}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ item: 'starter-plan' }),
+    cache: 'no-store',
+  });
+  const body = await response.json().catch(() => ({}));
+  return { response, body };
+}
+
 async function checkout() {
   if (!state.passport) {
     setResult('Mint a grant first.', 'warn');
     return;
   }
   try {
-    const response = await fetch('/api/checkout', {
-      method: 'POST',
-      headers: {
-        Authorization: `Hallmark ${state.passport}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ item: 'starter-plan' }),
-      cache: 'no-store',
-    });
-    const body = await response.json().catch(() => ({}));
-    state.passportUsed = true;
+    const { response, body } = await postCheckout(state.passport);
+    // Only a successful grant is consumed. A stale-revocation denial leaves the
+    // passport usable so the user can resume the clock and retry.
+    if (response.ok) state.passportUsed = true;
     const code = body.hallmark_error || 'OK';
     setResult(`${response.status} ${code} · ${body.hallmark?.surface || 'no surface'}`, response.ok ? 'ok' : 'deny');
     await refresh();
   } catch (error) {
     setResult(`Checkout failed: ${error.message}`, 'deny');
+  }
+}
+
+async function replay() {
+  try {
+    await api('/api/dashboard/reset', { method: 'POST' });
+    const grant = await api('/api/mint', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: '{}',
+    });
+    state.passport = grant.passport;
+    state.passportUsed = false;
+    const { response, body } = await postCheckout(state.passport);
+    if (response.ok) state.passportUsed = true;
+    setResult(`Replayed: minted ${grant.jti}, checkout ${response.status} ${body.hallmark_error || 'OK'}`, response.ok ? 'ok' : 'deny');
+    await refresh();
+  } catch (error) {
+    setResult(`Replay failed: ${error.message}`, 'deny');
+  }
+}
+
+async function clockAction(action) {
+  try {
+    const result = await api('/api/dashboard/clock', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action, seconds: 60 }),
+    });
+    state.snapshot = result.snapshot;
+    render();
+    if (action === 'freeze') setResult('Revocation frozen. Advance the clock 60s, then run checkout to see HLM_6004.', 'warn');
+    else if (action === 'advance') setResult(`Simulated clock +${result.snapshot.revocation.clockOffsetSec}s. Stale revocation now denies checkout.`, 'deny');
+    else setResult('Clock resumed. Revocation is fresh again; no fail-open occurred.', 'ok');
+  } catch (error) {
+    setResult(`Clock control failed: ${error.message}`, 'deny');
   }
 }
 
@@ -207,7 +267,7 @@ async function copyPassport() {
     await navigator.clipboard.writeText(state.passport);
     setResult('Passport copied to clipboard.', 'ok');
   } catch {
-    setResult('Clipboard unavailable. Use GET /api/mint directly.', 'warn');
+    setResult('Clipboard unavailable. Use POST /api/mint directly.', 'warn');
   }
 }
 
@@ -259,6 +319,10 @@ async function reset() {
 $('btn-mint').addEventListener('click', mint);
 $('btn-checkout').addEventListener('click', checkout);
 $('btn-copy').addEventListener('click', copyPassport);
+$('btn-replay').addEventListener('click', replay);
+$('btn-freeze').addEventListener('click', () => clockAction('freeze'));
+$('btn-advance').addEventListener('click', () => clockAction('advance'));
+$('btn-resume').addEventListener('click', () => clockAction('resume'));
 $('btn-kill').addEventListener('click', killLineage);
 $('btn-reset').addEventListener('click', reset);
 $('grant-rows').addEventListener('click', (event) => {

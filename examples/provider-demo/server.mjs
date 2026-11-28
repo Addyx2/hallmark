@@ -1,7 +1,11 @@
 // Runnable Freeroam → Barricade provider demo, with a local control-room view.
 // Draft product harness. Not a Hallmark L2 conformance gateway and not an
 // enrollment ceremony: /api/mint simulates a leash issuing a per-action grant.
+// POST /api/mint is preferred; GET remains an intentional local-only shortcut
+// for curl and the documented walkthrough (it signs ephemeral demo keys only).
 // The dashboard is in-memory only: no accounts, no persistence, no hosted service.
+// /api/dashboard/clock can freeze the revocation manifest and advance a
+// simulated clock so strict enforcement demonstrably fails closed (HLM_6004).
 
 import http from 'node:http';
 import { readFile } from 'node:fs/promises';
@@ -48,26 +52,26 @@ function nowSec() {
   return Math.floor(Date.now() / 1000);
 }
 
-function sendJson(res, status, body) {
+function sendJson(res, status, body, head = false) {
   res.statusCode = status;
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
   res.setHeader('Cache-Control', 'no-store');
-  res.end(JSON.stringify(body, null, 2));
+  res.end(head ? undefined : JSON.stringify(body, null, 2));
 }
 
-function sendText(res, status, text) {
+function sendText(res, status, text, head = false) {
   res.statusCode = status;
   res.setHeader('Content-Type', 'text/plain; charset=utf-8');
   res.setHeader('Cache-Control', 'no-store');
-  res.end(text);
+  res.end(head ? undefined : text);
 }
 
-async function sendStatic(res, file) {
+async function sendStatic(res, file, head = false) {
   const body = await readFile(new URL(file, import.meta.url));
   res.statusCode = 200;
   res.setHeader('Content-Type', CONTENT_TYPES[extname(file)] || 'application/octet-stream');
   res.setHeader('Cache-Control', 'no-store');
-  res.end(body);
+  res.end(head ? undefined : body);
 }
 
 function readBody(req) {
@@ -92,10 +96,22 @@ export async function createDemo({ port = 0 } = {}) {
   const ledger = new BudgetLedger();
   let grantCounter = 0;
   let lineageKilled = false;
+  let revocationFrozen = false;
+  let clockOffsetSec = 0;
 
   const pushEvent = (event) => {
     audit.push(event);
     if (audit.length > 200) audit.shift();
+  };
+  // Counters are monotonic and independent of the 200-event audit ring buffer.
+  const counters = { minted: 0, observed: 0, accepted: 0, denied: 0, charged: 0 };
+  const recordEvent = (event) => {
+    pushEvent(event);
+    if (event.event === 'passport.observed' || event.event === 'passport.absent') counters.observed += 1;
+    if (event.event === 'passport.accepted') counters.accepted += 1;
+    // Barricade denials carry a gate; Freeroam's rejected observations do not.
+    if (event.event === 'passport.rejected' && event.gate) counters.denied += 1;
+    if (event.event === 'budget.charged') counters.charged += 1;
   };
   const controlEvent = (event, fields = {}) => {
     pushEvent({ ts: Date.now(), event, ...fields });
@@ -139,20 +155,26 @@ export async function createDemo({ port = 0 } = {}) {
     revocation.iat = nowSec();
     revocation.exp = nowSec() + 120;
   };
+  // A local simulated clock affects only revocation freshness checks, never
+  // passport verification time. Advancing it past maxStalenessSec exercises
+  // the strict fail-closed path without expiring the passport itself.
+  const baseCheckFreshness = revocation.checkFreshness.bind(revocation);
+  revocation.checkFreshness = (now, maxStalenessSec, failClosed) =>
+    baseCheckFreshness(now + clockOffsetSec, maxStalenessSec, failClosed);
 
   const identity = {
     resolveKey: createKeyResolver([agent.publicJwk]),
     audience: AUDIENCE,
     tenant: TENANT,
   };
-  const observe = freeroam({ ...identity, onEvent: pushEvent });
+  const observe = freeroam({ ...identity, onEvent: recordEvent });
   const enforce = barricade({
     ...identity,
     policy,
     revocation,
     replay,
     ledger,
-    onEvent: pushEvent,
+    onEvent: recordEvent,
   });
 
   function mintPassport() {
@@ -231,6 +253,7 @@ export async function createDemo({ port = 0 } = {}) {
       remaining: { ...GRANT_BUDGET },
       charged: { req: 0, cost: 0 },
     });
+    counters.minted += 1;
 
     return {
       passport: jws,
@@ -288,14 +311,16 @@ export async function createDemo({ port = 0 } = {}) {
     audit.length = 0;
     grantCounter = 0;
     lineageKilled = false;
+    revocationFrozen = false;
+    clockOffsetSec = 0;
+    for (const key of Object.keys(counters)) counters[key] = 0;
     refreshRevocation();
     controlEvent('demo.reset', { tenant: TENANT });
     return true;
   }
 
   function snapshot() {
-    const now = nowSec();
-    const count = (name) => audit.filter((event) => event.event === name).length;
+    const now = nowSec() + clockOffsetSec;
     const grantRows = [...grants.values()].map((grant) => ({
       ...grant,
       remaining: ledger.remaining(grant.jti),
@@ -331,20 +356,18 @@ export async function createDemo({ port = 0 } = {}) {
         version: revocation.v,
         issuedAt: revocation.iat,
         expiresAt: revocation.exp,
-        ageSec: now - revocation.iat,
+        ageSec: Math.max(0, now - revocation.iat),
+        frozen: revocationFrozen,
+        clockOffsetSec,
+        maxStalenessSec: policy.surfaces[0].maxStalenessSec,
         keys: [...revocation.keys],
         sessions: [...revocation.sessions],
         attestations: [...revocation.attestations],
         tenants: [...revocation.tenants],
       },
       grants: grantRows,
-      counters: {
-        minted: grants.size,
-        observed: count('passport.observed'),
-        accepted: count('passport.accepted'),
-        denied: count('passport.rejected'),
-        charged: count('budget.charged'),
-      },
+      // Monotonic totals; the audit list below is a bounded ring buffer.
+      counters: { ...counters },
       audit: audit.slice().reverse(),
       boundary: {
         label: 'Draft product harness',
@@ -369,19 +392,28 @@ export async function createDemo({ port = 0 } = {}) {
   }
 
   const server = http.createServer(async (req, res) => {
-    refreshRevocation();
+    if (!revocationFrozen) refreshRevocation();
     const path = req.url.split('?')[0];
+    const head = req.method === 'HEAD';
 
-    if (STATIC_FILES.has(path) && req.method === 'GET') {
+    if (path === '/favicon.ico' && (req.method === 'GET' || head)) {
+      // The dashboard uses an inline data-URI icon; probes stay off the 404 path.
+      res.statusCode = 204;
+      res.setHeader('Cache-Control', 'no-store');
+      res.end();
+      return;
+    }
+
+    if (STATIC_FILES.has(path) && (req.method === 'GET' || head)) {
       try {
-        await sendStatic(res, STATIC_FILES.get(path));
+        await sendStatic(res, STATIC_FILES.get(path), head);
       } catch (err) {
-        sendJson(res, 500, { error: 'static_read_failed', detail: String(err && err.message || err) });
+        sendJson(res, 500, { error: 'static_read_failed', detail: String(err && err.message || err) }, head);
       }
       return;
     }
 
-    if (path === '/' && req.method === 'GET') {
+    if (path === '/' && (req.method === 'GET' || head)) {
       res.statusCode = 302;
       res.setHeader('Location', '/dashboard');
       res.setHeader('Cache-Control', 'no-store');
@@ -389,27 +421,32 @@ export async function createDemo({ port = 0 } = {}) {
       return;
     }
 
-    if (path === '/api/help' && req.method === 'GET') {
+    if (path === '/api/help' && (req.method === 'GET' || head)) {
       sendText(res, 200, [
         'Pascaal provider demo — Freeroam observes, Barricade enforces.',
         '',
         '  Dashboard  /dashboard',
-        '  1. GET  /api/mint                          # simulate a leash-issued grant',
+        '  1. POST /api/mint                          # simulate a leash-issued grant',
+        '     (GET /api/mint is an intentional local preview shortcut for curl)',
         '  2. GET  /api/status                        # observe-only, no credential required',
         '  3. curl -X POST /api/checkout -H "Authorization: Hallmark <passport>"',
         '  4. GET  /api/audit                         # safe, PII-redacted events',
         '  5. POST /api/dashboard/revoke              # revoke a grant session or kill the lineage',
-        '  6. POST /api/dashboard/reset               # restore the demo state',
+        '  6. POST /api/dashboard/clock               # { action: "freeze" | "advance" | "resume" }',
+        '                                             # freeze + advance 60s => HLM_6004 on checkout',
+        '  7. POST /api/dashboard/reset               # restore the demo state',
         '',
+        'Costs are mock cost units (100 units = $1). No billing is connected.',
+        'Crypto vectors are spec-wide, not specific to this harness.',
         'Use the Location header from GET / to find the dashboard.',
         'Draft product harness. Not ratified. Not an enrollment ceremony.',
         '',
-      ].join('\n'));
+      ].join('\n'), head);
       return;
     }
 
-    if (path === '/api/dashboard' && req.method === 'GET') {
-      sendJson(res, 200, snapshot());
+    if (path === '/api/dashboard' && (req.method === 'GET' || head)) {
+      sendJson(res, 200, snapshot(), head);
       return;
     }
 
@@ -427,19 +464,46 @@ export async function createDemo({ port = 0 } = {}) {
       return;
     }
 
+    if (path === '/api/dashboard/clock' && req.method === 'POST') {
+      const body = await readBody(req);
+      if (body.action === 'freeze') {
+        revocationFrozen = true;
+        controlEvent('revocation.frozen', { at: revocation.iat });
+      } else if (body.action === 'advance') {
+        const seconds = Number.isFinite(body.seconds) ? body.seconds : 60;
+        clockOffsetSec = Math.max(0, Math.min(3600, clockOffsetSec + seconds));
+        controlEvent('clock.advanced', { offsetSec: clockOffsetSec });
+      } else if (body.action === 'resume') {
+        revocationFrozen = false;
+        clockOffsetSec = 0;
+        refreshRevocation();
+        controlEvent('clock.resumed', { offsetSec: 0 });
+      } else {
+        sendJson(res, 400, {
+          error: 'invalid_clock_action',
+          hint: 'Use { action: "freeze" | "advance" | "resume" }',
+        });
+        return;
+      }
+      sendJson(res, 200, { ok: true, snapshot: snapshot() });
+      return;
+    }
+
     if (path === '/api/dashboard/reset' && req.method === 'POST') {
       resetDemo();
       sendJson(res, 200, { ok: true, snapshot: snapshot() });
       return;
     }
 
-    if (path === '/api/mint' && req.method === 'GET') {
-      sendJson(res, 200, mintPassport());
+    // POST is the intentional state-changing route. GET is kept as a documented
+    // local preview shortcut; neither touches a real key, registry or service.
+    if (path === '/api/mint' && (req.method === 'POST' || req.method === 'GET')) {
+      sendJson(res, 200, mintPassport(), head);
       return;
     }
 
-    if (path === '/api/status' && req.method === 'GET') {
-      run(observe, req, res, () => sendJson(res, 200, { ok: true, hallmark: req.hallmark }));
+    if (path === '/api/status' && (req.method === 'GET' || head)) {
+      run(observe, req, res, () => sendJson(res, 200, { ok: true, hallmark: req.hallmark }, head));
       return;
     }
 
@@ -469,8 +533,8 @@ export async function createDemo({ port = 0 } = {}) {
       return;
     }
 
-    if (path === '/api/audit' && req.method === 'GET') {
-      sendJson(res, 200, { events: audit });
+    if (path === '/api/audit' && (req.method === 'GET' || head)) {
+      sendJson(res, 200, { events: audit }, head);
       return;
     }
 

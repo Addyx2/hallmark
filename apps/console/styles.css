@@ -206,6 +206,7 @@ th {
 td { padding: 13px 14px; border-bottom: 1px solid var(--line); vertical-align: middle; }
 tbody tr:last-child td { border-bottom: 0; }
 tbody tr:hover { background: var(--wash-2); }
+tr.current-plan { background: var(--blue-wash); }
 td .sub { display: block; margin-top: 2px; color: var(--faint); font-size: 10px; }
 td.mono, th.mono { font-family: var(--mono); }
 .empty { padding: 36px 14px; text-align: center; color: var(--muted); }
@@ -243,6 +244,8 @@ td.mono, th.mono { font-family: var(--mono); }
 .chart-labels { display: flex; justify-content: space-between; margin-top: 8px; color: var(--faint); font-family: var(--mono); font-size: 10px; }
 
 .filter-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
+.filter-label { font-size: 10px; }
+.filter-row select:focus, .filter-row input:focus { outline: 2px solid var(--blue); outline-offset: 1px; }
 .filter-row select, .filter-row input {
   border: 1px solid var(--line-strong); background: var(--paper); padding: 7px 10px;
   border-radius: var(--radius); font-size: 12px;
@@ -272,7 +275,10 @@ td.mono, th.mono { font-family: var(--mono); }
   position: fixed; right: 24px; bottom: 24px; z-index: 50;
   max-width: 380px; padding: 14px 18px; background: var(--ink); color: #fff;
   font-size: 12px; border-radius: var(--radius); box-shadow: 0 12px 32px rgba(11,18,32,0.24);
+  /* The live region stays mounted; only its visual state changes. */
+  opacity: 0; transform: translateY(8px); pointer-events: none; transition: opacity 140ms ease, transform 140ms ease;
 }
+.toast.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
 
 /* ---------- Agent page ---------- */
 .agent-page { max-width: 860px; margin: 0 auto; padding: 64px 24px 96px; }

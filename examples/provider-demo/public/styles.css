@@ -328,6 +328,7 @@ td .sub { display: block; margin-top: 2px; color: var(--muted); font-size: 10px;
 .badge.used { background: var(--green-wash); color: var(--green); }
 .badge.revoked { background: var(--red-wash); color: var(--red); }
 .badge.minted { background: var(--blue-wash); color: var(--blue); }
+.badge.expired { background: var(--amber-wash); color: var(--amber); }
 
 .link-button {
   border: 0;
@@ -359,6 +360,8 @@ td .sub { display: block; margin-top: 2px; color: var(--muted); font-size: 10px;
 .event-meta { color: var(--muted); font-size: 10px; overflow-wrap: anywhere; }
 .event.deny .event-name { color: var(--red); }
 .event.accept .event-name { color: var(--green); }
+/* Resets and clock controls are operations, not denials: neutral by default. */
+.event.neutral .event-name { color: var(--ink); }
 
 .policy-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; margin-top: 20px; border-top: 1px solid var(--line); }
 
@@ -417,8 +420,8 @@ td .sub { display: block; margin-top: 2px; color: var(--muted); font-size: 10px;
 }
 
 @media (max-width: 560px) {
-  .topnav { gap: 12px; }
-  .topnav a:nth-child(3) { display: none; }
+  /* Keep Protocol reachable on mobile; wrap the nav instead of hiding it. */
+  .topnav { gap: 12px; flex-wrap: wrap; justify-content: flex-end; }
   .hero { padding: 48px 0 36px; }
   .proof-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }

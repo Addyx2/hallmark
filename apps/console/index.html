@@ -6,6 +6,7 @@
   <meta name="color-scheme" content="light">
   <meta name="description" content="Pascaal Console UI preview — organizations, projects, API keys, agents, grants, traffic, receipts, usage and agent-readable docs.">
   <title>Pascaal Console · Product preview</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230b1220'/%3E%3Ctext x='16' y='23' font-family='monospace' font-size='20' fill='white' text-anchor='middle'%3EP%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
@@ -37,9 +38,9 @@
 
     <section class="auth-panel">
       <div class="auth-card">
-        <div class="auth-tabs" role="tablist" aria-label="Authentication mode">
-          <button id="tab-signin" class="auth-tab active" type="button" role="tab" aria-selected="true">Sign in</button>
-          <button id="tab-signup" class="auth-tab" type="button" role="tab" aria-selected="false">Create account</button>
+        <div class="auth-tabs" aria-label="Authentication mode">
+          <button id="tab-signin" class="auth-tab active" type="button" aria-pressed="true">Sign in</button>
+          <button id="tab-signup" class="auth-tab" type="button" aria-pressed="false">Create account</button>
         </div>
 
         <h2 id="auth-title">Welcome back</h2>
@@ -65,7 +66,8 @@
         <button id="magic-link" class="button button-full" type="button">Send a magic link</button>
         <p class="auth-foot">
           This prototype has no real authentication. Any email and password will
-          open the demo console.
+          open the demo Console. Create account adds a new organization with a
+          starter project; nothing is sent or stored.
         </p>
         <a class="auth-docs" href="/agent/">Read the agent-readable product brief ↗</a>
       </div>
@@ -107,9 +109,9 @@
         </div>
         <div class="topbar-right">
           <span class="status"><span class="dot"></span> Mock session</span>
-          <button id="user-menu" class="user-chip" type="button" title="Signed-in user">
+          <span id="user-menu" class="user-chip" title="Mock identity — no account menu" aria-label="Mock identity, no account menu">
             <span id="user-initial">A</span>
-          </button>
+          </span>
           <button id="logout" class="button button-quiet" type="button">Log out</button>
         </div>
       </header>
@@ -118,7 +120,7 @@
     </div>
   </div>
 
-  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script type="module" src="/app.js"></script>
 </body>
 </html>
