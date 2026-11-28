@@ -28,9 +28,10 @@ Versions are **SDK** versions. The protocol remains **draft v1** and is not rati
   controls. A preview of Leash + Trackline, not the hosted product.
 - `docs/quickstart.md`: provider setup, framework snippets, explicit verification
   scope and conformance wording.
-- `docs/product-architecture.md`: Supermemory-like target architecture for the
-  hosted console — identity model, org scoping, scoped keys, service boundaries
-  and security boundaries.
+- `docs/product-architecture.md`: target architecture for a developer console
+  with organizations, roles, projects, scoped keys, agents, grants, traffic,
+  receipts, usage and agent-readable docs — identity model, org scoping, service
+  boundaries and security boundaries.
 - `apps/console/`: clickable console UI preview with simulated signup/login,
   organizations and roles, projects and scoped API keys, agents and grants,
   Freeroam traffic intelligence, Trackline receipts, usage/billing, docs for
@@ -45,7 +46,7 @@ Versions are **SDK** versions. The protocol remains **draft v1** and is not rati
 - `docs/openapi.json` for the managed service — deliberately not invented yet.
 - Spec §21 resolution before calling v1 ratified.
 
-## [0.1.0] - 2026-11-26
+## [0.1.0] - 2026-11-26 — local draft, unpublished
 
 ### Added
 
@@ -72,5 +73,5 @@ Versions are **SDK** versions. The protocol remains **draft v1** and is not rati
   must be claimed first.
 - `packages/hallmark-core/src/index.js` is a semantic copy of
   `spec/test-vectors/hallmark-ref.mjs`. Only the header comment changed.
-- Full conformance still lives in `spec/` (`npm test`: 38 vectors, 46 checks,
-  4 properties, 4 enforcement points, spec/code crosscheck).
+- Full conformance still lives in `spec/` (`npm test`: 38 vectors (6
+  accept/32 pinned), 4 properties, 4 enforcement points, spec/code crosscheck).

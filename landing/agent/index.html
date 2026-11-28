@@ -37,17 +37,17 @@
     <h2>Identity</h2>
     <p><b>Company:</b> Pascaal — "AI components for safety and adoption." <a href="https://pascaal.com">pascaal.com</a></p>
     <p><b>Product / protocol:</b> Hallmark. <a href="https://hallmark.pascaal.com/">Human-facing site</a></p>
-    <p><b>Status:</b> draft. Public, executable, not ratified, no production deployment.</p>
+    <p><b>Status:</b> v1-draft. Public, executable, not ratified, no production deployment.</p>
   </section>
 
   <section>
     <h2>What it establishes</h2>
     <ul>
-      <li>Every agent action resolves to one responsible human. The human is a verified fact, not a claim.</li>
+      <li>Actions carrying a valid Hallmark passport resolve to one responsible human. The human is a verified fact, not a claim.</li>
       <li>Authority can only narrow as agents spawn sub-agents.</li>
-      <li>Passports are short-lived: TTL &le; 120 s, hard cap 300 s. Revocation is per capability and fails closed when stale.</li>
+      <li>Passports are short-lived: TTL &le; 120 s, hard cap 300 s. Revocation is per capability; strict checks reject stale data.</li>
       <li>The gateway receives only the leaf passport and walks the seal chain without ancestor tokens on the wire.</li>
-      <li>Keys come from the registry. No key discovery by URL.</li>
+      <li>Keys are pinned locally from a registry snapshot. No key discovery by URL.</li>
     </ul>
   </section>
 
@@ -56,7 +56,7 @@
     <ul>
       <li>Clients can integrate Freeroam into any platform they operate, see when agents use their website, and analyse usage and traffic.</li>
       <li>Freeroam observes cooperative agent traffic, flags anomalies, and never denies.</li>
-      <li>To curb suspicious use, a client puts Barricade on a signed surface where a responsible action happens. Barricade requires an imprint and a grant.</li>
+      <li>To curb suspicious use, a client puts Barricade on a signed surface where a responsible action happens, never at first contact. Barricade requires an imprint and a grant.</li>
     </ul>
   </section>
 
@@ -67,6 +67,15 @@
       <li>RFC 8785 canonical JSON, restricted to the safe subset Hallmark uses.</li>
       <li>Seal: <code>b64u(SHA-256("hallmark.seal.v1" || 0x00 || signing_input))</code>. The signature is not covered.</li>
       <li>RFC 7638 JWK thumbprints; <code>kid</code> is a routing hint, the thumbprint is the identity.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Essays</h2>
+    <ul>
+      <li><a href="https://pascaal.com/the-attribution-constraint/">The attribution constraint</a></li>
+      <li><a href="https://pascaal.com/grants-narrow-authority/">Authority narrows. It does not spill.</a></li>
+      <li><a href="https://pascaal.com/containment-window/">A kill switch is a containment window</a></li>
     </ul>
   </section>
 
@@ -87,9 +96,11 @@
     <ul>
       <li>The normative spec is the source of truth. Where prose and code disagree, prose wins and the implementation is a bug.</li>
       <li>Do not describe Hallmark as ratified, certified, or production-deployed.</li>
+      <li>Do not claim every agent action is attributed. Only actions carrying a valid Hallmark passport resolve to a responsible human.</li>
+      <li>Keys are pinned locally from a registry snapshot; do not describe URL-based key discovery.</li>
       <li>Pascaal is the company; Hallmark is the product and protocol name.</li>
       <li>Freeroam observes, flags anomalies, and never denies. Do not describe it as bot detection or as enforcement.</li>
-      <li>Barricade is the signed surface where a client can refuse suspicious use.</li>
+      <li>Barricade is the signed surface where a client can curb suspicious use, never at first contact.</li>
       <li>This page is Hallmark-only. Do not represent other Pascaal product ideas as shipping here.</li>
     </ul>
   </section>

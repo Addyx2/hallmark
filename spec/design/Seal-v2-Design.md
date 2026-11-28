@@ -211,15 +211,17 @@ authenticator.
 
 ## Appendix A — How this closes the shopping thread
 
-The session's earlier goal ("empower Instinct/Muse-like agents with shopping
-abilities") and this design are one mechanism. Both are the Barricade issuing
-**v1 passports as capability tokens**:
+This design applies the same v1 passport mechanism to content-use licensing:
+one proof, two surfaces. Both are the Barricade issuing **v1 passports as
+capability tokens**:
 
 - shopping: `caps: ["commerce.purchase.v1"]`, budget = spend envelope;
 - content: `caps: ["content.use"]`, budget = usage allowance.
 
 The Imprint answers *who* (lineage to a human), the Barricade answers *may they*
 (capability + budget + revocation), the Seal answers *whose fingers are on the
-artifacts*. A third-party agent (Instinct, Muse, whoever signs on) presents an
-Imprint-verified passport; the Barricade decides; the shop or registry settles.
-That is the platform's product: one proof, two surfaces, one audit log.
+artifacts*. Every action carrying a valid Hallmark passport resolves to one
+responsible human. A third-party agent presents an Imprint-verified passport;
+the Barricade decides; the shop or registry settles. That is the platform's
+product: one proof, two surfaces, one audit log (specified in v1 §14, not yet
+implemented).

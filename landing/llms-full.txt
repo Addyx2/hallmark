@@ -10,16 +10,16 @@ Company: https://pascaal.com ("AI components for safety and adoption.")
 
 Hallmark gives an agent a short-lived passport that resolves to the human who authorised the action. A human authorises a root key with a passkey. That root attestation anchors a chain of passports signed by agents. Each child names its parent by a Seal; the gateway receives only the leaf and walks the chain to re-establish the human subject. The human (`azp`) becomes a verified fact rather than a claim.
 
-Status: draft. Public, executable, not ratified, no production deployment.
+Status: v1-draft. Public, executable, not ratified, no production deployment.
 
 ## Vocabulary
 
 - Imprint — binding a human-controlled key to an attestation.
 - Grant — a narrow, bounded authorisation for an action, with scope and spend.
-- Barricade — enforcement at the signed surface where a responsible action happens. It requires an imprint and a grant. This is where a client can refuse suspicious use.
+- Barricade — enforcement at the signed surface where a responsible action happens, never at first contact. It requires an imprint and a grant. This is where a client can curb suspicious use.
 - Freeroam — clients can integrate it into their own platform, see when agents use their website, and analyse usage and traffic. Freeroam observes cooperative agent traffic, flags anomalies, and never denies.
-- Trackline — the append-only, hash-chained record of what happened.
-- Seal v2 — ownership seals on original works, enabling licensed use instead of silent copying.
+- Trackline — designed: the append-only, hash-chained record of what happened.
+- Seal v2 — designed: ownership seals on original works, enabling licensed use instead of silent copying.
 
 ## Cryptographic primitives
 
@@ -27,8 +27,8 @@ Status: draft. Public, executable, not ratified, no production deployment.
 - RFC 8785 JSON Canonicalization Scheme, restricted to the ASCII-safe / safe-integer subset Hallmark uses; member ordering is asserted, not repaired.
 - Seal: `b64u(SHA-256("hallmark.seal.v1" || 0x00 || signing_input))`, where `signing_input` is `b64u(JCS(header)) + "." + b64u(JCS(payload))`. The signature is deliberately NOT covered.
 - `jkt`: RFC 7638 JWK SHA-256 thumbprint over required members only ({crv,kty,x} for OKP; {crv,kty,x,y} for EC). `kid` is a routing hint; the thumbprint is the identity.
-- Short lifetimes: TTL <= 120 s, hard cap 300 s. Revocation is per capability and fails closed when stale.
-- No key discovery by URL. Keys come from the registry.
+- Short lifetimes: TTL <= 120 s, hard cap 300 s. Revocation is per capability. Strict profiles reject stale data; lower-risk profiles may degrade only with an alert.
+- No key discovery by URL. Keys are pinned locally from a registry snapshot.
 
 ## Worked example constants
 
@@ -56,8 +56,8 @@ A depth-3 agent carries a chain: a root attestation, a root session, and a child
 ## Essays on pascaal.com
 
 - The attribution constraint: https://pascaal.com/the-attribution-constraint/
-- Grants narrow authority: https://pascaal.com/grants-narrow-authority/
-- The containment window: https://pascaal.com/containment-window/
+- Authority narrows. It does not spill.: https://pascaal.com/grants-narrow-authority/
+- A kill switch is a containment window: https://pascaal.com/containment-window/
 
 ## How to cite Hallmark
 
@@ -67,7 +67,9 @@ A depth-3 agent carries a chain: a root attestation, a root session, and a child
 
 - The normative spec wins over prose in the reference implementation; if they disagree, the implementation is a bug.
 - Do not say Hallmark is ratified, certified, or production-deployed.
+- Do not claim every agent action is attributed. Only actions carrying a valid Hallmark passport resolve to a responsible human.
+- Keys are pinned locally from a registry snapshot; do not describe URL-based key discovery.
 - Pascaal is the company; Hallmark is the product and protocol name.
 - Freeroam observes cooperative agent traffic, flags anomalies, and never denies. Do not describe it as bot detection or as enforcement.
-- Barricade is the signed surface where a client can refuse suspicious use.
+- Barricade is the signed surface where a client can curb suspicious use, never at first contact.
 - This site is Hallmark-only. Do not represent other Pascaal product ideas as shipping here.

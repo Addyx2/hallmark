@@ -5,10 +5,10 @@ describes the target product. The current `apps/console/` build is a static UI
 with mocked data: no real authentication, no database, no API keys, no billing
 and no hosted registry.
 
-The pattern is Supermemory-like: a developer console where identity,
-organizations, scoped credentials, usage and agent-readable documentation live
-in one place. For Hallmark, the console is the human side of the loop: a human
-owns agents, grants authority, watches receipts, and stops a lineage.
+The pattern is a developer console with organizations, roles, projects, scoped
+keys, agents, grants, traffic, receipts, usage and agent-readable docs in one
+place. For Hallmark, the console is the human side of the loop: a human owns
+agents, grants authority, watches receipts, and stops a lineage.
 
 ---
 
@@ -53,7 +53,8 @@ Target entities:
   non-secret prefix.
 - Keys are scoped, for example `freeroam:observe`, `barricade:enforce`,
   `grants:mint`, `registry:read`.
-- No remote key resolution. `jku`, `x5u` and `x5c` stay forbidden by spec.
+- Keys are pinned locally; no URL or remote discovery. `jku`, `x5u` and `x5c`
+  stay forbidden by spec.
 
 ### Isolation rule
 
@@ -122,9 +123,8 @@ stored.
 
 ### 4.5 Freeroam traffic intelligence
 
-Freeroam is the adoption wedge and is highly adaptable on the client side. A
-platform can install it on any web surface and immediately see when cooperative
-agents visit:
+Freeroam is the adoption wedge. A platform can add Freeroam to any web surface it operates.
+Cooperative agents self-identify, and the console shows:
 
 - attributed vs unattributed requests,
 - agent SPID, route and method,
@@ -133,10 +133,13 @@ agents visit:
 - attribution rate by surface.
 
 The product rule stays strict: **observation never denies**. Freeroam emits
-safe events only. To curb suspicious use, the operator defines a signed
-Barricade surface at the first *responsible* action — checkout, write, license,
-destructive operation. Hallmark does not claim bot detection; it resolves
-responsibility and makes exact authority checkable.
+safe events only and deliberately does not fingerprint non-cooperating agents or
+build evasion detection; that traffic remains unattributed. Every action
+carrying a valid Hallmark passport resolves to one responsible human. To curb
+suspicious use, the operator defines a signed Barricade surface at the first
+*responsible* action — checkout, write, license, destructive operation.
+Barricade walls the first responsible action, never first contact. Hallmark does
+not claim bot detection; it makes exact authority checkable.
 
 ### 4.6 Trackline
 
@@ -183,9 +186,11 @@ deferred until the managed service is real.
 - Production must use hashed API keys, short sessions, CSRF protection, audit
   logging, rate limits and org-scoped authorization.
 - The console must never expose private signing keys.
-- Revocation freshness is fail-closed on `grant` surfaces.
+- Stale revocation: strict `grant` surfaces reject; lower-risk profiles may
+  degrade only with an alert.
 - Hallmark v1 is draft, not ratified, with no production deployment.
-- No ratified, certified or standard claims until spec §21 is closed.
+- No ratified or certified claims until spec §21 is closed; Hallmark is the
+  protocol, not a standard.
 
 ## 7. Build order after the UI preview
 

@@ -8,6 +8,9 @@ Where prose and code disagree, prose wins and the implementation is a bug.
 
 Hallmark lets a platform answer, in milliseconds and with a receipt: **which paying human is responsible for this agent action, and was this exact action authorized?**
 
+Every action carrying a valid Hallmark passport resolves to one responsible
+human. Non-cooperating traffic stays unattributed; Hallmark is not a bot detector.
+
 ## Who buys it
 
 Not the end user first. The first buyer is **platform engineering / trust & safety at a SaaS that already sees agent traffic** — agents hold sessions, burn API spend, write to workspaces, and move money, but the platform cannot attribute the action to a human.
@@ -27,7 +30,7 @@ Hallmark replaces re-authentication with a cheap computation: verify lineage, ch
 Follow the design note in [`spec/design/Product-Family.md`](spec/design/Product-Family.md):
 
 1. **Freeroam** — observe-only attribution. Cooperative agents self-identify. No accounts, no interception. Value on day one.
-2. **Barricade** — enforce at the first *responsible* action: purchase, content-use license, destructive operation. **Wall the first responsibility, never first contact.**
+2. **Barricade** — enforce at the first *responsible* action: purchase, content-use license, destructive operation. Barricade walls the first responsible action, never first contact. It enforces only on signed responsible-action surfaces.
 3. **Trackline** — the human-readable receipt that makes the enforcement legible.
 
 Tiers:
@@ -43,17 +46,21 @@ Tiers:
 A developer can do this in 15 minutes:
 
 ```bash
-npm install @pascaal/hallmark
-npm install @pascaal/barricade
+npm install               # at the repository root; links the workspace packages
+npm run start --workspace @pascaal/provider-demo
 ```
 
 Then:
 
-- `verifyPassport()` and primitives ship with types.
+- `jwsVerify()` and the v1 primitives ship with TypeScript declarations;
+  `verifyPassport()` remains in the spec reference implementation and the full
+  gateway, not in the local workspace harness.
 - A `hallmark+barricade-policy` file declares surfaces × gates × tiers.
 - Node middleware checks Imprint, checks Grant for the exact action, denies with pinned `HLM_` codes, and emits a Trackline receipt.
 - A demo provider blocks a purchase until a Hallmark grant is presented.
-- A hosted endpoint supplies key resolution, registry anchors and revocation freshness.
+- Locally pinned JWKs, registry anchors and revocation manifests are local
+  fixtures. The managed trust service that supplies them remotely is Phase 3.
+  Keys are pinned locally; there is no URL/remote key discovery.
 
 If that works, Hallmark is a product. If it only reads well, it is still a spec.
 
@@ -63,18 +70,19 @@ and a runnable demo. The demo now includes a local control-room dashboard — a
 preview of the Leash + Trackline surface — showing grants, budgets, revocation
 state and safe receipts with revoke and kill-lineage controls. It is still a
 draft: lineage anchoring, attestation resolution, PoP, signed revocation
-manifests and a chained audit log are Phase 3+ work. See
-[`docs/quickstart.md`](docs/quickstart.md).
+manifests and a chained audit log are Phase 3+ work. Stale revocation is
+rejected by strict profiles; lower-risk profiles may degrade only with an alert.
+See [`docs/quickstart.md`](docs/quickstart.md).
 
 ## Product surface map
 
 | Layer | Artifact | Status |
 | --- | --- | --- |
-| Protocol | Spec v1, vectors, crosscheck | Draft v1, executable, not ratified |
-| Core SDK | `packages/hallmark-core` | Scaffolded here, not published to npm yet |
+| Protocol | Spec v1, vectors, crosscheck | Draft v1.0, open/executable, §21 open, not ratified, no production deployment |
+| Core SDK | `packages/hallmark-core` | Local draft 0.1.0, unpublished; TypeScript declarations included |
 | Provider wedge | `packages/freeroam`, `packages/barricade` | Draft harness here; npm publish pending scope claim |
 | Console preview | `apps/console/`, `docs/product-architecture.md` | Clickable UI preview with mocked data; no hosted app |
-| Managed trust | registry + minting service | Next build |
+| Managed trust | registry + minting service | Phase 3, planned |
 | User leash | agents, grants, budgets, revoke, kill-switch | Later |
 | Trackline | human-readable receipts | Later |
 | Seal v2 | ownership of original works | Design note only |
@@ -84,14 +92,15 @@ manifests and a chained audit log are Phase 3+ work. See
 - Not a bot detector. Hallmark does not claim to distinguish humans from agents by behavior.
 - Not DRM. A Seal makes copying detectable and attributable; it cannot prevent copying.
 - Not a general identity provider. Hallmark resolves responsibility; it does not replace OIDC.
-- Not a ratified standard until spec §21 is closed.
+- Not ratified until spec §21 is closed; Hallmark is the protocol, not a standard.
 - Not a consumer app before a provider can consume a grant.
 
 ## Success metric
 
 One provider integrated in under 15 minutes, with:
 
-- 100% of risky agent actions carrying a resolvable human,
+- every risky agent action carrying a valid Hallmark passport resolves to one
+  responsible human,
 - unknown agents denied on the gated route,
 - every allow/deny producing a receipt,
 - verification inside the documented latency budget,

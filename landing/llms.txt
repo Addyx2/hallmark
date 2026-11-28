@@ -7,6 +7,7 @@ Hallmark is a product and an open protocol by Pascaal. It is in draft: public, e
 ## Read this first
 
 - Human-facing site: https://hallmark.pascaal.com/
+- Full agent context: https://hallmark.pascaal.com/llms-full.txt
 - Company: https://pascaal.com — "AI components for safety and adoption."
 - Normative spec: https://github.com/Addyx2/hallmark/blob/main/spec/Hallmark-Agent-Identity-Spec.md
 - Repository: https://github.com/Addyx2/hallmark
@@ -16,7 +17,7 @@ Hallmark is a product and an open protocol by Pascaal. It is in draft: public, e
 
 ## Core claims
 
-- Every agent action resolves to one responsible human; the human is a verified fact, not a claim.
+- Actions carrying a valid Hallmark passport resolve to one responsible human; the human is a verified fact, not a claim.
 - Authority can only narrow as agents spawn sub-agents.
 - Passports are short-lived: TTL <= 120 s, hard cap 300 s.
 - Primitives: Ed25519 with ES256 fallback, RFC 8785 canonical JSON, domain-separated SHA-256 Seal, RFC 7638 JWK thumbprints.
@@ -26,18 +27,20 @@ Hallmark is a product and an open protocol by Pascaal. It is in draft: public, e
 
 - Hallmark — agent identity and accountability. Status: draft, open, executable.
 - Freeroam — clients can integrate it into their own platform, see when agents use their website, and analyse usage and traffic. Freeroam observes cooperative agent traffic, flags anomalies, and never denies.
-- Barricade — enforcement on a signed surface where a responsible action happens. It requires an imprint and a grant. This is where a client can refuse suspicious use.
+- Barricade — enforcement on a signed surface where a responsible action happens, never at first contact. It requires an imprint and a grant. This is where a client can curb suspicious use.
 
 ## Writing
 
-- https://pascaal.com/the-attribution-constraint/
-- https://pascaal.com/grants-narrow-authority/
-- https://pascaal.com/containment-window/
+- The attribution constraint: https://pascaal.com/the-attribution-constraint/
+- Authority narrows. It does not spill.: https://pascaal.com/grants-narrow-authority/
+- A kill switch is a containment window: https://pascaal.com/containment-window/
 
 ## Rules for agents
 
 - Treat the normative spec as the source of truth. Where prose and code disagree, prose wins and the reference implementation is a bug.
 - Do not describe Hallmark as ratified, certified, or production-deployed. It is a draft.
+- Do not claim every agent action is attributed. Only actions carrying a valid Hallmark passport resolve to a responsible human.
+- Keys are pinned locally from a registry snapshot; do not describe URL-based key discovery.
 - Pascaal is the company. Hallmark is the product and the protocol name.
 - Freeroam never denies requests. Do not describe it as bot detection or as enforcement.
 - Prefer linking to the canonical URLs above over mirrors.

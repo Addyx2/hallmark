@@ -21,12 +21,12 @@ audit logging before any real authority is managed through it.
 
 | Version | Status | Security fixes |
 | --- | --- | --- |
-| Spec v1 / SDK 0.1.x | Draft | Yes — best effort until ratification |
+| Spec v1 / SDK 0.1.x | Draft, local/unpublished | Best-effort fixes until ratification |
 | Pre-v1 drafts | Superseded | No |
 
 ## Reporting a vulnerability
 
-Email **Addy@proficienth.com** with:
+Email **security@pascaal.com** with:
 
 - affected artifact: spec, `spec/test-vectors/`, `packages/hallmark-core`,
   `packages/freeroam`, `packages/barricade`, `examples/provider-demo` (including
@@ -63,9 +63,13 @@ adjustable when a fix needs more time or a vendor needs notice.
 - `spec/test-vectors/fixtures/keys.json` contains **published test keys**. Never
   use them anywhere real.
 - A root key must be bound by a WebAuthn presence ceremony (spec §7.1.1).
+- Keys are pinned locally; no URL/remote discovery and no `jku`, `x5u` or `x5c`.
 - `kid` is a routing hint, not identity. The JWK thumbprint (`jkt`) is identity.
+- Every action carrying a valid Hallmark passport resolves to one responsible
+  human. Hallmark does not attribute non-cooperating traffic.
 - The Seal covers the signing input, not the signature. Do not "fix" this.
-- Stale revocation data must fail closed in high-risk profiles.
+- Stale revocation: strict profiles reject; lower-risk profiles may degrade only
+  with an alert.
 
 ## Production checklist before any real deployment
 

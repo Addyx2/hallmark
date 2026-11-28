@@ -19,8 +19,10 @@ directory. Nothing in it is decorative.
 
 ## Status
 
-**Draft, v1.0, not ratified.** No production deployment. See §21 for the open
-questions that should be answered before the SDK ships.
+**Draft, v1.0, open/executable, §21 open, not ratified.** No production
+deployment. Draft `0.1.x` evaluation releases may be tagged `draft` with §21
+open; ratification as v1/1.0 still requires §21 closure. The core SDK 0.1.0 is
+local and unpublished.
 
 ## Verify it
 
@@ -30,10 +32,10 @@ npm run vectors       # regenerate vectors and self-test, writes vectors.json
 npm run bench         # hot-path performance numbers behind spec §17
 ```
 
-`npm test` runs 38 conformance vectors (6 accept, 32 pinned to an exact error
-code), 4 design properties, 4 budget enforcement points, and a crosscheck that
-asserts the spec and the reference implementation still describe the same
-protocol. It exits non-zero if any invariant weakens.
+`npm test` runs 38 vectors (6 accept/32 pinned), 4 properties, 4 enforcement
+points, and a spec/code crosscheck that asserts the spec and the reference
+implementation still describe the same protocol. It exits non-zero if any
+invariant weakens.
 
 `vectors.json` contains every generated token alongside its expected and actual
 verdict — diff it in review to see exactly what changed.
@@ -65,16 +67,22 @@ test-vectors/
 ## What is actually enforced
 
 - **Cryptographic** — Ed25519/ES256 only, closed `alg` allowlist, canonical
-  JCS payloads, no duplicate JSON members, no remote key resolution.
+  JCS payloads, no duplicate JSON members. Keys are pinned locally; no URL or
+  remote discovery, and no `jku`/`x5u`/`x5c`.
 - **Lineage** — 13 invariants covering parent linkage, ancestry immutability,
   human immutability, tenant isolation, audience narrowing, capability narrowing
   and tree structure.
 - **Economic** — disjoint budget slices, so a root's spend cap holds across the
   whole tree with no cross-gateway coordination, even if a parent lies about its
   own bookkeeping.
-- **Operational** — TTL ceilings, replay suppression, per-capability revocation
-  freshness with fail-closed defaults, and a stated containment window of about
-  150 seconds for a compromised key.
+- **Operational** — TTL ceilings, replay suppression and per-capability
+  revocation freshness: strict profiles reject stale data; lower-risk profiles
+  may degrade only with an alert. Stated containment window is about 150 seconds
+  for a compromised key.
+
+Every action carrying a valid Hallmark passport resolves to one responsible
+human. This is not universal attribution: non-cooperating traffic is
+unattributed and Hallmark is not a bot detector.
 
 ## Two things worth knowing before reading the code
 

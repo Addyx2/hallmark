@@ -1,85 +1,51 @@
-# Pascaal — company, product map and launch note
+# Pascaal — brand and product decision record
 
-## Rationale
-- Hallmark is heavily trademarked in US (Hallmark Cards Inc) — risky as a company name, fine as a protocol name.
-- Pascaal: domain pascaal.com appears available, distinctive (close to Pascal/Pascale but unique), blank slate, pronounceable. Fits "AI components" brand.
-- The company needs room for multiple products: Hallmark today, Plots and Waterguard next.
+**Status: public decision record.** This note records the naming decision and the
+current public surface status. It is not a launch checklist.
 
-## Naming map
+## Decision
+
 - **Company: Pascaal** — "AI components for safety and adoption."
-- **Product 01: Hallmark** — agent identity and accountability (passport, grants, Trackline). Also the protocol name.
-- **Product 02: Plots** — autonomous work management. In design.
-- **Product 03: Waterguard** — agent security models. Research.
-- Protocol/spec: Hallmark (keep filenames/spec titles as-is to avoid breaking references; can alias later).
-- Repo stays `hallmark` (or rename later if desired) — not critical.
-
-## Suggested tagline
-"Pascaal — AI components for safety and adoption."
-
-Sub-line: "Hallmark makes agents accountable. Plots puts them to work. Waterguard keeps them inside the lines."
+- **Product and protocol: Hallmark** — agent identity and accountability:
+  passports, grants, Trackline.
+- On public sites, use Pascaal as the company name and Hallmark as the product/protocol name.
+- Spec titles, filenames and code prefixes keep the `hallmark` name so existing
+  references resolve. The repository stays `hallmark`.
 
 ## Product map
 
 | Product | Job | Status |
 | --- | --- | --- |
-| Hallmark | Resolve agent → human; grants, budgets, receipts | Spec v1, open |
+| Hallmark | Agent identity and accountability: passports, grants, revocation, receipts | Spec draft v1.0, open/executable; §21 open; not ratified; no production deployment; core SDK 0.1.0 local/unpublished |
 | Plots | Plan, execute and report autonomous work | In design |
 | Waterguard | Threat model, policy and containment for agents | Research |
 
-## GTM wedge (matches your thesis)
-"Accept agents. Attribute humans." — every SaaS can know which user owns the agents using their platform.
+Every action carrying a valid Hallmark passport resolves to one responsible
+human. Keys are pinned locally; there is no URL/remote key discovery. Hallmark
+does not attribute non-cooperating traffic and is not a bot detector.
 
-## Domains + hosting
-- `pascaal.com`: **registered** and live — company marketing site, hosted on another platform (not Vercel).
-- `hallmark.pascaal.com`: **live** — serves the site in `landing/`, and is the canonical Hallmark / protocol entry point (GitHub About points here).
-- `hallmark-topaz.vercel.app`: original Vercel deployment, no longer the canonical URL.
-- USPTO: search "Pascaal" (word mark) across classes relevant to identity/auth/SaaS. Distinctive string reduces conflict risk vs. common words.
-- Global: UKIPO/WIPO later if going international.
+## Public sites
 
-## Messaging note
-The company line in this repo is **"AI components for safety and adoption."**
-The `pascaal.com` homepage hero now uses **"AI components for safety and adoption."**
-The company line is aligned across the marketing site, this repo and the
-Hallmark product site.
+- `pascaal.com` — **live**: company marketing site, hosted on WordPress outside
+  this repository.
+- `hallmark.pascaal.com` — **live**: the canonical Hallmark product/protocol site,
+  served from `landing/` in this repository.
+- `hallmark-topaz.vercel.app` — legacy preview URL, no longer canonical.
 
-## Next practical steps
-1. Run the USPTO TM search for "Pascaal" (word mark) in classes 9/38/42 before heavy branding
-2. Align the `pascaal.com` hero copy with the company line above, if you want one voice
-3. Create logo/brand (minimal)
-4. On the public sites, use product name Pascaal, keep "Hallmark protocol" in About/Docs
-5. Plugin-first GTM (Freeroam → Barricade) as designed
+## Trademark and accounts
 
-## Answer to "how can people use this now?"
-- Today: read spec + design notes, run `npm test` in spec/ (reference impl + vectors). Protocol is concrete.
-- Near-term: implement plugin (imprint header + resolve + grant) first — this matches the viral loop (ask at first responsibility). App (Agent/Cluster/Trackline/Notifications) second.
-- Distribution: providers install plugin (Freeroam gives value immediately with zero accounts). That’s the wedge.
+- USPTO: one pending word-mark application for "Pascaal" (Classes 9/38/42); no
+  registration is claimed.
+- X: Do not link an X account until ownership is verified.
 
-## Verdict
-Pascaal is the right call. Distinctive, available-ish domain-wise, avoids Hallmark Cards' heavy TM footprint, and gives you a clean brand to build multiple products under.
+## Near-term sequence
 
-## Status log
-- 2026-10-19: User chose Pascaal as product name; landing stays private for now.
-- 2026-10-19: DNS check `pascaal.com` — no A/NS records (consistent with unregistered). Register ASAP to lock it in.
-- 2026-10-19: Landing page rebranded to Pascaal (Hallmark kept as protocol name in footer + docs).
-- 2026-11-17: Structure changed to company-level. Pascaal is the homepage; Hallmark, Plots and Waterguard are products. Company line: "AI components for safety and adoption." Landing rebuilt around that IA.
-- 2026-11-23: Repository flipped from private to public (`gh repo edit --visibility public`). Vercel deployment at hallmark-topaz.vercel.app was already live and serving the current landing; docs updated to match.
-- 2026-11-23: `pascaal.com` registered and live on another platform (company marketing site). `hallmark.pascaal.com` is live serving `landing/`; GitHub About and repo docs repointed there. Vercel URL kept only as a legacy preview.
-- 2026-11-25: `pascaal.com` marketing homepage upgraded: hero "AI components for safety and adoption.", Hallmark-only lede, both Hallmark links repointed to `hallmark.pascaal.com`, old blog links removed, Philosophy section and final CTA untouched, skip link/focus styles/mobile Hallmark nav/canvas pause shipped.
-- 2026-11-25: Rank Math live head verified (title, description, canonical, OG/Twitter, robots, JSON-LD); global OG thumbnail and site icon live; sitemaps and robots.txt verified. Redirection 301 `/2026/11/22/introducing-hallmark/` → `https://hallmark.pascaal.com/` verified; old post set to draft.
-- 2026-11-25: Privacy Policy (`/privacy-policy/`) and Terms of Use (`/terms-of-use/`) published and linked from homepage footer. Fresh homepage content backup saved.
-- 2026-11-25: Three spec-theme posts published: "The attribution constraint", "Authority narrows. It does not spill.", and "A kill switch is a containment window". All link to `hallmark.pascaal.com`.
-- 2026-11-25: Wordfence hardening: 2FA enabled and required for administrators; XML-RPC authentication disabled. Free license registration and 2FA enrollment remain user actions.
-- 2026-11-25: Design merged around the Hallmark editorial rail as the master system: white/blue Geist + Geist Mono, numbered mono eyebrows, hairline rules, restrained accent. `pascaal.com` now carries a "From Pascaal" product strip in that language; `hallmark.pascaal.com` is Hallmark-led and links back to the company site. Philosophy copy and the final "Get your hours back." CTA left untouched.
-- 2026-11-26: Mirrored the Hallmark brand mark (blue rounded square with the white corner glyph) into the `pascaal.com` header wordmark. Philosophy and final CTA still untouched; homepage backup refreshed.
-- 2026-11-26: Hallmark headline and page title now read "Autonomy Provenance for Compliance and Safety"; body descriptions unchanged.
-- 2026-11-26: `pascaal.com` header refined with a hairline rule, taller 84px rail, small uppercase mono nav and a Geist CTA; visible email address removed from the nav (footer contact kept).
-- 2026-11-26: Hallmark site gained shareability and AEO surfaces: canonical/OG/Twitter metadata, 1200×630 `og.png`, Hallmark favicon, JSON-LD, a conformance proof strip, an in-browser WebCrypto seal verifier with PASS/TAMPER modes, and agent-readable `/llms.txt`, `/llms-full.txt` and `/agent/`. Plots/Waterguard/Writing renumbered to 08/09/10. Publishing steps captured in `DEPLOY.md`.
-- 2026-11-26: Productization batch: Apache-2.0 `LICENSE`, `PRODUCT.md`, `ROADMAP.md`, `CHANGELOG.md`, `CONFORMANCE.md`, `SECURITY.md`, and `packages/hallmark-core` — a zero-dependency, installable copy of the v1 primitives with CLI and smoke tests. Buyer = platform/trust teams at SaaS seeing agent traffic; wedge = Freeroam → Barricade; npm publish pending `@pascaal` scope claim.
-- 2026-11-26: Phase 2 provider wedge shipped locally: `packages/freeroam` (observe-only), `packages/barricade` (signed surface enforcement), `examples/provider-demo` (T0 → T1 demo), `docs/quickstart.md`, root npm workspaces and TypeScript declarations for all three packages. Draft harness, not L2 conformance.
-- 2026-11-26: Local Leash + Trackline preview added as the demo dashboard: grants, budgets, revocation state, signed surface policy and safe audit events, with mint, checkout, revoke, kill-lineage and reset controls. Still in-memory only; not the hosted product.
-- 2026-11-27: Built the Pascaal Console UI preview (`apps/console/`) in a Supermemory-like product shape: simulated signup/login, organizations and roles, projects and scoped API keys, agents and grants, Freeroam traffic intelligence, Trackline receipts, usage/billing and agent-readable docs (`/llms.txt`, `/llms-full.txt`, `/agent/`). Mocked data only; no real auth, keys or billing. Architecture captured in `docs/product-architecture.md`.
-- 2026-11-26: X/Twitter check — no confirmed official Pascaal account found. `x.com/pascaal` currently returns an “Account suspended” page and neither `pascaal.com` nor `hallmark.pascaal.com` links to X. Do not claim or link a handle until ownership is verified.
-- TODO: Cal.com booking URL from user; 4 homepage `mailto:` CTAs remain until supplied. Mailchimp signup deferred by user.
-- TODO: User to complete Wordfence free license registration, enroll in 2FA, and revoke the exposed WordPress Application Password.
-- TODO: USPTO word-mark search for "Pascaal" (Classes 9/38/42) before heavy branding.
-- TODO: Align the `pascaal.com` hero with "AI components for safety and adoption" if a single company voice is wanted.
+1. Provider plugin first: **Freeroam** (observe-only attribution) → **Barricade**
+   (enforcement). Barricade walls the first responsible action, never first
+   contact; it enforces only on signed responsible-action surfaces.
+2. Hosted console second: a developer console with organizations, roles,
+   projects, scoped keys, agents, grants, traffic, receipts, usage and
+   agent-readable docs. The `apps/console/` build is a UI preview with mocked
+   data, not a hosted app.
+3. Managed trust service later: registry anchors, key custody and revocation
+   manifests are local fixtures until the Phase 3 service exists.

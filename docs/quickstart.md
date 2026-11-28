@@ -1,9 +1,10 @@
 # Hallmark provider quickstart
 
-**Status: draft product harness, not a ratified standard.** Hallmark v1 is
-draft and §21 is open. These packages are built on the v1 primitives; they are
-**not** an L2 conformance gateway. Use “Hallmark v1-draft conformant” only for
-the spec suite in [`../spec/`](../spec/), never for this middleware.
+**Status: draft product harness, not ratified.** Hallmark v1 is draft, §21 is
+open, and there is no production deployment; Hallmark is the protocol, not a
+standard. These packages are built on the v1 primitives; they are **not** an L3
+conformance gateway. Use “Hallmark v1-draft conformant” only for the spec suite
+in [`../spec/`](../spec/), never for this middleware.
 
 The first integration target is Express-compatible Node middleware
 `(req, res, next)`. The same function works in Express and the Next.js Pages
@@ -13,13 +14,18 @@ included.
 ## The wedge in one paragraph
 
 Run **Freeroam** on read routes: cooperative agents identify themselves, you
-record attribution, and nothing is blocked. Run **Barricade** on the first
-*responsible* action — purchase, content-use license, destructive operation.
-Wall the first responsibility, never first contact.
+record attribution, and nothing is blocked. Non-cooperating agents remain
+unattributed; Freeroam does not fingerprint them or build evasion detection.
+Run **Barricade** on the first *responsible* action — purchase, content-use
+license, destructive operation. Barricade walls the first responsible action,
+never first contact, and only on signed responsible-action surfaces. Every
+action carrying a valid Hallmark passport resolves to one responsible human.
 
 ## Console UI preview
 
-A Supermemory-like console preview runs locally with mocked data:
+A developer console with organizations, roles, projects, scoped keys, agents,
+grants, traffic, receipts, usage and agent-readable docs runs locally with
+mocked data:
 
 ```bash
 npm run start:console   # http://127.0.0.1:4320/
@@ -49,8 +55,10 @@ Until then, use this repository's workspace links:
 
 ```bash
 npm install          # at the repository root
-npm run test:all     # 16 tests: 13 package tests + 3 demo/dashboard tests
+npm run test:all
 ```
+
+`npm run test:all` runs the workspace suites for packages, demo/dashboard, console UI and landing site; core smoke (6) runs separately via its workspace. The spec suite stays separate with 38 vectors.
 
 Node 18 or newer. All three packages are zero-dependency except for each other.
 
@@ -168,6 +176,16 @@ import { barricade } from '@pascaal/barricade';
 
 const replay = new ReplayCache();
 const ledger = new BudgetLedger();
+// Fresh empty local fixture; registry anchors and signed manifests arrive with
+// the Phase 3 managed trust service.
+const now = Math.floor(Date.now() / 1000);
+const manifest = {
+  v: 1,
+  iat: now,
+  exp: now + 3600,
+  keys: [], sessions: [], attestations: [], tenants: [],
+  signature: '',
+};
 const revocation = new RevocationSet(manifest); // locally pinned, fresh
 
 app.post('/api/checkout', barricade({
@@ -229,10 +247,11 @@ automatic `finish` hook is installed there.
 - Structural `depth == ln.length` (L1).
 - Signed provider policy, surface match, capability/method/path/profile (§9).
 - `jti` cache plus `sqn` window (§11).
-- Revocation freshness and local denylist checks (§10).
+- Revocation freshness and local denylist checks (§10). Stale data is rejected
+  by strict profiles; lower-risk profiles may degrade only with an alert.
 - Observed-usage budget charging with idempotency keys (§9.2).
 
-**Not verified here — required before production or an L2 claim**
+**Not verified here — required before production or a full L3 gateway claim**
 
 - Full ancestry walk and spawn edge registry (§8.5–8.6).
 - Attestation store and root signer binding (V5).

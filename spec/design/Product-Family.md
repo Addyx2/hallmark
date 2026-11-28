@@ -1,6 +1,6 @@
 # Hallmark Product Family — the six products, one loop
 
-**Status: DESIGN NOTE — reviewed, not implemented. Not normative.**
+**Status: DESIGN NOTE — product components designed only, not implemented. Not normative.**
 Vocabulary companion to `Seal-v2-Design.md` and v1 `Hallmark-Agent-Identity-Spec.md`.
 Everything here rides the v1 core (attestation, lineage, grants-as-passports, audit).
 The product family is one closed loop: user leash → agent imprint → provider gate →
@@ -12,23 +12,24 @@ grant → action → trackline event → leash view.
 
 Hallmark is the user's leash, Imprint is the responsibility sticker, Grants are
 computed authorizations, Barricade enforces, Freeroam observes, Trackline
-reports — five products and one standard, all on the verified v1 rails.
+reports — five products and one protocol, all on the verified v1 rails.
 
 ## 1. Roles
 
 | Role | What it is | Holds |
 | --- | --- | --- |
 | The user | a human; owns agents | the leash (Hallmark account) |
-| The agent | from ANY provider — Muse, Instinct, their own, the labs | an Imprint, grants |
+| The agent | from any provider — third-party agents, in-house agents or lab agents | an Imprint, grants |
 | The provider | a service/commerce surface agents visit | Barricade or Freeroam, a `barricade-policy` |
 | The platform | the rails between all three | attestation, lineage, grants, audit |
 
 The strategic position: agents are commodity, the leash is the switching cost,
-and the leash is **vendor-neutral by construction** — a user running Muse and
-Instinct needs one leash for both or the grants never reconcile. Meta and OpenAI
-each want to own the agent control plane; neither can, neutrally. The defensible
-layer under the leash is the standard: every agent wears the same Imprint, every
-provider accepts the same Grant, every action lands in the same audit.
+and the leash is **vendor-neutral by construction** — a user running agents from
+different providers needs one leash for them all or the grants never reconcile.
+Meta and OpenAI each want to own the agent control plane; neither can,
+neutrally. The defensible layer under the leash is the protocol: every agent
+wears the same Imprint, every provider accepts the same Grant, every authorized
+action lands in the same audit.
 
 ## 2. The products
 
@@ -46,15 +47,17 @@ Tiers against the funnel:
 - **T1** — enrolled at the moment of first *responsible* action: purchase,
   content-use license, destructive op. The provider's gate offers
   "continue with Hallmark"; the agent prompts the user; one tap enrolls; the
-  action proceeds. Wall the first responsibility, never first contact.
+  action proceeds. Barricade walls the first responsible action, never first
+  contact, and only on signed responsible-action surfaces.
 - **T2** — elevated: liveness / passkey re-assertion on demand for high-value
   or policy-gated actions.
 
 ### 2.2 Imprint — the sticker
 Responsibility attached to an agent at enrollment, never detachable, unspoofable
-by construction: v1 lineage (L1–L13) means every agent terminates at exactly one
-human (`root.sub`). The user can ask "which descendant did this?" and get a
-provable answer.
+by construction: v1 lineage (L1–L13) requires a single `root.sub`. Every action
+carrying a valid Hallmark passport resolves to one responsible human. The user
+can ask "which descendant did this?" and get a provable answer. Traffic with no
+valid passport remains unattributed; this is not bot detection.
 
 ### 2.3 Grants — computed authorization
 Authentication answers "who are you?" once and forever; a Grant is a
@@ -78,14 +81,13 @@ spec-shaped artifact: claim type `hallmark+barricade-policy` — surfaces × gat
 grant it mints the use token and appends the audit row.
 
 ### 2.5 Freeroam — observe
-The same gate with the denial removed: agent identification + telemetry only,
-no enforcement. **Honest bounds:** cooperating agents (wearing an Imprint in a
-standardized request header) are tracked exactly; non-cooperating agents are
-best-effort fingerprinting, and that is the anti-bot arms race Amazon is
-currently litigating (CFAA). Build the cooperative-identity signal, not the
-evasion-detector. "Identify yourself" is also the exact norm the market is
-demanding (Amazon's stated conditions, Web Bot Auth, Trusted Agent Protocol) —
-it is both the CFAA-safe side of the line and the marketable one.
+The same gate with the denial removed: identification of cooperating agents and
+telemetry only, no enforcement. **Honest bounds:** agents that present an
+Imprint in the protocol request header are attributed exactly. Non-cooperating
+agents remain unattributed. Freeroam deliberately does not fingerprint them and
+does not build evasion detection or an anti-bot classifier. "Identify yourself"
+is the cooperative norm the market is demanding (Web Bot Auth, Trusted Agent
+Protocol) and the defensible side of the line.
 
 Freeroam is the wedge: observation sells visibility → insight converts provider
 to Barricade → grants monetize.
@@ -93,8 +95,8 @@ to Barricade → grants monetize.
 ### 2.6 Trackline — feedback
 The agent-to-user event feed: signed `hallmark+trackline-event` records —
 what the agent did, cost, merchant, grant `jti` ref, budget remaining. These are
-**the same rows as the v1 §14 audit log**, productized: the append-only log with
-a signed fan-out to the user's inbox. Trackline is the leash's feedback loop and
+designed to mirror **the v1 §14 audit log** (specified, not implemented):
+an append-only log with a signed fan-out to the user's inbox. Trackline is the leash's feedback loop and
 the receipt surface. It also makes misappropriation provable ("this content
 entered X's dataset; no grant was ever minted to X's lineage").
 
@@ -113,18 +115,19 @@ Agent never holds authority — only a request and a short-lived grant. The
 authentication terminates at the gate, not at the agent, otherwise a compromised
 agent MITMs the proof.
 
-## 4. Already built vs genuinely new
+## 4. Built vs designed
 
 | Layer | v1 state |
 | --- | --- |
-| attestation, lineage L1–L13, revocation, replay, budgets, caps | built, vector-tested |
-| audit log (§14) | built and mirrored by Trackline |
-| the gate pipeline V1–V10 | built; Barricade = enforce mode, Freeroam = observe mode |
-| grants as passports (cap + budget + jti) | built; the leash just mints them |
+| v1 primitives: attestation, lineage L1–L13, revocation, replay, budgets, caps | built and vector-tested in the spec reference |
+| audit log (§14) | specified, not implemented |
+| gate pipeline V1–V10 | partially implemented in the draft provider harness (Freeroam observe, Barricade enforce); not a full gateway |
+| grants as passports (cap + budget + jti) | primitives built and vector-tested; the leash that mints them is designed only |
+| Hallmark leash, Imprint, Barricade product policy, Trackline | designed only; not built as products |
 
-Genuinely new, wants its own spec shape:
+Designed only, not built — each wants its own spec shape:
 
-1. **Cooperative agent identity signal** — the header standard: an imprinted
+1. **Cooperative agent identity signal** — the protocol header: an imprinted
    agent declares itself (imprint/grant reference) to every provider it visits.
    Freeroam's exactness and Barricade's identity gate both depend on it. Also
    the market norm ("identify yourself") and the CFAA-safe alternative to
@@ -137,7 +140,7 @@ Genuinely new, wants its own spec shape:
 ## 5. Provider economics — the honest part
 
 An agent that shops cleanly never sees the provider's ad surfaces (the $68B
-problem behind the Amazon–Muse / Amazon–Perplexity fights). The provider is the
+problem behind large-platform agent commerce disputes). The provider is the
 payer, so Barricade's fee must make providers whole on **transaction value** —
 per verified/spent grant — not an ad-equivalent per-impression tax. Grants + the
 payment rail are the revenue product; Freeroam + Trackline are retention.
@@ -158,8 +161,8 @@ Each step creates the adoption base the next one requires.
    billing (v1 already computes the evidence; the rate-card differs).
 2. **Who owns Trackline** — the operator (agent-provider) or the leash (user)?
    It affects whether the feed is an agent obligation or a user entitlement.
-3. **Freeroam legal framing** — observation of non-cooperating agents carries
-   CFAA/ToS exposure. Decide the cooperative-only scope explicitly before
-   building detection heuristics that drift.
+3. **Freeroam legal framing** — keep the scope cooperative-only. Non-cooperating
+   agents remain unattributed; Freeroam deliberately does not fingerprint or
+   build evasion detection, and detection heuristics stay out of scope.
 4. **Barricade policy authorship** — human-configured per provider, or minted
    through a marketplace so providers can adopt a baseline policy in one click?

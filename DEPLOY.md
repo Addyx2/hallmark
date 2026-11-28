@@ -33,10 +33,16 @@ tag in `landing/index.html` says so.
 # from the repository root
 git status --short
 cd spec && npm test && cd ..
+git diff -- spec/test-vectors/vectors.json
 git add -A
 git commit -m "Describe the change"
 git push origin main
 ```
+
+Inspect `git diff -- spec/test-vectors/vectors.json` before staging. On a clean
+checkout, expect only the two ES256 signature segments to change (ES256 uses a
+random `k`); do not commit unrelated churn. The same `npm test` run includes the
+pre-deploy spec/code crosscheck — treat a crosscheck failure as a blocker.
 
 Vercel picks up the push, builds the static files from `landing/`, and promotes
 the deployment to `hallmark.pascaal.com`. Verify the live page after the
@@ -52,6 +58,8 @@ deployment finishes.
 | `/llms.txt` | Short agent-readable summary (the `llms.txt` convention) |
 | `/llms-full.txt` | Full agent context, vocabulary and canonical citations |
 | `/agent/` | Plain HTML agent view — `landing/agent/index.html` becomes `/agent/` because the root directory is `landing` |
+| `/robots.txt` | Crawler access rules and sitemap pointer |
+| `/sitemap.xml` | Canonical URL inventory for the human and agent views |
 | `/spec/…` | Not served here. Spec files are read from GitHub, linked from the site |
 
 If `/agent/` 404s live, the Vercel **Root Directory** is probably set to the
@@ -68,31 +76,31 @@ python -m http.server 8765
 
 Then open `http://127.0.0.1:8765/` and check:
 
-- `Verify` ends in **PASS · V1 chain intact**.
-- `Tamper & verify` ends in **FAIL · V2 seal mismatch**.
-- `/llms.txt`, `/llms-full.txt`, `/agent/` and `/og.png` all return 200.
+- `Verify` ends in **PASS · root attestation intact**.
+- `Tamper & verify` ends in **FAIL · signature and seal mismatch**.
+- `/llms.txt`, `/llms-full.txt`, `/agent/`, `/robots.txt`, `/sitemap.xml` and `/og.png` all return 200.
 - No console errors.
 - Canonical is `https://hallmark.pascaal.com/`.
-- JSON-LD parses and contains `Organization` + `SoftwareApplication`.
+- JSON-LD parses and contains `Organization` + `SoftwareApplication`, with `softwareVersion: v1-draft`.
 
 Conformance for the protocol itself stays separate from the website deploy:
 
 ```bash
 cd spec
-npm test        # 38 vectors, properties, budgets and spec/code crosscheck
+npm test        # 38 vectors (6 accept/32 pinned), 4 properties, 4 enforcement points, spec/code crosscheck
 npm run bench   # numbers behind spec §17
 ```
 
 ## Agent / AEO surfaces
 
-The site follows the convention used by mem0 and supermemory: a machine-readable
-summary, a fuller context file, and canonical links back to the human site and
-the normative spec.
+The site exposes a machine-readable summary, a fuller context file, and canonical
+links back to the human site and the normative spec.
 
 - `llms.txt` — short index: what Hallmark is, status, canonical URLs, rules for agents.
 - `llms-full.txt` — primitives, vocabulary, worked-example constants, conformance, citations.
 - `/agent/` — plain HTML, no scripts, same facts and citations.
-- JSON-LD in `index.html` — `Organization` and `SoftwareApplication`.
+- JSON-LD in `index.html` — `Organization`, `SoftwareApplication` and draft status.
+- `/robots.txt` and `/sitemap.xml` — crawler rules and canonical URL inventory.
 - Open Graph / Twitter cards — shareable title, description and 1200×630 image.
 
 When the spec changes, update `llms.txt`, `llms-full.txt` and `/agent/` in the

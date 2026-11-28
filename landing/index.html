@@ -9,6 +9,7 @@
 <link rel="canonical" href="https://hallmark.pascaal.com/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="alternate" type="text/plain" href="/llms.txt" title="Hallmark, summarized for agents">
+<link rel="alternate" type="text/plain" href="/llms-full.txt" title="Hallmark, full context for agents">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Hallmark by Pascaal">
 <meta property="og:title" content="Hallmark provides a clean trail of use and ownership through tracable passports , resolving agents acts to authorised parties.">
@@ -23,7 +24,7 @@
 <meta name="twitter:description" content="Short-lived passports that resolve agent actions to the people who authorised them.">
 <meta name="twitter:image" content="https://hallmark.pascaal.com/og.png">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://pascaal.com/#organization","name":"Pascaal","url":"https://pascaal.com","description":"AI components for safety and adoption."},{"@type":"SoftwareApplication","@id":"https://hallmark.pascaal.com/#software","name":"Hallmark","applicationCategory":"SecurityApplication","operatingSystem":"Web","url":"https://hallmark.pascaal.com/","description":"Hallmark provides a clean trail of use and ownership through tracable passports , resolving agents acts to authorised parties.","publisher":{"@id":"https://pascaal.com/#organization"},"sameAs":["https://github.com/Addyx2/hallmark"],"isBasedOn":{"@type":"CreativeWork","name":"Hallmark Agent Identity Spec","url":"https://github.com/Addyx2/hallmark/blob/main/spec/Hallmark-Agent-Identity-Spec.md"}}]}
+{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://pascaal.com/#organization","name":"Pascaal","url":"https://pascaal.com","description":"AI components for safety and adoption."},{"@type":"SoftwareApplication","@id":"https://hallmark.pascaal.com/#software","name":"Hallmark","applicationCategory":"SecurityApplication","operatingSystem":"Web","url":"https://hallmark.pascaal.com/","description":"Hallmark provides a clean trail of use and ownership through tracable passports , resolving agents acts to authorised parties.","softwareVersion":"v1-draft","additionalProperty":[{"@type":"PropertyValue","name":"status","value":"Open draft — executable reference; not ratified or production-deployed."}],"publisher":{"@id":"https://pascaal.com/#organization"},"sameAs":["https://github.com/Addyx2/hallmark"],"isBasedOn":{"@type":"CreativeWork","name":"Hallmark Agent Identity Spec","url":"https://github.com/Addyx2/hallmark/blob/main/spec/Hallmark-Agent-Identity-Spec.md"}}]}
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,10 +33,10 @@
   :root{
     --paper:#f4f4f6;
     --ink:#0b1015;
-    --ink-86:#0b1015db;
-    --ink-68:#0b1015ad;
-    --ink-60:#0b101599;
-    --ink-45:#0b101573;
+    --ink-86:#0b1015e6;
+    --ink-68:#0b1015bd;
+    --ink-60:#0b1015b3;
+    --ink-45:#0b10159e;
     --rule:#dfdfdf;
     --rule-soft:#e9e9e9;
     --blue:#0562ef;
@@ -55,10 +56,13 @@
   body{margin:0;background:#fff;color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.65}
   ::selection{background:#0562ef29}
   :focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+  .col:focus{outline:none}
   h1,h2,h3,h4,p,figure,blockquote,dl,dd{margin:0}
   a{color:inherit;text-decoration:none}
   ol,ul{margin:0;padding:0;list-style:none}
   .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+  .skip-link{position:absolute;left:16px;top:-72px;z-index:100;padding:10px 14px;background:var(--ink);color:#fff;border-radius:6px;font-size:14px;font-weight:500;transition:top .2s var(--ease)}
+  .skip-link:focus{top:16px}
   .mono{font-family:var(--mono)}
   .arrow{display:inline-block;margin-inline-start:.35em;font-weight:400;transition:translate .2s var(--ease)}
   a:hover .arrow,a:focus-visible .arrow{translate:2px -2px}
@@ -84,13 +88,13 @@
 
   /* ---------- rail nav ---------- */
   .rail .nav{display:flex;flex-direction:column;align-items:flex-start;gap:13px;margin-top:40px}
-  .nav a{font-size:15px;line-height:1.4;letter-spacing:-.006em;color:var(--ink-68);transition:color .2s}
+  .nav a{display:inline-flex;align-items:center;min-height:36px;padding-block:2px;font-size:15px;line-height:1.4;letter-spacing:-.006em;color:var(--ink-68);transition:color .2s}
   .nav a:hover,.nav a[aria-current]{color:var(--ink)}
   .nav-doors a[aria-current]{font-weight:500}
   .rail-rule{width:100%;height:1px;border:0;margin:26px 0;background:repeating-linear-gradient(90deg,var(--rule) 0 4px,transparent 4px 8px)}
   .nav-here{display:flex;flex-direction:column;gap:11px;position:relative}
   .nav-here:before{content:"On this page";font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-60);line-height:14px;margin-bottom:3px}
-  .nav-here a{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;line-height:1.45;color:var(--ink-60);transition:color .2s}
+  .nav-here a{display:flex;align-items:center;min-height:32px;gap:10px;font-size:13.5px;line-height:1.45;color:var(--ink-60);transition:color .2s}
   .nav-here a:before{content:"";flex:none;width:22px;height:2px;margin-top:9px;border-radius:1px;background:#0b101538;transition:background .2s,scale .3s var(--ease);transform-origin:0}
   .nav-here a:hover,.nav-here a[aria-current]{color:var(--ink)}
   .nav-here a[aria-current]:before{background:var(--blue);scale:1.15 1}
@@ -99,7 +103,6 @@
   .nav-sub a{font-size:12.5px;line-height:1.4}
   .nav-sub a:before{width:12px;height:1.5px;margin-top:8px;background:#0b101529}
   .nav-sub a[aria-current]:before{background:var(--blue)}
-  .nav-here .nav-parent.in-section{color:var(--ink)}
 
   /* ---------- hero ---------- */
   .hero{position:relative}
@@ -167,7 +170,7 @@
   .body b{color:var(--ink);font-weight:500}
   .body a{color:var(--blue);text-decoration:underline;text-decoration-color:#0562ef4d;text-underline-offset:3px}
   .body a:hover{text-decoration-color:var(--blue)}
-  .more{display:inline-flex;align-items:center;font-size:14.5px;font-weight:500;color:var(--ink);margin-top:22px;transition:color .2s}
+  .more{display:inline-flex;align-items:center;min-height:44px;font-size:14.5px;font-weight:500;color:var(--ink);margin-top:22px;transition:color .2s}
   .more:hover{color:var(--blue)}
 
   /* ---------- figure ---------- */
@@ -203,7 +206,7 @@
   /* ---------- deploy ---------- */
   .deploy{margin-top:32px;border-top:1px solid var(--rule)}
   .dep{padding:16px 0;border-bottom:1px solid var(--rule-soft)}
-  .dep h4{font-size:15.5px;font-weight:500;letter-spacing:-.01em}
+  .dep h3{font-size:15.5px;font-weight:500;letter-spacing:-.01em}
   .dep p{margin-top:4px;font-size:14px;line-height:1.6;color:var(--ink-68);max-width:31em}
 
   /* ---------- security ---------- */
@@ -237,15 +240,12 @@
   .foot-group a{color:var(--ink-68);transition:color .2s;width:fit-content}
   .foot-group a:hover{color:var(--ink)}
   .foot-legal{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:30px;padding-top:14px;border-top:1px solid var(--rule);font-size:12px}
-  .foot-status{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
-  .foot-status .dot{width:7px;height:7px;border-radius:50%;background:#10a86a;flex:none}
   .foot-top:hover .up{translate:0 -2px}
   .up{display:inline-block;transition:translate .2s var(--ease)}
   @media(max-width:640px){
     .foot-grid{grid-template-columns:1fr 1fr}
     .foot-brand{grid-column:1/-1}
     .foot-legal{align-items:flex-start}
-    .foot-status{margin-left:0}
   }
 
   /* ---------- reveal ---------- */
@@ -253,8 +253,8 @@
   html.js [data-reveal].is-visible{opacity:1;translate:0}
   @media(prefers-reduced-motion:reduce){
     html{scroll-behavior:auto}
+    *,:before,:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
     html.js [data-reveal]{opacity:1;translate:0;transition:none}
-    .arrow,.btn,.prompt,.post,.row,.up{transition:none}
   }
 
   /* ---------- responsive shell ---------- */
@@ -265,6 +265,7 @@
     .rail .nav{flex-flow:wrap;gap:6px 18px;margin-top:0}
     .rail-rule,.nav-here{display:none}
     .nav a{font-size:13.5px}
+    section{scroll-margin-top:96px}
     .col{padding-block:48px 80px}
   }
   @media(max-width:560px){
@@ -272,6 +273,7 @@
     .rail{flex-wrap:wrap;row-gap:10px}
     .rail .nav{order:3;flex-basis:100%;gap:6px 14px}
     .rail .nav a{max-width:100%;overflow-wrap:anywhere}
+    section{scroll-margin-top:132px}
     .statement{font-size:34px;letter-spacing:-.025em}
     .creed{font-size:21px}
     .final h2{font-size:26px}
@@ -288,7 +290,7 @@
   .verify-panel{border:1px solid var(--rule);border-radius:6px;background:var(--paper);overflow:hidden;margin-top:28px}
   .verify-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 18px;border-bottom:1px solid var(--rule);font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-60)}
   .verify-actions{display:flex;gap:8px;flex-wrap:wrap}
-  .verify-actions button{font:inherit;letter-spacing:inherit;color:var(--ink);background:#fff;border:1px solid var(--rule);border-radius:3px;padding:7px 12px;cursor:pointer}
+  .verify-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:38px;font:inherit;letter-spacing:inherit;color:var(--ink);background:#fff;border:1px solid var(--rule);border-radius:3px;padding:7px 12px;cursor:pointer}
   .verify-actions button.primary{background:var(--blue);border-color:var(--blue);color:#fff}
   .verify-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
   .verify-left,.verify-right{padding:18px;min-width:0}
@@ -297,7 +299,7 @@
   .verify .vline{display:flex;gap:10px;font:12px/1.7 var(--mono);color:var(--ink-60);border-bottom:1px solid var(--rule-soft);padding:6px 0}
   .verify .vline:last-child{border-bottom:0}
   .verify .vline b{color:var(--ink);font-weight:500}
-  .verify .vline.ok b{color:#0a8a55}
+  .verify .vline.ok b{color:#086f43}
   .verify .vline.bad b{color:#c0392b}
   @media(max-width:760px){
     .verify-body{grid-template-columns:1fr}
@@ -306,6 +308,7 @@
 </style>
 </head>
 <body>
+<a class="skip-link" href="#top">Skip to content</a>
 <div class="page">
 
   <!-- ============ rail ============ -->
@@ -319,7 +322,7 @@
     </div>
 
     <nav class="nav nav-doors" aria-label="Site">
-      <a href="#top" aria-current="page">Home</a>
+      <a href="#top" aria-current="location">Home</a>
       <a href="#hallmark">Hallmark</a>
       <a href="#components">Components</a>
       <a href="#verify">Verify</a>
@@ -340,12 +343,17 @@
   </aside>
 
   <!-- ============ column ============ -->
-  <main class="col" id="top">
+  <main class="col" id="top" tabindex="-1">
 
     <div class="hero">
-      <h1 class="statement" data-reveal="load" style="--d:120ms">Hallmark provides a clean trail of use and ownership through tracable passports , resolving agents acts to authorised parties.</h1>
+      <p class="note" data-reveal="load" style="--d:80ms">
+        <span class="note-live" aria-hidden="true"></span>
+        Open draft · executable · not ratified
+        <a class="note-cta" href="https://github.com/Addyx2/hallmark/blob/main/spec/Hallmark-Agent-Identity-Spec.md" target="_blank" rel="noopener">Status</a>
+      </p>
+      <h1 class="statement" data-reveal="load" style="--d:140ms">Hallmark provides a clean trail of use and ownership through tracable passports , resolving agents acts to authorised parties.</h1>
 
-      <p class="dek" data-reveal="load" style="--d:200ms">
+      <p class="dek" data-reveal="load" style="--d:220ms">
         Hallmark gives an agent a short-lived passport. A gateway can see who authorised the action,
         what it was allowed to do, and what happened.
       </p>
@@ -370,15 +378,15 @@
             <svg class="copy" viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M7.5 14.5c0-3.3 0-4.95 1.02-5.98C9.55 7.5 11.2 7.5 14.5 7.5s4.95 0 5.97 1.02C21.5 9.55 21.5 11.2 21.5 14.5s0 4.95-1.03 5.97C19.45 21.5 17.8 21.5 14.5 21.5s-4.95 0-5.98-1.03C7.5 19.45 7.5 17.8 7.5 14.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M7.5 16.5c-1.4 0-2.1 0-2.66-.2a3 3 0 0 1-1.64-1.64C3 14.1 3 13.4 3 12V9.5c0-3.3 0-4.95 1.03-5.97C5.05 2.5 6.7 2.5 10 2.5h2.5c1.4 0 2.1 0 2.66.2a3 3 0 0 1 1.64 1.64c.2.56.2 1.26.2 2.66" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
             <svg class="ok" viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M5 14l3.5 3.5L19 6.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </span>
-          <span class="sr-only" role="status" aria-live="polite" id="promptStatus"></span>
         </button>
+        <span class="sr-only" role="status" aria-live="polite" id="promptStatus"></span>
       </div>
 
       <div class="works" data-reveal="load" style="--d:360ms">
-        <div class="works-label">Works with</div>
+        <div class="works-label">Integration points</div>
         <div class="works-list">
-          <span>MCP</span><span>ChatGPT</span><span>Claude</span><span>Cursor</span>
-          <span>LangGraph</span><span>OpenAI Agents SDK</span><span>Any HTTP gateway</span>
+          <span>MCP tool calls</span><span>HTTP gateways</span><span>Express-compatible middleware</span>
+          <span>Fastify hooks</span><span>Next.js App Router</span>
         </div>
       </div>
     </div>
@@ -455,7 +463,7 @@
         </div>
         <div class="row">
           <h3>Barricade</h3>
-          <p>A provider-side check at the surface where the action happens. It requires an imprint and a grant. This is where a client can refuse suspicious use.</p>
+          <p>A provider-side check on a signed surface where a responsible action happens. It requires an imprint and a grant. That is where a client can curb suspicious use — never at first contact.</p>
         </div>
         <div class="row">
           <h3>Freeroam</h3>
@@ -463,11 +471,11 @@
         </div>
         <div class="row">
           <h3>Trackline</h3>
-          <p>A receipt for each action: what ran, what it cost, and which grant allowed it.</p>
+          <p>Designed: a receipt for each action — what ran, what it cost, and which grant allowed it.</p>
         </div>
         <div class="row">
           <h3>Seal v2</h3>
-          <p>Ownership seals on original work, so use can be licensed instead of copied.</p>
+          <p>Designed: ownership seals on original work, so use can be licensed instead of copied.</p>
         </div>
       </div>
 
@@ -479,21 +487,22 @@
       <div class="eyebrow"><i aria-hidden="true"></i>Deployment</div>
       <h2 class="creed">Put the check <b>where the traffic is.</b></h2>
       <p class="body">
-        Verification is stateless. The passport carries no PII &mdash; only a lineage, a grant
-        reference and public key material. Check it in the gateway, at the edge, or inside your VPC.
+        Verification uses locally pinned keys and revocation data. The passport carries a signed
+        lineage, a grant and public key material &mdash; not identity documents, and no URL-based
+        key discovery. Run the check in the gateway, at the edge, or inside your VPC.
       </p>
       <div class="deploy">
         <div class="dep">
-          <h4>Gateway</h4>
+          <h3>Gateway</h3>
           <p>One header check before routing. Reject, challenge, or allow with attribution, per route.</p>
         </div>
         <div class="dep">
-          <h4>Edge</h4>
-          <p>Stateless verification plus registry lookups, with no call back to a control plane.</p>
+          <h3>Edge</h3>
+          <p>Pinned verification with local revocation data. No callback to a remote key service.</p>
         </div>
         <div class="dep">
-          <h4>VPC</h4>
-          <p>Run the verifier and the registry anchor yourself. The format does not care where it is checked.</p>
+          <h3>Private network</h3>
+          <p>Keep the registry snapshot and revocation manifest inside your own boundary.</p>
         </div>
       </div>
     </section>
@@ -503,8 +512,8 @@
       <div class="eyebrow"><i aria-hidden="true"></i>Security</div>
       <h2 class="creed">Unknown input <b>fails closed.</b></h2>
       <p class="body">
-        The passport is the only thing crossing the trust boundary. It is small and canonical, and
-        anything unverifiable is rejected at the check.
+        A passport is the only thing crossing the trust boundary here. It is small and canonical,
+        and checked against locally pinned keys and revocation data before the action runs.
       </p>
       <div class="checks">
         <div class="check">
@@ -514,13 +523,13 @@
           <p><b>JSON is canonical.</b> RFC&nbsp;8785; duplicate keys and non-canonical encodings fail.</p>
         </div>
         <div class="check">
-          <p><b>Keys come from the registry.</b> No URL discovery.</p>
+          <p><b>Keys are pinned locally.</b> Registry snapshots provide the trust anchor. No URL discovery.</p>
         </div>
         <div class="check">
           <p><b>Replay is rejected.</b> A <span class="mono">jti</span> cache and sequence window stop reuse.</p>
         </div>
         <div class="check">
-          <p><b>Revocation is per capability.</b> Stale data fails closed for that capability.</p>
+          <p><b>Revocation is per capability.</b> Strict checks reject stale data; lower-risk routes may degrade only with an alert.</p>
         </div>
         <div class="check">
           <p><b>Lifetimes are short.</b> 120 seconds by default, 300 maximum.</p>
@@ -533,8 +542,8 @@
       <div class="eyebrow"><i aria-hidden="true"></i>Verify</div>
       <h2 class="creed">Check a seal <b>in the browser.</b></h2>
       <p class="body">
-        This verifier signs a sample passport, computes the seal, then checks both. Tamper with the
-        subject and the chain fails. Nothing leaves the page.
+        This verifier signs a sample root attestation, computes a Seal over the signed input, then
+        checks both. Tamper with the subject and the proofs no longer match. Nothing leaves the page.
       </p>
       <div class="verify-panel">
         <div class="verify-head">
@@ -573,11 +582,11 @@
           <span class="m">Essay</span>
         </a>
         <a class="post" href="https://pascaal.com/grants-narrow-authority/" target="_blank" rel="noopener">
-          <span class="t">Grants narrow authority</span>
+          <span class="t">Authority narrows. It does not spill.</span>
           <span class="m">Essay</span>
         </a>
         <a class="post" href="https://pascaal.com/containment-window/" target="_blank" rel="noopener">
-          <span class="t">The containment window</span>
+          <span class="t">A kill switch is a containment window</span>
           <span class="m">Essay</span>
         </a>
       </div>
@@ -648,14 +657,23 @@
     let timer;
     btn.addEventListener('click', async () => {
       const text = btn.dataset.prompt || '';
+      let copied = false;
       try {
         await navigator.clipboard.writeText(text);
+        copied = true;
       } catch {
         const ta = document.createElement('textarea');
         ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
         document.body.appendChild(ta); ta.select();
-        try { document.execCommand('copy'); } catch {}
+        try { copied = document.execCommand('copy'); } catch {}
         ta.remove();
+      }
+      if (!copied) {
+        window.prompt('Copy this setup prompt:', text);
+        btn.classList.remove('copied');
+        label.textContent = 'Copy the selected prompt';
+        status.textContent = 'Clipboard permission was blocked. Select the text in the dialog to copy.';
+        return;
       }
       btn.classList.add('copied');
       label.textContent = 'Setup prompt copied';
@@ -690,14 +708,15 @@
   // ---- active section in the rail ----
   const links = [...document.querySelectorAll('.nav-here a')];
   const sections = links.map((a) => document.querySelector(a.getAttribute('href'))).filter(Boolean);
-  const parentLink = document.querySelector('.nav-parent');
   if ('IntersectionObserver' in window && sections.length) {
     const so = new IntersectionObserver((entries) => {
       for (const e of entries) {
         if (!e.isIntersecting) continue;
         const id = '#' + e.target.id;
-        links.forEach((a) => a.toggleAttribute('aria-current', a.getAttribute('href') === id));
-        if (parentLink) parentLink.classList.toggle('in-section', !!document.querySelector('.nav-sub a[aria-current]'));
+        links.forEach((a) => {
+          if (a.getAttribute('href') === id) a.setAttribute('aria-current', 'location');
+          else a.removeAttribute('aria-current');
+        });
       }
     }, { rootMargin: '-20% 0px -60% 0px', threshold: 0 });
     sections.forEach((s) => so.observe(s));
@@ -796,23 +815,22 @@
       const originalSeal = await sealOf(originalInput);
 
       let input = originalInput;
-      let shownSeal = originalSeal;
       if (tamper) {
         payload.sub = 'usr_0000';
         input = b64u(utf8(jcs(sampleHeader))) + '.' + b64u(utf8(jcs(payload)));
-        shownSeal = await sealOf(input);
       }
 
       vPayload.textContent = jcs(payload);
       const sigOk = await crypto.subtle.verify('Ed25519', keys.publicKey, sig, utf8(input));
-      const sealOk = (await sealOf(input)) === shownSeal;
-      const pass = sigOk && sealOk && !tamper;
+      const presentedSeal = originalSeal;
+      const sealOk = (await sealOf(input)) === presentedSeal;
+      const pass = sigOk && sealOk;
 
       vLog.append(line('jcs', 'members sorted, integers canonical', 'ok'));
-      vLog.append(line('seal', shownSeal.slice(0, 24) + '…', sealOk ? 'ok' : 'bad'));
+      vLog.append(line('seal', tamper ? 'does not match presented seal' : presentedSeal.slice(0, 24) + '…', sealOk ? 'ok' : 'bad'));
       vLog.append(line('signature', sigOk ? 'Ed25519 valid' : 'Ed25519 invalid', sigOk ? 'ok' : 'bad'));
       vLog.append(line('provenance', tamper ? 'sub claim altered' : 'sub = usr_4471', tamper ? 'bad' : 'ok'));
-      vLog.append(line('verdict', pass ? 'PASS · V1 chain intact' : 'FAIL · V2 seal mismatch', pass ? 'ok' : 'bad'));
+      vLog.append(line('verdict', pass ? 'PASS · root attestation intact' : 'FAIL · signature and seal mismatch', pass ? 'ok' : 'bad'));
     } catch (err) {
       vPayload.textContent = 'Verifier error: ' + String(err && err.message || err);
       vLog.append(line('verdict', 'ERROR', 'bad'));

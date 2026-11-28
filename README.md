@@ -11,17 +11,21 @@ who is responsible for it. Three products, one thesis: agents should be
 
 | Product | What it is | Status |
 | --- | --- | --- |
-| **Hallmark** | Agent identity and accountability: a short-lived passport resolves every agent to one responsible human, with grants that name the action and budgets that cannot be shared. | Spec v1, open, executable |
+| **Hallmark** | Agent identity and accountability: short-lived passports, grants that name the action and budgets that cannot be shared. | Spec draft v1.0, open/executable, §21 open, not ratified, no production deployment |
 | **Plots** | Autonomous work management: agents plan, execute and report real work, with the plan, spend and hand-offs legible to the owner. | In design |
 | **Waterguard** | Agent security models: threat models, policy and containment for agents acting on real systems. | Research |
+
+Every action carrying a valid Hallmark passport resolves to one responsible
+human. Non-cooperating traffic stays unattributed; Hallmark is not a bot
+detector. Keys are pinned locally — no URL or remote discovery.
 
 Hallmark is the foundation: Ed25519 with ES256 fallback, RFC 8785 JCS,
 short-lived passes, disjoint budget slices. Plots and Waterguard are designed to
 inherit the same lineage rather than invent a second identity system.
 
-> Pascaal is the company; Hallmark is a product (and the protocol name). See
-> [`PASCAAL_BRAND_NOTE.md`](PASCAAL_BRAND_NOTE.md) for the naming decision and
-> the remaining launch check (USPTO).
+> Pascaal is the company; Hallmark is the product and protocol name. See
+> [`PASCAAL_BRAND_NOTE.md`](PASCAAL_BRAND_NOTE.md) for the public naming decision
+> and site status.
 
 ## Layout
 
@@ -32,11 +36,11 @@ inherit the same lineage rather than invent a second identity system.
 | [`landing/`](landing/) | Site source, published at [hallmark.pascaal.com](https://hallmark.pascaal.com) |
 | [`landing/llms.txt`](landing/llms.txt) / [`landing/llms-full.txt`](landing/llms-full.txt) | Agent-readable summaries for answer engines |
 | [`landing/agent/`](landing/agent/) | Plain HTML agent view of the same facts |
-| [`packages/hallmark-core/`](packages/hallmark-core/) | Installable v1 primitives package (`@pascaal/hallmark`, draft, not published yet) |
+| [`packages/hallmark-core/`](packages/hallmark-core/) | Workspace package for v1 primitives (`@pascaal/hallmark`, draft, unpublished) |
 | [`packages/freeroam/`](packages/freeroam/) | Observe-only attribution middleware (`@pascaal/freeroam`) |
 | [`packages/barricade/`](packages/barricade/) | Provider-side enforcement middleware (`@pascaal/barricade`) |
 | [`examples/provider-demo/`](examples/provider-demo/) | Runnable Freeroam → Barricade demo with a local control-room dashboard |
-| [`apps/console/`](apps/console/) | Supermemory-like console UI preview: signup, orgs/roles, projects/keys, agents/grants, traffic, receipts, usage, agent docs |
+| [`apps/console/`](apps/console/) | A developer console with organizations, roles, projects, scoped keys, agents, grants, traffic, receipts, usage and agent-readable docs — UI preview with mocked data |
 | [`docs/product-architecture.md`](docs/product-architecture.md) | Target architecture for the hosted Pascaal Console |
 | [`docs/quickstart.md`](docs/quickstart.md) | Provider setup, framework snippets and verification scope |
 | [`PRODUCT.md`](PRODUCT.md) | Buyer, wedge, MVP definition, non-goals and success metric |
@@ -50,7 +54,7 @@ inherit the same lineage rather than invent a second identity system.
 
 ```bash
 cd spec
-npm test        # 38 vectors + 4 properties + 4 budgets + spec/code crosscheck
+npm test        # 38 vectors + 4 properties + 4 enforcement points + spec/code crosscheck
 npm run bench   # performance numbers behind spec §17
 ```
 
@@ -64,10 +68,12 @@ integration. [`PRODUCT.md`](PRODUCT.md) defines the buyer and the 15-minute MVP;
 
 ```bash
 npm install               # at the repo root; links the workspace packages
-npm run test:all          # 13 package tests + 3 demo/dashboard tests + 2 console tests
+npm run test:all
 npm run start --workspace @pascaal/provider-demo
 npm run start:console     # console UI preview at http://127.0.0.1:4320/
 ```
+
+`npm run test:all` runs the workspace suites for packages, demo/dashboard, console UI and landing site; core smoke (6) runs separately via its workspace. The spec suite stays separate with 38 vectors.
 
 `packages/hallmark-core/src/index.js` is a semantic copy of
 `spec/test-vectors/hallmark-ref.mjs`; only the header changed. Full conformance
@@ -98,5 +104,6 @@ surfaces (`llms.txt`, `llms-full.txt`, `/agent/`, JSON-LD, OG card).
 
 ## Status
 
-Hallmark: draft v1.0, not ratified, no production deployment.
+Hallmark: draft v1.0, open/executable, §21 open, not ratified, no production
+deployment; core SDK 0.1.0 local/unpublished.
 Plots: in design. Waterguard: research direction only.
